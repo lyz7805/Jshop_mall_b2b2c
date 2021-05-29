@@ -11,7 +11,7 @@ use app\common\model\UserLog;
 
 class Common extends Base
 {
-    public function initialize(){
+    protected function initialize(){
         parent::initialize();
         //此控制器不需要模板布局，所以屏蔽掉
         $this->view->engine->layout(false);
@@ -33,10 +33,10 @@ class Common extends Base
             $result = $manageModel->toLogin(input('param.'));
             if($result['status']){
                 if(Request::isAjax()){
-                    $result['data'] = redirect_url(url('Index/index'));
+                    $result['data'] = redirect_url(url('shop/select'));
                     return $result;
                 }else{
-                    $this->redirect(redirect_url(url('Index/index')));
+                    $this->redirect(redirect_url(url('shop/select')));
                 }
             }else{
                 return $result;
@@ -56,7 +56,8 @@ class Common extends Base
             $userLogModel = new UserLog();
             $userLogModel->setLog(session('manage.id'),$userLogModel::USER_LOGOUT,[],$userLogModel::MANAGE_TYPE);
         }
-        session('manage', null);
+        // session('manage', null);
+        session(null);
         $this->success('退出成功',url('Index/index'));
     }
 }

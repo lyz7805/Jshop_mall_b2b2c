@@ -1,0 +1,95 @@
+{if $is_super_admin}
+<div class="layui-row layui-col-space15">
+	<div class="layui-col-md12">
+		<a class="layui-btn" href="{:url('setting/index')}" lay-href="{:url('setting/index')}">
+			<i class="iconfont icon-review"></i>
+			<cite>平台设置</cite>
+		</a>
+		<a class="layui-btn" href="{:url('shop/add')}" lay-href="{:url('shop/add')}">
+			<i class="iconfont icon-review"></i>
+			<cite>增加商铺</cite>
+		</a>
+	</div>
+</div>
+{/if}
+<div class="layui-row layui-col-space15">
+	<div class="layui-col-md12">
+		<div class="layui-card">
+			<div class="layui-card-header">
+				<i class="iconfont icon-caozuo"></i>商铺选择
+			</div>
+			<div class="layui-card-body">
+				<div class="layadmin-link layadmin-shortcut">
+					<ul class="layui-row layui-col-space10 layui-this">
+						{volist name="shop_list" id="shop"}
+						<li class="layui-col-xs3 layui-col-md2 layui-col-lg1 layui-bg-gray">
+							<a href="{:url('shop/select', ['to' => $shop.secret_id])}">
+								<i class="iconfont icon-goods layui-bg-gray"></i>
+								<cite>{$shop.name}</cite>
+							</a>
+						</li>
+						{/volist}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="__STATIC_LIB__layuiadmin/layui/layui.js"></script>
+<script src="__STATIC_JS__jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__STATIC_JS__jshop.js"></script>
+<script>
+	layui.config({
+		base: '__STATIC_LIB__layuiadmin/' //静态资源所在路径
+	}).extend({
+		index: 'lib/index' //主入口模块
+	}).use(['index', 'form'], function () {
+		var $ = layui.$,
+			setter = layui.setter,
+			admin = layui.admin;
+
+		var form = layui.form;
+		form.render();
+
+		//提交
+		// form.on('submit(password_login)', function (data) {
+		// 	JsPost("{:url('manage/common/login')}", data.field, function (data) {
+		// 		if (data.status) {
+		// 			layer.msg('登陆成功，跳转中...');
+		// 			setTimeout("window.location.href='" + data.data + "'; ", 1500);
+		// 		} else {
+		// 			if (data.data == '10013' || data.data == '10012') {
+		// 				$('#captcha_div').show();
+		// 			}
+		// 			setCaptcha();
+		// 			layer.msg(data.msg);
+		// 		}
+		// 	});
+		// 	return false;
+		// });
+	});
+</script>
+<style>
+	body {
+		background-color: #eee;
+		overflow: hidden;
+	}
+
+	.layadmin-user-login {
+		z-index: 99;
+	}
+
+	.loading-more {
+		overflow: hidden;
+	}
+
+	.loading-more>div {
+		display: inline-block;
+	}
+
+	.loading-more a {
+		float: right;
+		font-size: 12px;
+		margin-top: 5px;
+	}
+</style>
