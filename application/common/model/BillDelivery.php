@@ -18,7 +18,7 @@ use think\Db;
  * @package app\common\model
  * @author keinx
  */
-class BillDelivery extends Common
+class BillDelivery extends BaseB2b2c
 {
 
     //时间自动存储

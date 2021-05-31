@@ -4,7 +4,7 @@ namespace app\common\model;
 
 use think\Db;
 
-class ManageRole extends Common
+class ManageRole extends BaseB2b2c
 {
 
     protected $autoWriteTimestamp = true;

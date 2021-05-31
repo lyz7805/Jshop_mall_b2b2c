@@ -16,7 +16,7 @@ use think\Db;
  * Class Order
  * @package app\common\model
  */
-class Order extends Common
+class Order extends BaseB2b2c
 {
     protected $pk = 'order_id';
 

@@ -4,7 +4,7 @@ namespace app\common\model;
 use think\Db;
 use think\model\concern\SoftDelete;
 
-class BillReship extends Common
+class BillReship extends BaseB2b2c
 {
     protected $pk = 'reship_id';
 

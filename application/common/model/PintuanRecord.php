@@ -7,7 +7,8 @@ use app\common\model\Goods;
 use think\Model;
 use think\Db;
 
-class PintuanRecord extends Model{
+class PintuanRecord extends BaseB2b2c
+{
 
     const STATUS_COMM = 1; //拼团中
     const STATUS_FULL = 2;  //团满了

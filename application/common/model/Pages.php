@@ -9,7 +9,7 @@
 
 namespace app\common\model;
 
-class Pages extends Common
+class Pages extends BaseB2b2c
 {
 
     const MAIN_YES = 1;//首页

@@ -7,7 +7,7 @@ namespace app\common\model;
  * @package app\common\model
  * @author sin
  */
-class MessageCenter extends Common
+class MessageCenter extends BaseB2b2c
 {
     const SEND_TRUE = 1;        //发送
     const SEND_FALSE= 2;        //不发送

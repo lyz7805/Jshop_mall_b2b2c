@@ -6,7 +6,7 @@ use think\model\concern\SoftDelete;
  * Class Clerk
  * @package app\common\model
  */
-class Clerk extends Common
+class Clerk extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

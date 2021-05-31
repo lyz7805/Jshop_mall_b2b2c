@@ -4,7 +4,7 @@ namespace app\common\model;
 
 use think\model\concern\SoftDelete;
 
-class Promotion extends Common
+class Promotion extends BaseB2b2c
 {
     use SoftDelete;
     protected $deleteTime = 'isdel';

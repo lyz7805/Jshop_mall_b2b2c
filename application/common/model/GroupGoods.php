@@ -9,9 +9,8 @@
 
 namespace app\common\model;
 
-class GroupGoods extends Common
+class GroupGoods extends BaseB2b2c
 {
-
     /**
      * 判断当前商品在未结束的活动中是否存在
      * @param int $goods_id 商品id

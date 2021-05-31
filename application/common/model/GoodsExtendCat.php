@@ -15,7 +15,7 @@ namespace app\common\model;
  * Class GoodsExtendCat
  * @package app\common\model
  */
-class GoodsExtendCat extends Common
+class GoodsExtendCat extends BaseB2b2c
 {
 
 

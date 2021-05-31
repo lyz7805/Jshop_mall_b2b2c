@@ -10,7 +10,7 @@ namespace app\common\model;
 
 use think\Db;
 
-class FormSubmit extends common
+class FormSubmit extends BaseB2b2c
 {
 
     protected $autoWriteTimestamp = true;

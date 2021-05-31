@@ -14,7 +14,7 @@ namespace app\common\model;
  * Date: 2018/9/6
  * Time: 下午12:02
  */
-class Hooks extends Common
+class Hooks extends BaseAdmin
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

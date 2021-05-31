@@ -16,7 +16,7 @@ use think\Db;
  * @package app\common\model
  * @author keinx
  */
-class Logistics extends Common
+class Logistics extends BaseAdmin
 {
     public function add($data)
     {

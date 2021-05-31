@@ -11,7 +11,7 @@ namespace app\common\model;
 use think\Validate;
 use think\model\concern\SoftDelete;
 
-class Brand extends Common
+class Brand extends BaseB2b2c
 {
     use SoftDelete;
     protected $deleteTime = 'isdel';

@@ -10,7 +10,7 @@ namespace app\common\model;
 
 use think\Validate;
 
-class Carousel extends Common
+class Carousel extends BaseB2b2c
 {
     protected $name = 'advertisement';
 

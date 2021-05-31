@@ -28,7 +28,7 @@ use think\Db;
  * Email:1457529125@qq.com
  * Date: 2018-01-09 20:09
  */
-class Goods extends Common
+class Goods extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

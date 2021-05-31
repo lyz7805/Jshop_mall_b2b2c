@@ -10,7 +10,7 @@ use think\Db;
  * @package app\common\model
  * @author keinx
  */
-class OrderItems extends Common
+class OrderItems extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = false;

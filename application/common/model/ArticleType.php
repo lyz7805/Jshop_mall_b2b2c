@@ -11,7 +11,7 @@ namespace app\common\model;
 
 use think\Validate;
 
-class ArticleType extends Common
+class ArticleType extends BaseB2b2c
 {
     const TOP_CLASS_PARENT_ID = 0;          //顶级分类父类ID
 

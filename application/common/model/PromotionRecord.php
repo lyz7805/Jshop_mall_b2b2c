@@ -6,7 +6,7 @@ use think\Validate;
 use think\Model;
 
 //活动订单记录，目前主要记录团购秒杀
-class PromotionRecord extends Common
+class PromotionRecord extends BaseB2b2c
 {
 
     protected $autoWriteTimestamp = true;

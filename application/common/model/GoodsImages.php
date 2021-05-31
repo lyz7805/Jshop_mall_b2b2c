@@ -18,7 +18,7 @@ namespace app\common\model;
  * Email:1457529125@qq.com
  * Date: 2018-01-09 20:09
  */
-class GoodsImages extends Common
+class GoodsImages extends BaseB2b2c
 {
 
     /**

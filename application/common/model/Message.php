@@ -7,7 +7,7 @@ namespace app\common\model;
  * @package app\common\model
  * @author sin
  */
-class Message extends Common
+class Message extends BaseB2b2c
 {
     const STATUS_UNREAD = 1;        //未读
     const STATUS_READED= 2;        //已读

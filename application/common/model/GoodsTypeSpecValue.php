@@ -17,7 +17,7 @@ namespace app\common\model;
  * Email:1457529125@qq.com
  * Date: 2018-01-09 20:10
  */
-class GoodsTypeSpecValue extends Common
+class GoodsTypeSpecValue extends BaseB2b2c
 {
 
     public function addAll($data = [ ])

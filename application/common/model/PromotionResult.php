@@ -2,7 +2,7 @@
 
 namespace app\common\model;
 
-class PromotionResult extends Common
+class PromotionResult extends BaseB2b2c
 {
     public $code = [
 

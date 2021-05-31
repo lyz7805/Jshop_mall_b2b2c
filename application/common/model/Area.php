@@ -19,7 +19,7 @@ use think\Validate;
  * @package app\common\model
  * @author keinx
  */
-class Area extends Common
+class Area extends BaseAdmin
 {
 
     const PROVINCE_DEPTH = 1;

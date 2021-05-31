@@ -13,7 +13,7 @@ namespace app\common\model;
  * Class ImagesGroup
  * @package app\common\model
  */
-class ImagesGroup extends Common
+class ImagesGroup extends BaseB2b2c
 {
 
 }

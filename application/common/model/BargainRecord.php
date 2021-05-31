@@ -6,7 +6,7 @@ use think\Validate;
 use think\Model;
 
 //砍价活动订单表
-class BargainRecord extends Common
+class BargainRecord extends BaseB2b2c
 {
 
     protected $autoWriteTimestamp = true;

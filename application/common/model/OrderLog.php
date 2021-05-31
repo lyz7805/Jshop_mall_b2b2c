@@ -6,7 +6,7 @@ namespace app\common\model;
  * Class OrderLog
  * @package app\common\model
  */
-class OrderLog extends Common
+class OrderLog extends BaseB2b2c
 {
     const LOG_TYPE_CREATE = 1; //订单创建
     const LOG_TYPE_PAY = 2; //订单支付

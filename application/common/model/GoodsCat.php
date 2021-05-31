@@ -16,7 +16,7 @@ namespace app\common\model;
  * @package app\common\model
  * @author keinx
  */
-class GoodsCat extends Common
+class GoodsCat extends BaseB2b2c
 {
     //const PLATFORM_ID = 0;                  //平台ID
     const TOP_CLASS_PARENT_ID = 0;          //顶级分类父类ID

@@ -3,7 +3,7 @@
 namespace app\common\model;
 
 
-class Setting extends Common
+class Setting extends BaseB2b2c
 {
     public $skeys = [
         'shop_name' => [

@@ -3,7 +3,7 @@ namespace app\common\model;
 
 use think\facade\Log;
 
-class OperationLog extends Common
+class OperationLog extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

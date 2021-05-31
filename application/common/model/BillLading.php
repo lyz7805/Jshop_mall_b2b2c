@@ -7,7 +7,7 @@ use think\model\concern\SoftDelete;
  * Class BillLading
  * @package app\common\model
  */
-class BillLading extends Common
+class BillLading extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

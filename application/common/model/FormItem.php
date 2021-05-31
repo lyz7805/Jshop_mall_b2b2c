@@ -8,7 +8,8 @@
 // +----------------------------------------------------------------------
 namespace app\common\model;
 
-class FormItem extends common{
+class FormItem extends BaseB2b2c
+{
 
     const REQUIRED_YES = 1;//必填
     const REQUIRED_NO = 2;//不是必填

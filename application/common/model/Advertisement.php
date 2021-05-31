@@ -11,7 +11,7 @@ namespace app\common\model;
 use app\common\model\AdvertPosition;
 use think\Validate;
 
-class Advertisement extends Common
+class Advertisement extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

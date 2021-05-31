@@ -18,7 +18,7 @@ use think\Db;
  * @package app\common\model
  * @author keinx
  */
-class Cart extends Common
+class Cart extends BaseB2b2c
 {
     const TYPE_COMMON = 1;      //普通模式          //这些都是系统内置的type类型，如果二开新增购物车类型的话，建议从二位数开始
     const TYPE_PINTUAN = 2;      //拼团模式

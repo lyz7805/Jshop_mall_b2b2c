@@ -3,7 +3,7 @@
 namespace app\common\model;
 
 
-class Sms extends Common
+class Sms extends BaseAdmin
 {
 
     const STATUS_UNUSED = 1;        //状态 未使用

@@ -5,7 +5,7 @@ namespace app\common\model;
 use think\Validate;
 use think\Model;
 
-class Bargain extends Common
+class Bargain extends BaseB2b2c
 {
 
     //时间自动存储

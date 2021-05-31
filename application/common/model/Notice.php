@@ -12,7 +12,7 @@ namespace app\common\model;
 use think\model\concern\SoftDelete;
 use think\Validate;
 
-class Notice extends Common
+class Notice extends BaseB2b2c
 {
     use SoftDelete;
     protected $deleteTime   = 'isdel';

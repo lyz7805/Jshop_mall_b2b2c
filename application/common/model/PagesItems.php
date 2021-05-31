@@ -11,7 +11,7 @@ namespace app\common\model;
 
 use think\Db;
 
-class PagesItems extends Common
+class PagesItems extends BaseB2b2c
 {
 
     /**

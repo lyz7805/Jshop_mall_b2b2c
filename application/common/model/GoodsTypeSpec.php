@@ -19,7 +19,7 @@ use app\common\model\GoodsTypeSpecValue;
  * Email:1457529125@qq.com
  * Date: 2018-01-09 20:10
  */
-class GoodsTypeSpec extends Common
+class GoodsTypeSpec extends BaseB2b2c
 {
 
     public function getSpecValue()

@@ -6,7 +6,7 @@ use think\Validate;
 use think\Db;
 use think\model\concern\SoftDelete;
 
-class BillAftersales extends Common
+class BillAftersales extends BaseB2b2c
 {
     protected $pk = 'aftersales_id';
 

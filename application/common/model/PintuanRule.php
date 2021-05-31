@@ -5,7 +5,8 @@ namespace app\common\model;
 use think\Validate;
 use think\Model;
 
-class PintuanRule extends Common{
+class PintuanRule extends BaseB2b2c
+{
 
 
     //时间自动存储

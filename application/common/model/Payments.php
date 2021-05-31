@@ -1,7 +1,7 @@
 <?php
 namespace app\common\model;
 
-class Payments extends Common
+class Payments extends BaseAdmin
 {
 
     const PAYMENT_STATUS_YES = 1;      //启用

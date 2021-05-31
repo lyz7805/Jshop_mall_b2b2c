@@ -7,7 +7,7 @@ use think\Validate;
  * Class Store
  * @package app\common\model
  */
-class Store extends Common
+class Store extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

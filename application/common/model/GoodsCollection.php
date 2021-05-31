@@ -8,7 +8,7 @@ namespace app\common\model;
  * @package app\common\model
  *
  */
-class GoodsCollection extends Common
+class GoodsCollection extends BaseB2b2c
 {
 
     protected $autoWriteTimestamp = true;

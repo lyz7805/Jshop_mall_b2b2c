@@ -18,7 +18,7 @@ use think\facade\Log;
  * @package app\common\model
  * @author keinx
  */
-class Addons extends Common
+class Addons extends BaseAdmin
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

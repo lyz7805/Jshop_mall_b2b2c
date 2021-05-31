@@ -10,7 +10,7 @@ namespace app\common\model;
 
 use think\Validate;
 
-class AdvertPosition extends Common
+class AdvertPosition extends BaseAdmin
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

@@ -9,7 +9,7 @@ use think\Db;
  * @package app\common\model
  * @author keinx
  */
-class Balance extends Common
+class Balance extends BaseAdmin
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

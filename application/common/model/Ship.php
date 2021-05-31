@@ -19,7 +19,7 @@ use app\common\model\Logistics;
  * @package app\common\model
  * @author keinx
  */
-class Ship extends Common
+class Ship extends BaseB2b2c
 {
 
     const HAS_COD_NO = 1;//不是货到付款

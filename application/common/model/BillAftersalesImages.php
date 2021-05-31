@@ -1,7 +1,7 @@
 <?php
 namespace app\common\model;
 
-class BillAftersalesImages extends Common
+class BillAftersalesImages extends BaseB2b2c
 {
 
 }

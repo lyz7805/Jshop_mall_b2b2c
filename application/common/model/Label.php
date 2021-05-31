@@ -7,7 +7,8 @@
 // | Author: mark <jima@jihainet.com>
 // +----------------------------------------------------------------------
 namespace app\common\model;
-class Label extends Common
+
+class Label extends BaseB2b2c
 {
 
     public $default_label = [

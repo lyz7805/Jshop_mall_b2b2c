@@ -10,7 +10,7 @@ namespace app\common\model;
 
 use think\Validate;
 
-class CarouselSeat extends Common
+class CarouselSeat extends BaseAdmin
 {
     protected $name = 'advert_position';
 

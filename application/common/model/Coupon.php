@@ -9,7 +9,7 @@
 namespace app\common\model;
 use app\common\model\Promotion;
 
-class Coupon extends Common
+class Coupon extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

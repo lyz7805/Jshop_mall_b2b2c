@@ -3,7 +3,7 @@ namespace app\common\model;
 
 use think\Db;
 
-class BillRefund extends Common
+class BillRefund extends BaseB2b2c
 {
 
     protected $pk = 'refund_id';

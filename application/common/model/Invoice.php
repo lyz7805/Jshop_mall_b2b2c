@@ -13,7 +13,7 @@ namespace app\common\model;
  * Class Invoice
  * @package app\common\model
  */
-class Invoice extends Common
+class Invoice extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

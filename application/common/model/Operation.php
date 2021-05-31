@@ -3,7 +3,7 @@ namespace app\common\model;
 
 use think\facade\Hook;
 
-class Operation extends Common
+class Operation extends BaseAdmin
 {
     const MENU_START = 1;       //起始节点
     const MENU_MANAGE = 2;      //管理平台起始菜单id

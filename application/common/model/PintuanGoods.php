@@ -5,7 +5,7 @@ namespace app\common\model;
 use app\common\model\Common;
 use app\common\model\Products;
 
-class PintuanGoods extends Common
+class PintuanGoods extends BaseB2b2c
 {
 
 

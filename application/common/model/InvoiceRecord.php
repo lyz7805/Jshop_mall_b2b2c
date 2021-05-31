@@ -6,7 +6,7 @@ namespace app\common\model;
  * Class InvoiceRecord
  * @package app\common\model
  */
-class InvoiceRecord extends Common
+class InvoiceRecord extends BaseB2b2c
 {
     /**
      * 记录企业发票信息

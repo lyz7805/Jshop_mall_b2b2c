@@ -14,7 +14,7 @@ namespace app\common\model;
  * @package app\common\model
  * @author keinx
  */
-class BillDeliveryItems extends Common
+class BillDeliveryItems extends BaseB2b2c
 {
 
 }

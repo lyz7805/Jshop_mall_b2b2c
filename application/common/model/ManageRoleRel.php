@@ -5,7 +5,7 @@
 
 namespace app\common\model;
 
-class ManageRoleRel extends Common
+class ManageRoleRel extends BaseB2b2c
 {
 
 }

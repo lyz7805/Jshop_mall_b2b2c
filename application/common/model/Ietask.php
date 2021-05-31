@@ -14,7 +14,7 @@ namespace app\common\model;
  * @package app\common\model
  * @author keinx
  */
-class Ietask extends Common
+class Ietask extends BaseB2b2c
 {
     protected $autoWriteTimestamp = true;
     protected $createTime = 'ctime';

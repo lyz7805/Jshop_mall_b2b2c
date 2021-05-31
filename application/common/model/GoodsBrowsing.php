@@ -11,7 +11,7 @@ namespace app\common\model;
 
 use think\model\concern\SoftDelete;
 
-class GoodsBrowsing extends Common
+class GoodsBrowsing extends BaseB2b2c
 {
     use SoftDelete;
     protected $deleteTime = 'isdel';

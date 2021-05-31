@@ -9,7 +9,7 @@
 namespace app\common\model;
 use think\Db;
 
-class GoodsGrade extends Common
+class GoodsGrade extends BaseB2b2c
 {
     /***
      * 获取会员等级优惠价

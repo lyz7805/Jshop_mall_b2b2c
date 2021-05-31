@@ -7,7 +7,7 @@ namespace app\common\model;
  * Class BillDeliveryOrderRel
  * @package app\common\model
  */
-class BillDeliveryOrderRel extends Common
+class BillDeliveryOrderRel extends BaseB2b2c
 {
     /**
      * 获取订单号列表

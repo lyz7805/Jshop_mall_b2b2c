@@ -2,7 +2,7 @@
 
 namespace app\common\model;
 
-class PromotionCondition extends Common
+class PromotionCondition extends BaseB2b2c
 {
     public $code = [
         'GOODS_ALL' => [

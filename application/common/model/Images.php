@@ -7,7 +7,8 @@
 // | Author: mark <jima@jihainet.com>
 // +----------------------------------------------------------------------
 namespace app\common\model;
-class Images extends Common
+
+class Images extends BaseB2b2c
 {
 
     /**

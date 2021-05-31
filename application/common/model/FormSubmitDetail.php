@@ -8,7 +8,8 @@
 // +----------------------------------------------------------------------
 namespace app\common\model;
 
-class FormSubmitDetail extends common{
+class FormSubmitDetail extends BaseB2b2c
+{
 
     public function add($data){
         return $this->save($data);

@@ -5,7 +5,7 @@
 
 namespace app\common\model;
 
-class ManageRoleOperationRel extends Common
+class ManageRoleOperationRel extends BaseB2b2c
 {
 
     public function savePerm($role_id,$operations)

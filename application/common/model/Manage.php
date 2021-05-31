@@ -4,7 +4,7 @@ namespace app\common\model;
 use think\model\concern\SoftDelete;
 use think\Validate;
 
-class Manage extends Common
+class Manage extends BaseB2b2c
 {
 
     const TYPE_SUPER_ID = 13;            //超级管理员 id

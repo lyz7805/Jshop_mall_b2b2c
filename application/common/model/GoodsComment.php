@@ -8,7 +8,7 @@ use think\Db;
  * Class GoodsComment
  * @package app\common\model
  */
-class GoodsComment extends Common
+class GoodsComment extends BaseB2b2c
 {
     const DISPLAY_SHOW = 1;
     const DISPLAY_HIDE = 2;
