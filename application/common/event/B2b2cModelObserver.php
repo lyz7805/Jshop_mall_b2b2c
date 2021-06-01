@@ -16,8 +16,9 @@ class B2b2cModelObserver
     protected static $shop_id;
 
     public function __construct() {
-        $this->shop_id = get_shop_id();
+        self::$shop_id = get_shop_id();
     }
+
     /**
      * 注册模型before_insert事件
      *
