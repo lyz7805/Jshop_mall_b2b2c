@@ -10,6 +10,7 @@
 namespace app\manage\controller;
 
 use app\common\controller\Manage as ManageController;
+use app\common\model\ManageLog;
 use app\common\model\ManageRole;
 use app\common\model\Manage as ManageModel;
 use app\common\model\ManageRoleRel;
@@ -208,50 +209,9 @@ class Administrator extends ManageController
     }
 
 
-    /**
-     * 获取查询授权信息
-     * @return array
-     */
-    public function getVersion()
+    public function manageLogList()
     {
-        $return  =  [
-            'msg' => error_code(10027, true),
-            'status' => false,
-            'data' => []
-        ];
-        $product = config('jshop.product');
-        $version = config('jshop.version');
-        $url     = config('jshop.authorization_url') . '/b2c/Authorization/verification';
-        $domain  = $_SERVER['SERVER_NAME'];
-        $curl    = new Curl();
-        $params  = [
-            'domain'  => $domain,
-            'product' => $product,
-            'version' => $version,
-            'time'    => time(),
-        ];
-        $data    = $curl::post($url, $params);
-        $data    = json_decode($data, true);
-        if ($data['status']) {
-            $return['data']['is_authorization'] = $data['data']['is_authorization'];
-            $return['data']['version']          = $version;
-            $return['data']['product']          = $product;
-            $return['data']['changeLog']        = $data['data']['changeLog'];
-            $return['msg']                      = '授权查询成功';
-            $return['status']                   = true;
-            return $return;
-        }
-        //未授权
-        $return['data']['product']          = $product;
-        $return['data']['version']          = $version;
-        $return['data']['changeLog']        = '未查询到授权信息';
-        $return['data']['is_authorization'] = false;
-        return $return;
-    }
-
-    public function userLogList()
-    {
-        $userLogModel = new UserLog();
-        return $userLogModel->getList(0, $userLogModel::MANAGE_TYPE);
+        $manageLogModel = new ManageLog();
+        return $manageLogModel->getList(0);
     }
 }

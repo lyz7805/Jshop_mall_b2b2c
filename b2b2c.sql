@@ -212,3 +212,18 @@ UPDATE `jshop_store` SET `shop_id` = 1 WHERE `shop_id` = 0;
 
 UPDATE `jshop_user_grade` SET `shop_id` = 1 WHERE `shop_id` = 0;
 UPDATE `jshop_user_log` SET `shop_id` = 1 WHERE `shop_id` = 0;
+
+-- 创建mange_log
+CREATE TABLE `jshop_manage_log` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `shop_id` int(10) NOT NULL COMMENT '商铺ID 关联shop.id',
+  `user_id` int(11) unsigned NOT NULL COMMENT '用户id',
+  `state` tinyint(1) DEFAULT NULL COMMENT '登录 1  退出2,3注册',
+  `ctime` bigint(12) unsigned DEFAULT NULL COMMENT '时间',
+  `params` varchar(200) DEFAULT '' COMMENT '参数',
+  `ip` varchar(15) DEFAULT NULL COMMENT 'ip地址',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='管理员登录日志';
+
+-- 更新操作权限
+UPDATE jshop_operation SET code = 'managelog' WHERE code = 'userlog' AND type = 'a';

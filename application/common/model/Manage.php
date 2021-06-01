@@ -1,4 +1,5 @@
 <?php
+
 namespace app\common\model;
 
 use think\model\concern\SoftDelete;
@@ -154,7 +155,7 @@ class Manage extends BaseB2b2c
             'msg'    => ''
         );
         if (!isset($data['mobile']) || !isset($data['password'])) {
-//            $result['msg'] = '请输入手机号码或者密码';
+            //            $result['msg'] = '请输入手机号码或者密码';
             return error_code(11031);
         }
 
@@ -195,7 +196,6 @@ class Manage extends BaseB2b2c
             return error_code(11033);
         }
         return $result;
-
     }
 
     /**
@@ -234,8 +234,6 @@ class Manage extends BaseB2b2c
             return error_code(10024);
         }
         return $result;
-
-
     }
 
     private function setSession($userInfo)
@@ -247,8 +245,11 @@ class Manage extends BaseB2b2c
         ];
         session('manage', $userInfo->toArray());
 
-        $userLogModel = new UserLog();//添加登录日志
-        $userLogModel->setLog($userInfo->id, $userLogModel::USER_LOGIN,[],$userLogModel::MANAGE_TYPE);
+        // 管理员已绑定商铺，可直接从用户信息获取
+        session('shop_id', $userInfo->shop_id);
+
+        $logModel = new ManageLog(); //添加登录日志
+        $logModel->setLog($userInfo->id, $logModel::USER_LOGIN, []);
 
         $result['status'] = true;
         return $result;
@@ -264,5 +265,4 @@ class Manage extends BaseB2b2c
 
         return md5(md5($password) . $ctime);
     }
-
 }

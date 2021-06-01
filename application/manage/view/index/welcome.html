@@ -2,7 +2,7 @@
 <div class="layadmin-tabsbody-item layui-show">
 
     <div class="layui-row layui-col-space15">
-            <div class="layui-col-md8">
+            <div class="layui-col-md12">
                 <div class="layui-row layui-col-space15">
                     <div class="layui-col-md6">
                         <div class="layui-card">
@@ -24,12 +24,12 @@
                                                 <cite>订单</cite>
                                             </a>
                                         </li>
-                                        <li class="layui-col-xs3">
+                                        <!-- <li class="layui-col-xs3">
                                             <a href="javascript:;" lay-href="{:url('user/index')}">
                                                 <i class="iconfont icon-user"></i>
                                                 <cite>会员</cite>
                                             </a>
-                                        </li>
+                                        </li> -->
                                         <li class="layui-col-xs3">
                                             <a href="javascript:;" lay-href="{:url('notice/index')}">
                                                 <i class="iconfont icon-gonggao"></i>
@@ -104,17 +104,6 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-col-md4">
-                <div class="layui-card">
-                    <div class="layui-card-header">
-                        <i class="iconfont icon-gonggao"></i>版本信息
-                    </div>
-
-                    <div class="layui-card-body layui-text" id="view">
-
-                    </div>
-                </div>
-            </div>
             <div class="layui-col-md6">
                 <div class="layui-card">
                     <div class="layui-card-header">
@@ -144,7 +133,7 @@
                 <div class="layui-card">
                     <div class="layui-card-header loading-more">
                         <div><i class="iconfont icon-dingdan1"></i>最近登录</div>
-                        <a href="{:url('OperationLog/userLog')}">查看更多>></a>
+                        <a href="{:url('OperationLog/manageLog')}">查看更多>></a>
                     </div>
 
                     <div class="layui-card-body" id="loginLog"></div>
@@ -201,47 +190,6 @@
             {{# } }}
         </script>
 
-            <script id="version" type="text/html">
-                <table class="layui-table">
-                    <colgroup>
-                        <col width="100">
-                        <col>
-                    </colgroup>
-                    <tbody>
-                        <tr>
-                            <td>产品名称</td>
-                            <td>
-                                {{ d.product }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>当前版本</td>
-                            <td>
-                                {{ d.version }} <a href="https://gitee.com/hnjihai/jshop_mall" target="_blank" style="padding-left: 15px;">更新日志</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>是否授权</td>
-                            <td>
-                                {{# if(d.is_authorization ==true){ }}
-                                <a href="https://www.jihainet.com/" style="color: green;" target="_blank">已授权</a> {{# }else{ }}
-                                <a href="https://www.jihainet.com/" style="color: red;" target="_blank">未授权</a> {{# } }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>产品授权</td>
-                            <td style="padding-bottom: 0;">
-                                <div class="layui-btn-container">
-                                    {{# if(d.is_authorization ==true){ }}
-                                    <a href="https://www.jihainet.com" target="_blank" class="layui-btn  layui-btn-bg">下载更新</a> {{# }else{ }}
-                                    <a href="https://www.jihainet.com/" target="_blank" class="layui-btn layui-btn-danger  layui-btn-bg">获取授权</a>
-                                    <a href="https://www.jihainet.com/" target="_blank" class="layui-btn  layui-btn-bg">立即下载</a> {{# } }}
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </script>
 
 
             <script id="oplog" type="text/html">
@@ -276,17 +224,10 @@
                     var $ = layui.$,
                         laytpl = layui.laytpl,
                         layer = layui.layer;
-                    $.get("{:url('manage/administrator/getVersion')}", function(data) {
-                        var getTpl = version.innerHTML,
-                            view = document.getElementById('view');
-                        laytpl(getTpl).render(data.data, function(html) {
-                            view.innerHTML = html;
-                        });
-                    });
 
 
                     //获取历史登录记录
-                    $.get("{:url('manage/administrator/userLogList',array('state'=>1))}", function(data) {
+                    $.get("{:url('manage/administrator/manageLogList',array('state'=>1))}", function(data) {
                         var getTpl = log.innerHTML,
                             view = document.getElementById('loginLog');
                         laytpl(getTpl).render(data.data, function(html) {
