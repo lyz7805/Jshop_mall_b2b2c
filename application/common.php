@@ -21,6 +21,7 @@ use app\common\model\Operation;
 use app\common\model\Area;
 use app\common\model\Payments;
 use app\common\model\Logistics;
+use app\common\model\Shop;
 use org\Wx;
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
@@ -177,7 +178,13 @@ function get_file_extension($filename)
 function get_hash_dir($name = 'default')
 {
     $ident = sha1(uniqid('', true) . $name . microtime());
-    $dir   = '/' . $ident{0} . $ident{1} . '/' . $ident{2} . $ident{3} . '/' . $ident{4} . $ident{5} . '/';
+    $dir   = '/' . $ident{
+        0} . $ident{
+        1} . '/' . $ident{
+        2} . $ident{
+        3} . '/' . $ident{
+        4} . $ident{
+        5} . '/';
     return $dir;
 }
 
@@ -218,9 +225,9 @@ function mkdirs($dir, $mode = 0777)
 function _sImage($image_id = '', $type = 's')
 {
     if (!$image_id) {
-        $image_id = getSetting('shop_default_image');//系统默认图片
+        $image_id = getSetting('shop_default_image'); //系统默认图片
         if (!$image_id) {
-            return config('jshop.default_image');//默认图片
+            return config('jshop.default_image'); //默认图片
         }
     }
 
@@ -239,7 +246,7 @@ function _sImage($image_id = '', $type = 's')
             return request()->domain() . str_replace("\\", "/", $image['url']);
         }
     } else {
-        return config('jshop.default_image');//默认图片
+        return config('jshop.default_image'); //默认图片
     }
 }
 
@@ -292,7 +299,6 @@ function redirect_url($url = "")
         } else {
             $str = '/';
         }
-
     }
     return $str;
 }
@@ -317,10 +323,10 @@ function get_user_info($user_id, $field = 'mobile')
                 $nickname = format_mobile($user['mobile']);
             }
             return $nickname;
-        }elseif($field == 'showname'){
+        } elseif ($field == 'showname') {
             $str = $user['mobile'];
-            if($user['username']){
-                $str .= "(".$user['username'].")";
+            if ($user['username']) {
+                $str .= "(" . $user['username'] . ")";
             }
             return $str;
         } else {
@@ -469,15 +475,15 @@ function error_code($code, $mini = false)
     ];
     //有语言包就应用语言包
     $data = func_get_args();
-    array_splice($data,1,1);
+    array_splice($data, 1, 1);
     $msg = jshop_l(...$data);
-    if($msg == ""){
+    if ($msg == "") {
         if (config('?error.' . $code)) {
             $msg = config('error.' . $code);
             $count = count($data);
             $count--;
-            for($i=1;$i<=$count;$i++){
-                $msg = str_replace("{JSHOP".$i."}",$data[$i],$msg);
+            for ($i = 1; $i <= $count; $i++) {
+                $msg = str_replace("{JSHOP" . $i . "}", $data[$i], $msg);
             }
         }
     }
@@ -489,32 +495,34 @@ function error_code($code, $mini = false)
     }
 }
 //语言包，前端和数据
-function jshop_l($code){
+function jshop_l($code)
+{
     $data = func_get_args();
     $str = "";
-    if (!config('?language_'.getSetting('language').'.' . $code)) {
+    if (!config('?language_' . getSetting('language') . '.' . $code)) {
         return $str;
     }
-    $str = config('language_'.getSetting('language').'.' . $code);
+    $str = config('language_' . getSetting('language') . '.' . $code);
     $count = count($data);
     $count--;
-    for($i=1;$i<=$count;$i++){
-        $str = str_replace("{JSHOP".$i."}",$data[$i],$str);
+    for ($i = 1; $i <= $count; $i++) {
+        $str = str_replace("{JSHOP" . $i . "}", $data[$i], $str);
     }
     return $str;
 }
 //后端语言包,所有的后端的显示放到这里
-function jshop_m_l($code){
+function jshop_m_l($code)
+{
     $data = func_get_args();
     $str = "";
-    if (!config('?language_'.config('jshop.language').'.' . $code)) {
+    if (!config('?language_' . config('jshop.language') . '.' . $code)) {
         return $str;
     }
-    $str = config('language_'.config('jshop.language').'.' . $code);
+    $str = config('language_' . config('jshop.language') . '.' . $code);
     $count = count($data);
     $count--;
-    for($i=1;$i<=$count;$i++){
-        $str = str_replace("{JSHOP".$i."}",$data[$i],$str);
+    for ($i = 1; $i <= $count; $i++) {
+        $str = str_replace("{JSHOP" . $i . "}", $data[$i], $str);
     }
     return $str;
 }
@@ -611,7 +619,7 @@ function getLabelStyle($style)
         case 'blue':
             $label_style = "layui-bg-blue";
             break;
-        default :
+        default:
             $label_style = '';
     }
     return $label_style;
@@ -679,11 +687,11 @@ function getBool($value = '1')
  * @param bool|true $year
  * @return bool|string
  */
-function getTime($time = 0,$year=true)
+function getTime($time = 0, $year = true)
 {
-    if($year){
+    if ($year) {
         return date('Y-m-d H:i:s', $time);
-    }else{
+    } else {
         return date('m-d H:i:s', $time);
     }
 }
@@ -814,7 +822,7 @@ function isIntranet($url = '')
  * @param type $type 接口名称 ( Card|Custom|Device|Extend|Media|Oauth|Pay|Receive|Script|User )
  * @return \Wehcat\WechatReceive 返回接口对接
  */
-function & load_wechat($type = '')
+function &load_wechat($type = '')
 {
 
     static $wechat = array();
@@ -875,7 +883,7 @@ function get_lately_days($day, $data)
 function sendMessage($user_id, $code, $params)
 {
     $messageCenter = new \app\common\model\MessageCenter();
-    hook("adminmessage",array('user_id'=>$user_id,"code"=>$code,"params"=>$params));
+    hook("adminmessage", array('user_id' => $user_id, "code" => $code, "params" => $params));
     return $messageCenter->sendMessage($user_id, $code, $params);
 }
 
@@ -998,7 +1006,6 @@ function getAddonsConfigVal($name, $val)
     } else {
         return "";
     }
-
 }
 
 
@@ -1102,7 +1109,7 @@ function checkAddons($hookname = '')
  * @throws \think\db\exception\ModelNotFoundException
  * @throws \think\exception\DbException
  */
-function isInGroup($gid = 0, &$promotion_id = 0,&$condition = [])
+function isInGroup($gid = 0, &$promotion_id = 0, &$condition = [])
 {
     if (!$gid) {
         return false;
@@ -1112,8 +1119,8 @@ function isInGroup($gid = 0, &$promotion_id = 0,&$condition = [])
 
     $where[]   = ['p.status', 'eq', $promotion::STATUS_OPEN];
 
-    if($promotion_id){
-        $where[]   = ['p.id', 'eq', $promotion_id];//团购秒杀id
+    if ($promotion_id) {
+        $where[]   = ['p.id', 'eq', $promotion_id]; //团购秒杀id
     }
     /*
     $where[]   = ['p.stime', 'lt', time()];
@@ -1247,7 +1254,7 @@ function isEmail($email)
  */
 function convertString($value = '')
 {
-    return  '="'.$value.'"';
+    return  '="' . $value . '"';
 }
 
 
@@ -1257,7 +1264,7 @@ function convertString($value = '')
 function mobile_string($user_id = 0)
 {
     $mobile = get_user_info($user_id);
-    return '="'.$mobile.'"';
+    return '="' . $mobile . '"';
 }
 
 
@@ -1267,7 +1274,7 @@ function mobile_string($user_id = 0)
 function nickname_string($user_id = 0)
 {
     $nickname = get_user_info($user_id, 'nickname');
-    return '="'.$nickname.'"';
+    return '="' . $nickname . '"';
 }
 
 
@@ -1347,7 +1354,7 @@ function validateJshopToken()
             \think\facade\Cache::set($form . '_token', $new_token, 86400);   //1天过期
             $return = [
                 'data'   => '',
-                'msg'    => error_code(10082,true),
+                'msg'    => error_code(10082, true),
                 'status' => false,
                 'token'  => $new_token
             ];
@@ -1460,13 +1467,18 @@ function encrypt($txt)
     $nh1   = rand(0, 64);
     $nh2   = rand(0, 64);
     $nh3   = rand(0, 64);
-    $ch1   = $chars{$nh1};
-    $ch2   = $chars{$nh2};
-    $ch3   = $chars{$nh3};
+    $ch1   = $chars{
+        $nh1};
+    $ch2   = $chars{
+        $nh2};
+    $ch3   = $chars{
+        $nh3};
     $nhnum = $nh1 + $nh2 + $nh3;
     $knum  = 0;
     $i     = 0;
-    while (isset($key{$i})) $knum += ord($key{$i++});
+    while (isset($key{
+        $i})) $knum += ord($key{
+        $i++});
     $mdKey = substr(md5(md5(md5($key . $ch1) . $ch2 . $ikey) . $ch3), $nhnum % 8, $knum % 8 + 16);
     $txt   = base64_encode(time() . '_' . $txt);
     $txt   = str_replace(array('+', '/', '='), array('-', '_', '.'), $txt);
@@ -1477,8 +1489,11 @@ function encrypt($txt)
     $klen  = strlen($mdKey);
     for ($i = 0; $i < $tlen; $i++) {
         $k = $k == $klen ? 0 : $k;
-        $j = ($nhnum + strpos($chars, $txt{$i}) + ord($mdKey{$k++})) % 64;
-        $tmp .= $chars{$j};
+        $j = ($nhnum + strpos($chars, $txt{
+            $i}) + ord($mdKey{
+            $k++})) % 64;
+        $tmp .= $chars{
+            $j};
     }
     $tmplen = strlen($tmp);
     $tmp    = substr_replace($tmp, $ch3, $nh2 % ++$tmplen, 0);
@@ -1502,14 +1517,19 @@ function decrypt($txt, $ttl = 0)
     $knum  = 0;
     $i     = 0;
     $tlen  = @strlen($txt);
-    while (isset($key{$i})) $knum += ord($key{$i++});
-    $ch1   = @$txt{$knum % $tlen};
+    while (isset($key{
+        $i})) $knum += ord($key{
+        $i++});
+    $ch1   = @$txt{
+        $knum % $tlen};
     $nh1   = strpos($chars, $ch1);
     $txt   = @substr_replace($txt, '', $knum % $tlen--, 1);
-    $ch2   = @$txt{$nh1 % $tlen};
+    $ch2   = @$txt{
+        $nh1 % $tlen};
     $nh2   = @strpos($chars, $ch2);
     $txt   = @substr_replace($txt, '', $nh1 % $tlen--, 1);
-    $ch3   = @$txt{$nh2 % $tlen};
+    $ch3   = @$txt{
+        $nh2 % $tlen};
     $nh3   = @strpos($chars, $ch3);
     $txt   = @substr_replace($txt, '', $nh2 % $tlen--, 1);
     $nhnum = $nh1 + $nh2 + $nh3;
@@ -1521,9 +1541,12 @@ function decrypt($txt, $ttl = 0)
     $klen  = @strlen($mdKey);
     for ($i = 0; $i < $tlen; $i++) {
         $k = $k == $klen ? 0 : $k;
-        $j = strpos($chars, $txt{$i}) - $nhnum - ord($mdKey{$k++});
+        $j = strpos($chars, $txt{
+            $i}) - $nhnum - ord($mdKey{
+            $k++});
         while ($j < 0) $j += 64;
-        $tmp .= $chars{$j};
+        $tmp .= $chars{
+            $j};
     }
     $tmp = str_replace(array('-', '_', '.'), array('+', '/', '='), $tmp);
     $tmp = trim(base64_decode($tmp));
@@ -1815,16 +1838,15 @@ function imgSecCheck($img, $type = 1)
  * @param bool|true $subdir
  * @return bool
  */
-function del_dir_and_file($dirName,$subdir = true)
+function del_dir_and_file($dirName, $subdir = true)
 {
-    if(!is_dir($dirName)) return true;
+    if (!is_dir($dirName)) return true;
     if ($handle = opendir("$dirName")) {
         while (false !== ($item = readdir($handle))) {
             if ($item != "." && $item != "..") {
-                if (is_dir("$dirName/$item")){
+                if (is_dir("$dirName/$item")) {
                     del_dir_and_file("$dirName/$item", false);
-                }
-                else
+                } else
                     @unlink("$dirName/$item");
             }
         }
@@ -1884,4 +1906,40 @@ function get_shop_id()
 function is_super_admin()
 {
     return session('manage.username') == 'admin';
+}
+
+/**
+ * 缓存商铺列表
+ * 
+ * @param bool $refresh 是否强制刷新，默认否
+ */
+function cache_shop_list(bool $refresh = false)
+{
+    !defined('SHOP_LIST_WITH_ID_CACHE_KEY') && define('SHOP_LIST_WITH_ID_CACHE_KEY', config('b2b2c.shop_list_with_id_cache_key'));
+    !defined('SHOP_LIST_WITH_SECRET_ID_CACHE_KEY') && define('SHOP_LIST_WITH_SECRET_ID_CACHE_KEY', config('b2b2c.shop_list_with_secret_id_cache_key'));
+    !defined('SHOP_LIST_WITH_SUBDOMAIN_CACHE_KEY') && define('SHOP_LIST_WITH_SUBDOMAIN_CACHE_KEY', config('b2b2c.shop_list_with_subdomain_cache_key'));
+
+    if ($refresh) {
+        \think\facade\Cache::rm(SHOP_LIST_WITH_ID_CACHE_KEY, null);
+        \think\facade\Cache::rm(SHOP_LIST_WITH_SECRET_ID_CACHE_KEY, null);
+        \think\facade\Cache::rm(SHOP_LIST_WITH_SUBDOMAIN_CACHE_KEY, null);
+    }
+
+    if (!\think\facade\Cache::has(SHOP_LIST_WITH_ID_CACHE_KEY)) {
+        $shop = new Shop();
+        $list = $shop->where('status', Shop::STATUS_NORMAL)->column('*', 'id');
+        \think\facade\Cache::set(SHOP_LIST_WITH_ID_CACHE_KEY, $list, 0);
+    }
+
+    if (!\think\facade\Cache::has(SHOP_LIST_WITH_SECRET_ID_CACHE_KEY)) {
+        $shop = new Shop();
+        $list = $shop->where('status', Shop::STATUS_NORMAL)->column('*', 'secret_id');
+        \think\facade\Cache::set(SHOP_LIST_WITH_SECRET_ID_CACHE_KEY, $list, 0);
+    }
+
+    if (!\think\facade\Cache::has(SHOP_LIST_WITH_SUBDOMAIN_CACHE_KEY)) {
+        $shop = new Shop();
+        $list = $shop->where('status', Shop::STATUS_NORMAL)->where('subdomain', '<>', '')->column('*', 'subdomain');
+        \think\facade\Cache::set(SHOP_LIST_WITH_SUBDOMAIN_CACHE_KEY, $list, 0);
+    }
 }
