@@ -4,7 +4,7 @@
 namespace app\common\model;
 
 
-class UserGrade extends BaseB2b2c
+class UserGrade extends Common
 {
     const IS_DEF_YES = 1;
     const IS_DEF_NO = 2;

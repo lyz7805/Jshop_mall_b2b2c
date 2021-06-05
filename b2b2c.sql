@@ -113,6 +113,9 @@ ALTER TABLE `jshop_ship` ADD COLUMN `shop_id` int(10) NOT NULL COMMENT '商铺ID
 ALTER TABLE `jshop_store` ADD COLUMN `shop_id` int(10) NOT NULL COMMENT '商铺ID 关联shop.id' FIRST;
 
 ALTER TABLE `jshop_user_grade` ADD COLUMN `shop_id` int(10) NOT NULL COMMENT '商铺ID 关联shop.id' FIRST;
+// 用户等级取消店铺等级，改为商城用户等级
+// TODO 以后可考虑店铺会员等级之说
+ALTER TABLE `jshop_user_grade` DROP COLUMN `shop_id`;
 ALTER TABLE `jshop_user_log` ADD COLUMN `shop_id` int(10) NOT NULL COMMENT '商铺ID 关联shop.id' AFTER `id`;
 
 
