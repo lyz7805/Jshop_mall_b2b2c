@@ -1,0 +1,50 @@
+<div class="table-body">
+	<table id="typeTable" lay-filter="test"></table>
+</div>
+<script>
+    var table;
+    layui.use(['form', 'layedit', 'laydate','table'], function(){
+        var form = layui.form;
+        table = layui.table.render({
+            elem: '#typeTable',
+            height: 'full-99',
+            cellMinWidth: '80',
+            page: 'true',
+            limit:'20',
+            url: "{:url('GoodsTypeSpec/index')}?_ajax=1",
+            id: 'typeTable',
+            cols: [[
+				{field:'id', width:90, title:'ID', align: 'center'},
+				{field:'shop_id', width:90, title:'店铺ID', align: 'center'},
+                {field: 'name', width: 150, title: '名称', align: 'center'},
+                {field: 'spec_value', minWidth: 240, title: '属性值',templet:function(data){
+                    var html="";
+                    if(data.spec_value.length>0){
+                        $.each(data.spec_value,function(i,j){
+                            html = html + "|"+ j.value;
+                        });
+                        html=html.substr(1);
+                        return html;
+                    }else{
+                        return '无属性值';
+                    }
+                }, align: 'center'},
+                {field: 'sort', width: 100, title: '排序', align: 'center'}
+            ]],
+        });
+
+        layui.form.on('submit(*)', function(data){
+            layui.table.reload('userTable', {
+                where: data.field
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    });
+
+
+
+</script>

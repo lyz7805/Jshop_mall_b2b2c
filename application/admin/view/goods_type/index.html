@@ -1,0 +1,77 @@
+<style>
+    .layui-btn .layui-icon{
+        margin-right: 0;
+    }
+    .layui-layer-page .layui-layer-content{
+        overflow: initial;
+    }
+</style>
+<div class="table-body">
+	<table id="typeTable" lay-filter="test"></table>
+</div>
+<script>
+    var table;
+    layui.use(['form', 'layedit', 'laydate','table'], function(){
+        var form = layui.form;
+
+        table = layui.table.render({
+            elem: '#typeTable',
+            height: 'full-99',
+            cellMinWidth: '80',
+            page: 'true',
+            limit:'20',
+            url: "{:url('GoodsType/index')}?_ajax=1",
+            id:'typeTable',
+            cols: [[
+				{field:'id', width:90, title:'ID', align: 'center'},
+				{field:'shop_id', width:90, title:'店铺ID', align: 'center'},
+                {field:'name', width:200,title:'名称', align: 'center'},
+                {field:'params', minWidth:200,title:'参数',templet:function (data) {
+                    if(typeof(data.params) == "undefined"||data.params.length==0){
+                        var html='';
+                        return html;
+                    }else{
+                        var html='';
+                        $.each(data.params,function(i,j){
+                            html = html + "|"+ j.name;
+                        });
+                        html=html.substr(1);
+                        return html;
+                    }
+                }, align: 'center'},
+                {field:'spec', minWidth:200,title:'属性',templet:function(data){
+                    if(typeof(data.spec) == "undefined"||data.spec.length==0){
+                        var html='';
+                        return html;
+                    }else{
+                        var html='';
+                        $.each(data.spec,function(i,j){
+                            html = html + "|"+ j.name;
+                        });
+                        html=html.substr(1);
+                        return html;
+                    }
+                }, align: 'center'},
+            ]]
+        });
+        layui.form.on('submit(*)', function(data){
+            layui.table.reload('userTable', {
+                where: data.field
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+
+        layui.table.on('tool(test)',function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var id = data.id;
+           
+        })
+    });
+
+</script>

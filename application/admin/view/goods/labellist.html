@@ -1,0 +1,42 @@
+
+<table id="label" lay-filter="label"></table>
+<script>
+    layui.use(['table','form','laydate'], function(){
+        var table = layui.table, form = layui.form, date = layui.laydate;
+        //第一个实例
+        table.render({
+            elem: '#label',
+            height: 'full-35',
+            url: '{:url("Goods/labellist")}', //数据接口
+            page: true,
+            even: true,
+
+            limit:'{:config("jshop.page_limit")}',
+            cols: [[ //表头
+                {field: 'id', title: 'ID',align:'center',width:100},
+                {field:'shop_id', width:90, title:'店铺ID', align: 'center'},
+                {field: 'name', title: '名称',align:'center'},
+                {field: 'style', title: '样式',align:'center'},
+            ]]
+        })
+
+        //search
+        date.render({
+            elem:'#date',
+            type: 'datetime',
+            range: '到', //或 range: '~' 来自定义分割字符
+            trigger: 'click' //自动弹出控件的事件，采用click弹出
+        });
+
+        form.on('submit(coupon-search)', function(data){
+            layui.table.reload('coupon', {
+                where: data.field
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    });
+</script>

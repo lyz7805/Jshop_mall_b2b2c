@@ -1,12 +1,10 @@
 <?php
 
-
 namespace app\common\model;
-
 
 use app\common\model\User as UserModel;
 
-class UserLog extends Common
+class AdminUserLog extends Common
 {
 
     const USER_LOGIN = 1;     //登录
@@ -14,8 +12,8 @@ class UserLog extends Common
     const USER_REG = 3;    //注册
     const USER_EDIT = 4;    //用户编辑信息
 
-    const USER_TYPE = 1;//用户类型，会员
-    const MANAGE_TYPE = 2;//用户类型，管理员
+    const USER_TYPE = 1; //用户类型，会员
+    const MANAGE_TYPE = 2; //用户类型，管理员
 
     //总后台的登陆记录
     public function getList($user_id = 0, $type = self::USER_TYPE, $limit = 10)
@@ -36,8 +34,8 @@ class UserLog extends Common
                 $data[$key]['username'] = isset($userInfo['mobile']) ? $userInfo['mobile'] : $userInfo['nickname'];
             } else {
                 $adminModel            = new Admin();
-                $manageInfo             = $adminModel->field('id,username,nickname,mobile')->where(['id' => $val['user_id']])->find();
-                $data[$key]['username'] = (isset($manageInfo['mobile'])&&$manageInfo['mobile']) ? $manageInfo['mobile'] : $manageInfo['username'];
+                $adminInfo             = $adminModel->field('id,username,nickname,mobile')->where(['id' => $val['user_id']])->find();
+                $data[$key]['username'] = (isset($adminInfo['mobile']) && $adminInfo['mobile']) ? $adminInfo['mobile'] : $adminInfo['username'];
             }
 
             $data[$key]['state'] = config('params.user')['state'][$val['state']];
@@ -49,21 +47,20 @@ class UserLog extends Common
     protected function tableWhere($post)
     {
         $where = [];
-        if(isset($post['user_id']) && $post['user_id'] != ""){
+        if (isset($post['user_id']) && $post['user_id'] != "") {
             $where[] = ['user_id', 'eq', $post['user_id']];
         }
         if (isset($post['id']) && $post['id'] != "") {
             $where[] = ['id', 'eq', $post['id']];
         }
-        if(isset($post['type']) && $post['type']){
-            $where[] = ['type','=', $post['type']];
+        if (isset($post['type']) && $post['type']) {
+            $where[] = ['type', '=', $post['type']];
         }
-        if(!empty($post['date']))
-        {
+        if (!empty($post['date'])) {
             $date_string = $post['date'];
             $date_array = explode(' 到 ', $date_string);
-            $sdate = strtotime($date_array[0].' 00:00:00');
-            $edate = strtotime($date_array[1].' 23:59:59');
+            $sdate = strtotime($date_array[0] . ' 00:00:00');
+            $edate = strtotime($date_array[1] . ' 23:59:59');
             $where[] = array('ctime', ['>=', $sdate], ['<', $edate], 'and');
         }
         $result['where'] = $where;
@@ -79,15 +76,15 @@ class UserLog extends Common
      */
     protected function tableFormat($list)
     {
-        foreach($list as $k => $v) {
+        foreach ($list as $k => $v) {
             if ($v['type'] == self::USER_TYPE) {
                 $userModel              = new UserModel();
                 $userInfo               = $userModel->field('id,username,nickname,mobile')->where(['id' => $v['user_id']])->find();
                 $list[$k]['username'] = isset($userInfo['mobile']) ? $userInfo['mobile'] : $userInfo['nickname'];
             } else {
                 $adminModel            = new Admin();
-                $manageInfo             = $adminModel->field('id,username,nickname,mobile')->where(['id' => $v['user_id']])->find();
-                $list[$k]['username'] = (isset($manageInfo['mobile'])&&$manageInfo['mobile']) ? $manageInfo['mobile'] : $manageInfo['username'];
+                $adminInfo             = $adminModel->field('id,username,nickname,mobile')->where(['id' => $v['user_id']])->find();
+                $list[$k]['username'] = (isset($adminInfo['mobile']) && $adminInfo['mobile']) ? $adminInfo['mobile'] : $adminInfo['username'];
             }
             $list[$k]['state'] = config('params.user')['state'][$v['state']];
             $list[$k]['ctime'] = getTime($v['ctime']);
@@ -119,7 +116,7 @@ class UserLog extends Common
     /**
      * 按天统计商户下面的数据
      */
-    public function statistics($day,$state)
+    public function statistics($day, $state)
     {
         $where['state'] = $state;
         $field = 'state,DATE_FORMAT(from_unixtime(ctime),"%Y-%m-%d") as day, count(*) as nums';
@@ -128,8 +125,6 @@ class UserLog extends Common
 
         $data = get_lately_days($day, $res);
         return ['day' => $data['day'], 'data' => $data['data']];
-
-
     }
 
     /**
@@ -222,8 +217,7 @@ class UserLog extends Common
             $re['count'] = count($list);
         }
         $userModel = new User();
-        foreach ($data as &$v)
-        {
+        foreach ($data as &$v) {
             $userInfo = $userModel->field('id,username,nickname,mobile')->where(['id' => $v['user_id']])->select();
             $v['username'] = $userInfo[0]['mobile'];
         }
@@ -250,25 +244,25 @@ class UserLog extends Common
 
 
 
-//    /**
-//     *  ip获取定位城市
-//     * User:tianyu
-//     * @param string $ip
-//     * @return bool|string
-//     */
-//    private function getCity( $ip = '' ){
-//
-///*        if( empty($ip) ) $ip = get_client_ip();
-//
-//        $url='http://ip.taobao.com/service/getIpInfo.php?ip='.$ip;
-//
-//        $result = file_get_contents($url);
-//
-//        $result = json_decode($result,true);
-//
-//        if($result['code']!==0 || !is_array($result['data'])) return false;
-//
-//        return $result['data']['region'].$result['data']['city'];*/
-//        return '';
-//    }
+    //    /**
+    //     *  ip获取定位城市
+    //     * User:tianyu
+    //     * @param string $ip
+    //     * @return bool|string
+    //     */
+    //    private function getCity( $ip = '' ){
+    //
+    ///*        if( empty($ip) ) $ip = get_client_ip();
+    //
+    //        $url='http://ip.taobao.com/service/getIpInfo.php?ip='.$ip;
+    //
+    //        $result = file_get_contents($url);
+    //
+    //        $result = json_decode($result,true);
+    //
+    //        if($result['code']!==0 || !is_array($result['data'])) return false;
+    //
+    //        return $result['data']['region'].$result['data']['city'];*/
+    //        return '';
+    //    }
 }

@@ -1,0 +1,61 @@
+<style>
+    .layui-btn .layui-icon {
+        margin-right: 0;
+    }
+    @media screen and (max-width: 500px) {
+        .layui-table-view {
+            width: 100% !important;
+            overflow-x: scroll !important;
+            left: 0 !important;
+        }
+        .layui-table-box {
+            width: 600px !important;
+            box-sizing: border-box;
+        }
+    }
+</style>
+
+<div class="table-body">
+    <table id="typeTable" lay-filter="test"></table>
+</div>
+
+<script>
+    var table;
+    layui.use(['form', 'layedit', 'laydate', 'table'], function () {
+        table = layui.table.render({
+            elem: '#typeTable',
+            height: 'full-99',
+            cellMinWidth: '80',
+            page: 'true',
+            limit: '20',
+            url: "{:url('GoodsParams/index')}?_ajax=1",
+            id: 'typeTable',
+            cols: [[
+                {field:'id', width:90, title:'ID', align: 'center'},
+                {field:'shop_id', width:90, title:'店铺ID', align: 'center'},
+                { field: 'name', width: 150, title: '名称', align: 'center'},
+                {
+                    field: 'type', width: 150, title: '类型', templet: function (data) {
+                        if (data.type == 'text') {
+                            return '文本框';
+                        } else if (data.type == 'radio') {
+                            return '单选框';
+                        } else if (data.type == 'checkbox') {
+                            return '复选框';
+                        }
+                    }, align: 'center'
+                },
+                { field: 'value', minWidth: 150, title: '参数', align: 'center' },
+            ]]
+        });
+        layui.form.on('submit(*)', function (data) {
+            layui.table.reload('userTable', {
+                where: data.field
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>

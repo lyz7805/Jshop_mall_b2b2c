@@ -777,9 +777,10 @@ class BillAftersales extends BaseB2b2c
     /**
      * @return int|string
      */
-    public function getCount()
+    public function getCount(bool $useGlobalScope = true)
     {
         $where[] = ['status', 'eq', self::STATUS_WAITAUDIT];
+        !$useGlobalScope && $this->useGlobalScope(false);
         $count   = $this->where($where)->count();
         return $count ? $count : 0;
     }

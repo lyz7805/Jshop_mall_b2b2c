@@ -17,5 +17,8 @@ return [
     'shop_list_with_secret_id_cache_key' => 'shop_list_with_secret_id',
 
     // 根据subdomain索引缓存商铺列表
-    'shop_list_with_subdomain_cache_key' => 'shop_list_with_subdomain'
+    'shop_list_with_subdomain_cache_key' => 'shop_list_with_subdomain',
+
+    //管理员登陆失败次数，如果超过这个次数，会显示图片验证码，防止暴力破解
+    'admin_login_fail_num' => 5,
 ];

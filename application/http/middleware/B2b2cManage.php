@@ -16,6 +16,11 @@ class B2b2cManage
 
     public function handle(Request $request, \Closure $next)
     {
+        $mdl = $request->module();
+        if ($mdl != 'manage') {
+            return $next($request);
+        }
+
         $ctl = $request->controller(true);
         $act = $request->action(true);
 

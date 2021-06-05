@@ -48,6 +48,8 @@ class B2b2cDomainManage
                             return $next($request);
                         }
 
+                        // TODO 其他访问模式，通过链接中标记商铺信息，比如京东链接https://mall.jd.com/index-1000004123.html
+
                         abort(404, '请求页面不存在');
                     } elseif (count($domain) == 1) { // 存在三级子域名，判断是否在配置的子域名中
                         !Cache::has(SHOP_LIST_WITH_SUBDOMAIN_CACHE_KEY) && abort(404, '请求页面不存在');
