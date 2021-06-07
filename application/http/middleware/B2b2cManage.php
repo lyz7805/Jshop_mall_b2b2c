@@ -9,7 +9,7 @@ use think\Request;
  */
 class B2b2cManage
 {
-    protected $expect = [
+    protected $exclude = [
         'common' => ['login', 'logout'],
         'shop' => '*',
     ];
@@ -25,7 +25,7 @@ class B2b2cManage
         $act = $request->action(true);
 
         // 在排除名单中直接返回
-        if (in_array($ctl, array_keys($this->expect)) && ($this->expect[$ctl] === '*' || in_array($act, $this->expect[$ctl]))) {
+        if (in_array($ctl, array_keys($this->exclude)) && ($this->exclude[$ctl] === '*' || in_array($act, $this->exclude[$ctl]))) {
             return $next($request);
         }
 
