@@ -45,6 +45,6 @@ class BaseB2b2c extends Common
      */
     protected function base($query)
     {
-        static::$shop_id && $query->where('shop_id', static::$shop_id);
+        static::$shop_id && $query->where($query->getTable() . '.shop_id', static::$shop_id);
     }
 }
