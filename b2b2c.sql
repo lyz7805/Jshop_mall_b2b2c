@@ -710,4 +710,10 @@ INSERT INTO `jshop_admin_operation` VALUES (604, 479, '微信小程序', 'wechat
 INSERT INTO `jshop_admin_operation` VALUES (605, 296, '申请售后', 'aftersales', 'a', 297, 2, 100);
 INSERT INTO `jshop_admin_operation` VALUES (606, 347, '填写退货单', 'reship', 'a', 348, 2, 100);
 
+-- 区分模块ID
+-- TODO 其实operation的设计思路是可以将多个模块，比如manage和admin合在一起的，这个以后可以再探讨
+UPDATE `jshop_admin_operation` SET `id` = 5, `name` = '平台管理后台' WHERE `id` = 2;
+UPDATE `jshop_admin_operation` SET `parent_id` = 5 WHERE `parent_id` = 2;
+UPDATE `jshop_admin_operation` SET `parent_menu_id` = 5 WHERE `parent_menu_id` = 2;
+
 SET FOREIGN_KEY_CHECKS = 1;

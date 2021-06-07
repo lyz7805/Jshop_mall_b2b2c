@@ -6,7 +6,11 @@ use think\facade\Hook;
 class AdminOperation extends BaseAdmin
 {
     const MENU_START = 1;       //起始节点
-    const MENU_MANAGE = 2;      //管理平台起始菜单id
+    const MENU_ADMIN = 5;
+    /**
+     * @deprecated 
+     */
+    const MENU_MANAGE = self::MENU_ADMIN;      //管理平台起始菜单id
 
     const PERM_TYPE_SUB = 1;    //主体权限
     const PERM_TYPE_HALFSUB = 2;    //半主体权限，在权限菜单上提现，但是不在左侧菜单上体现
@@ -15,7 +19,7 @@ class AdminOperation extends BaseAdmin
 
     //不需要权限判断的控制器和方法,前台传过来的都是小写，这里就不采用驼峰法写了。
     private $noPerm = [
-        self::MENU_MANAGE => [
+        self::MENU_ADMIN => [
             'Index'         => ['index', 'tagselectbrands', 'tagselectgoods', 'tagselectproducts', 'clearcache', 'welcome','tagselectnotice','tagselectgroup','tagpintuan','tagselectuser'],
             //'Order'         => ['statistics'],
             'Images'        => ['uploadimage', 'listimage', 'manage', 'cropper'],
@@ -128,7 +132,7 @@ class AdminOperation extends BaseAdmin
      */
     public function adminMenu($admin_id,$type = self::PERM_TYPE_SUB)
     {
-        $parent_menu_id = self::MENU_MANAGE;
+        $parent_menu_id = self::MENU_ADMIN;
 
         if(cache('?admin_operation_'.$admin_id) && $type == self::PERM_TYPE_SUB){         //如果有缓存，并且类型是1的话，就取缓存，因为类型是1主要是后台菜单上用，类型是2的话，主要是给别人分配权限的时候会用到
             $menuTree = cache('admin_operation_'.$admin_id);
@@ -308,7 +312,7 @@ class AdminOperation extends BaseAdmin
      * @return array
      */
 
-    public function getOperationInfo($ctl = 'index', $act = 'index',$model_id = self::MENU_MANAGE)
+    public function getOperationInfo($ctl = 'index', $act = 'index',$model_id = self::MENU_ADMIN)
     {
         $result        = [
             'msg'    => '',
