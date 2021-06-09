@@ -716,4 +716,9 @@ UPDATE `jshop_admin_operation` SET `id` = 5, `name` = '平台管理后台' WHERE
 UPDATE `jshop_admin_operation` SET `parent_id` = 5 WHERE `parent_id` = 2;
 UPDATE `jshop_admin_operation` SET `parent_menu_id` = 5 WHERE `parent_menu_id` = 2;
 
+-- 更新店铺菜单中部分菜单名称
+UPDATE `jshop_operation` SET `name` = '店铺设置' WHERE `name` = '平台设置';
+UPDATE `jshop_operation` SET `name` = '店铺角色' WHERE `name` = '平台角色';
+UPDATE `jshop_operation` SET `name` = '店铺管理员' WHERE `name` = '平台管理员';
+
 SET FOREIGN_KEY_CHECKS = 1;

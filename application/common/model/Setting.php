@@ -7,23 +7,23 @@ class Setting extends BaseB2b2c
 {
     public $skeys = [
         'shop_name' => [
-            'name' => '平台名称',
+            'name' => '店铺名称',
             'value' => 'jshop商城系统'
         ],
         'shop_desc' => [
-            'name' => '平台描述',
-            'value' => '平台描述会展示在前台及微信分享店铺描述'
+            'name' => '店铺描述',
+            'value' => '店铺描述会展示在前台及微信分享店铺描述'
         ],
         'shop_address' => [
-            'name' => '平台地址',
-            'value' => '我的平台地址'
+            'name' => '店铺地址',
+            'value' => '我的店铺地址'
         ],
         'shop_beian' => [
             'name' => '备案信息',
             'value' => '网站备案信息'
         ],
         'shop_logo' => [
-            'name' => '平台logo',
+            'name' => '店铺logo',
             'value' => '',
         ],
         'shop_favicon' => [
@@ -433,7 +433,7 @@ class Setting extends BaseB2b2c
         }
         if($skey == 'shop_name'){
             if($value == ''){
-//                $result['msg'] = "平台名称不能为空";
+//                $result['msg'] = "店铺名称不能为空";
                 return error_code(10084);
             }
         }

@@ -10,6 +10,7 @@
 namespace app\common\controller;
 
 use app\common\model\ManageRoleOperationRel;
+use app\common\model\Shop;
 use think\Container;
 use app\common\model\Operation;
 use Request;
@@ -17,6 +18,12 @@ use Request;
 
 class Manage extends Base
 {
+    /**
+     * 商家店铺ID
+     * @var string
+     */
+    public static $shop_id;
+
     protected function initialize()
     {
         parent::initialize();
@@ -49,11 +56,17 @@ class Manage extends Base
             }
         }
 
+        static::$shop_id = get_shop_id();
+
         $jshopHost = Container::get('request')->domain();
         $this->assign('jshopHost', $jshopHost);
+
+        $shop = Shop::get(static::$shop_id);
+        $this->assign('shop', $shop);
+
         //店铺名称
-        $shop_name = getSetting('shop_name');
-        $this->assign('shop_name', $shop_name);
+//        $shop_name = getSetting('shop_name');
+        $this->assign('shop_name', $shop['name']);
         $this->view->engine->layout('layout');
 
     }
