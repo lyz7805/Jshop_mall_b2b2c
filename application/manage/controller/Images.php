@@ -153,6 +153,7 @@ class Images extends Manage
         } else {
             echo $result;
         }
+        exit;
     }
 
     /**
