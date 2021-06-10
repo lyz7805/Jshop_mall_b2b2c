@@ -152,7 +152,7 @@ class Operation extends BaseAdmin
     public function manageOperation($manage_id,$type = self::PERM_TYPE_HALFSUB){
         $manageModel = new Manage();
         //如果是超级管理员，直接返回所有
-        if($manage_id == $manageModel::TYPE_SUPER_ID){
+        if(Manage::isShopAdmin($manage_id)){
             //直接取所有数据，然后返回
             $list = $this->where('perm_type','<=',$type)->order('sort asc')->select();
         }else{
@@ -700,7 +700,7 @@ class Operation extends BaseAdmin
         $list = $this->addonsOperations();
         $manageModel = new Manage();
         //如果不是超级管理员，要把他的插件权限取出来，然后在$list上把没有权限的删掉
-        if($manage_id != $manageModel::TYPE_SUPER_ID){
+        if(!Manage::isShopAdmin($manage_id)){
             $manageRoleRel = new ManageRoleRel();
             //取此管理员的所有角色
             $roles = $manageRoleRel->where('manage_id',$manage_id)->select();

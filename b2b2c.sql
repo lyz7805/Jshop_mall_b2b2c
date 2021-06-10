@@ -116,8 +116,8 @@ ALTER TABLE `jshop_ship` ADD COLUMN `shop_id` int(10) NOT NULL COMMENT '商铺ID
 ALTER TABLE `jshop_store` ADD COLUMN `shop_id` int(10) NOT NULL COMMENT '商铺ID 关联shop.id' FIRST;
 
 ALTER TABLE `jshop_user_grade` ADD COLUMN `shop_id` int(10) NOT NULL COMMENT '商铺ID 关联shop.id' FIRST;
-// 用户等级取消店铺等级，改为商城用户等级
-// TODO 以后可考虑店铺会员等级之说
+-- 用户等级取消店铺等级，改为商城用户等级
+-- TODO 以后可考虑店铺会员等级之说
 ALTER TABLE `jshop_user_grade` DROP COLUMN `shop_id`;
 ALTER TABLE `jshop_user_log` ADD COLUMN `shop_id` int(10) NOT NULL COMMENT '商铺ID 关联shop.id' AFTER `id`;
 
@@ -720,5 +720,11 @@ UPDATE `jshop_admin_operation` SET `parent_menu_id` = 5 WHERE `parent_menu_id` =
 UPDATE `jshop_operation` SET `name` = '店铺设置' WHERE `name` = '平台设置';
 UPDATE `jshop_operation` SET `name` = '店铺角色' WHERE `name` = '平台角色';
 UPDATE `jshop_operation` SET `name` = '店铺管理员' WHERE `name` = '平台管理员';
+
+-- 添加is_shop_admin标记是否店铺超级管理员，此字段在新建店铺是标记1，另外由平台管理员修改，一个店铺只能设置一个超级管理员
+ALTER TABLE `jshop_manage` ADD COLUMN `is_shop_admin` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否店铺超级管理员 1-是，0-否' AFTER `shop_id`;
+
+-- 主键调整
+ALTER TABLE `jshop_setting` DROP PRIMARY KEY, ADD PRIMARY KEY (`shop_id`, `skey`) USING BTREE;
 
 SET FOREIGN_KEY_CHECKS = 1;

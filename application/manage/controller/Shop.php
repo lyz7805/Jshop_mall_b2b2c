@@ -60,7 +60,7 @@ class Shop extends Manage
     public function add(ShopModel $shop)
     {
         if (Request::isAjax()) {
-            return $shop->addData(input('param.'));
+            return $shop->addShop(input('param.'));
         }
 
         return $this->fetch();

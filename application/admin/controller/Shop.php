@@ -18,7 +18,7 @@ use app\common\model\WeixinAuthor;
 use app\common\model\Goods;
 use app\common\model\Brand;
 use app\common\model\Products;
-use Request;
+use think\facade\Request;
 
 class Shop extends Admin
 {
@@ -31,7 +31,11 @@ class Shop extends Admin
 
     public function index()
     {
-        // return $this->fetch('index');
+        if (Request::isAjax()) {
+            $shopModel = new ShopModel();
+            return $shopModel->tableData(input('param.'));
+        }
+        return $this->fetch();
     }
 
     public function select(ShopModel $shop)
@@ -59,7 +63,7 @@ class Shop extends Admin
     public function add(ShopModel $shop)
     {
         if (Request::isAjax()) {
-            return $shop->addData(input('param.'));
+            return $shop->addShop(input('param.'));
         }
 
         return $this->fetch();

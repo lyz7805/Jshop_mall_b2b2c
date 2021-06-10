@@ -13,6 +13,11 @@ class Manage extends BaseB2b2c
     const STATUS_NORMAL = 1;        //用户状态 正常
     const STATUS_DISABLE = 2;       //用户状态 停用
 
+    // 是否店铺超级管理员 是
+    const IS_SHOP_ADMIN_YES = 1;
+    // 是否店铺超级管理员 否
+    const IS_SHOP_ADMIN_NO = 0;
+
     protected $rule = [
         'username' => 'length:3,20|alphaDash',
         'mobile'   => 'require|mobile',
@@ -26,6 +31,15 @@ class Manage extends BaseB2b2c
         'nickname'           => '昵称长度为2-50个字符',
     ];
 
+    /**
+     * 是否店铺超级管理员
+     * @param $id int 管理员ID
+     * @return bool
+     */
+    public static function isShopAdmin(int $id): bool
+    {
+        return static::where('id', $id)->value('is_shop_admin') == self::IS_SHOP_ADMIN_YES;
+    }
 
     /**
      * 返回layui的table所需要的格式
@@ -46,7 +60,7 @@ class Manage extends BaseB2b2c
             ->alias('m')
             ->leftJoin('manage_role_rel mrr', 'mrr.manage_id = m.id')
             ->leftJoin('manage_role mr', 'mr.id = mrr.role_id')
-            ->where('m.id', 'neq', $this::TYPE_SUPER_ID)
+            ->where('m.id', 'neq', $this::IS_SHOP_ADMIN_YES)
             ->group("m.id")
             ->paginate($limit);
         $data = $this->tableFormat($list->getCollection());         //返回的数据格式化，并渲染成table所需要的最终的显示数据类型
@@ -260,7 +274,7 @@ class Manage extends BaseB2b2c
      * @param string $pw 要加密的字符串
      * @return string
      */
-    private function enPassword($password, $ctime)
+    public function enPassword($password, $ctime)
     {
 
         return md5(md5($password) . $ctime);

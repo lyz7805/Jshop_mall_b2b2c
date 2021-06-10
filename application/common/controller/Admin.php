@@ -29,7 +29,7 @@ class Admin extends Base
 
         // 判断是否有权限操作
         $arorModel = new AdminRoleOperationRel();
-        $permRe    = $arorModel->checkPerm(session('admin.id'), $operationModel::MENU_MANAGE, $cont_name, $act_name);
+        $permRe    = $arorModel->checkPerm(session('admin.id'), $operationModel::MENU_ADMIN, $cont_name, $act_name);
         if (!$permRe['status']) {
             if (Request::isAjax()) {
                 $err = [

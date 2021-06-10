@@ -104,7 +104,7 @@ class ManageRoleOperationRel extends BaseB2b2c
 
         $manageModel = new Manage();
         //如果是超级管理员，直接返回
-        if($manage_id == $manageModel::TYPE_SUPER_ID){
+        if(Manage::isShopAdmin($manage_id)){
             $result['status'] = true;
             return $result;
         }

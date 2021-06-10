@@ -2,6 +2,8 @@
 
 namespace app\common\model;
 
+use think\exception\DbException;
+use think\exception\PDOException;
 use think\model\concern\SoftDelete;
 
 class Shop extends Common
@@ -22,26 +24,26 @@ class Shop extends Common
     public const STATUS_NORMAL = 1;
     public const STATUS_DISABLE = 2;
 
-    public function getStatusTextAttr($value)
+    public function getStatusTextAttr($value): string
     {
-        $statuss = [
+        $statuses = [
             self::STATUS_NORMAL => '启用',
             self::STATUS_DISABLE => '禁用'
         ];
-        return $statuss[$value];
+        return $statuses[$value];
     }
 
-    protected function setSecretIdAttr()
+    protected function setSecretIdAttr(): string
     {
         return create_guid();
     }
 
     /**
      * @param $post
-     * @return mixed
-     * @throws \think\exception\DbException
+     * @return array
+     * @throws DbException
      */
-    public function tableData($post)
+    public function tableData($post): array
     {
         if (isset($post['limit'])) {
             $limit = $post['limit'];
@@ -62,23 +64,92 @@ class Shop extends Common
         return $re;
     }
 
-
     /**
-     * 添加
+     * 添加新店铺
      * @param array $data
      * @return array
+     * @throws PDOException
      */
-    public function addData($data = [])
+    public function addShop(array $data = []): array
     {
-        $result = ['status' => true, 'msg' => '保存成功', 'data' => ''];
+        $result = ['status' => true, 'msg' => '保存成功', 'data' => []];
 
-        if (!$this->allowField(true)->save($data)) {
-            return error_code(10004);
+        $checkRes = $this->checkData($data, 'add');
+        if (!$checkRes['status']) {
+            $result['status'] = false;
+            $result['msg'] = $checkRes['msg'];
+            return $result;
         }
+
+        $shop = $data['shop'];
+        $manage = $data['manage'];
+        $this->startTrans();
+
+        if (!$this->allowField(['name', 'subdomain', 'status'])->save($shop)) {
+            $this->rollback();
+            return error_code(10004);
+        } else {
+            $shop_id = $this->id;
+            $manageModel = new Manage();
+            $manage['shop_id'] = $shop_id;
+            $manage['ctime'] = time();
+            $manage['password'] = $manageModel->enPassword($manage['password'], time());
+            $manage['is_shop_admin'] = $manageModel::IS_SHOP_ADMIN_YES;
+            if (!$manageModel->allowField(true)->save($manage)) {
+                $this->rollback();
+                return error_code(10004);
+            }
+            $result['data']['shop'] = $this;
+            $result['data']['manage'] = $manageModel;
+        }
+
+        $this->commit();
+
+        cache_shop_list(true);
 
         return $result;
     }
 
+    /**
+     * 在新增或编辑时验证数据有效性
+     * @param array $data 要验证的数据
+     * @param string $scene 验证场景，支持add和edit
+     * @return array ['status' => bool, 'msg' => string, 'data' => array]
+     */
+    public function checkData(array $data, string $scene = 'add'): array
+    {
+        $result = ['status' => false, 'msg' => '验证失败', 'data' => []];
+        $validate = new \app\common\validate\Shop();
+        switch ($scene) {
+            case 'edit':
+                if (!$validate->scene('edit')->check($data)) {
+                    $result['msg'] = $validate->getError();
+                } else {
+                    $result['status'] = true;
+                    $result['msg']    = '验证成功';
+                }
+                break;
+            case 'add':
+            default:
+                $scene = 'add';
+                if (!$validate->scene('add_base')->check($data)) {
+                    $result['msg'] = $validate->getError();
+                } else {
+                    if (!$validate->scene('add')->check($data['shop'])) {
+                        $result['msg'] = $validate->getError();
+                    } else {
+                        $manageValidate = new \app\common\validate\Manage();
+                        if (!$manageValidate->scene('shop_add')->check($data['manage'])) {
+                            $result['msg'] = $manageValidate->getError();
+                        } else {
+                            $result['status'] = true;
+                            $result['msg']    = '验证成功';
+                        }
+                    }
+                }
+        }
+        return $result;
+    }
 
     /**
      * 修改
@@ -153,7 +224,7 @@ class Shop extends Common
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws DbException
      */
     public function storeList(int $status = 0)
     {
