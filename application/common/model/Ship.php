@@ -73,7 +73,7 @@ class Ship extends BaseB2b2c
         }
         $data['logi_name'] = $logistics['logi_name'];
 
-        if ($this->insert($data)) {
+        if ($this->save($data)) {
             $result['status'] = true;
             $result['msg']    = '添加成功';
             $result['data'] = '';
