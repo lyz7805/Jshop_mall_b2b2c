@@ -45,8 +45,12 @@
                 {
                     field: 'operating', title: '操作', width: 140, align: 'center', templet: function (data) {
                         var html = '';
-                        html += '<a class="layui-btn layui-btn-xs option-edit" data-id="' + data.id + '">编辑</a>';
-                        html += '<a class="layui-btn layui-btn-xs option-del layui-btn-danger" data-id="' + data.id + '">删除</a>';
+                        if (data.is_shop_admin) {
+                            html += '请联系平台管理员修改';
+                        } else {
+                            html += '<a class="layui-btn layui-btn-xs option-edit" data-id="' + data.id + '">编辑</a>';
+                            html += '<a class="layui-btn layui-btn-xs option-del layui-btn-danger" data-id="' + data.id + '">删除</a>';
+                        }
                         return html;
                     }
                 },

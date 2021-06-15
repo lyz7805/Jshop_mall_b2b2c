@@ -103,7 +103,7 @@ class Administrator extends ManageController
         }
 
         $manageModel = new ManageModel();
-        if (input('param.id') == $manageModel::TYPE_SUPER_ID) {
+        if (ManageModel::isShopAdmin(input('param.id'))) {
             return error_code(11023);
         }
         $manageInfo = $manageModel->where(['id' => input('param.id')])->find();
@@ -156,7 +156,7 @@ class Administrator extends ManageController
         }
 
         $manageModel = new manageModel();
-        if (input('param.id') == $manageModel::TYPE_SUPER_ID) {
+        if ($manageModel::isShopAdmin(input('param.id'))) {
             return error_code(11024);
         }
 
