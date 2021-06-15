@@ -18,9 +18,9 @@ use think\Db;
  */
 class Logistics extends BaseAdmin
 {
-    public function add($data)
+    public function add($data): bool
     {
-        return $this->insert($data);
+        return $this->allowField(true)->save($data);
     }
 
     protected function tableWhere($post)

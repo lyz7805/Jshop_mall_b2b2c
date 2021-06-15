@@ -278,7 +278,7 @@ class Area extends BaseAdmin
             $result['status'] = false;
             $result['msg'] = $validate->getError();
         } else {
-            if (!$this->insert($data))
+            if (!$this->allowField(true)->save($data))
             {
                 $result['status'] = false;
                 $result['msg'] = error_code(10004,true);

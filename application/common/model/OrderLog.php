@@ -44,9 +44,9 @@ class OrderLog extends BaseB2b2c
      * @param $type
      * @param $msg
      * @param $data
-     * @return int|string
+     * @return bool
      */
-    public function addLog($order_id, $user_id, $type, $msg, $data)
+    public function addLog($order_id, $user_id, $type, $msg, $data): bool
     {
         $info['order_id'] = $order_id;
         $info['user_id'] = $user_id;
@@ -55,8 +55,7 @@ class OrderLog extends BaseB2b2c
         $info['data'] = json_encode($data);
         $info['ctime'] = time();
 
-        $res = $this->insert($info);
-        return $res;
+        return $this->allowField(true)->save($info);
     }
 
 

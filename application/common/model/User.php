@@ -1178,11 +1178,11 @@ class User extends Common
 
     public function doAdd($data = [])
     {
-        $result = $this->insert($data);
+        $result = $this->allowField(true)->save($data);
         if ($result) {
             return $this->getLastInsID();
         }
-        return $result;
+        return false;
     }
 
     public function grade()

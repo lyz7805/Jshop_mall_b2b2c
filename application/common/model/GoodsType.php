@@ -28,11 +28,11 @@ class GoodsType extends BaseB2b2c
     /**
      * 添加商品类型
      * @param $data
-     * @return int|string
+     * @return bool
      */
-    public function add($data)
+    public function add($data): bool
     {
-        return $this->insert($data);
+        return $this->allowField(true)->save($data);
     }
 
 

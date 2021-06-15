@@ -60,7 +60,7 @@ class UserPointLog extends Common
                 'remarks' => $remarks,
                 'ctime'   => time()
             ];
-            $this->insert($data);
+            $this->allowField(true)->save($data);
 
             //插入主表
             $where[] = ['id', 'eq', $user_id];
