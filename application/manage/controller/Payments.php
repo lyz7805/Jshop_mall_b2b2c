@@ -21,7 +21,7 @@ class Payments extends Manage
 
 
     //支付方式第二步
-    public function edit()
+    protected function edit()
     {
         $result = [
             'status' => false,
@@ -53,7 +53,7 @@ class Payments extends Manage
         return $result;
     }
 
-    public function changeStatus()
+    protected function changeStatus()
     {
         $paymentsModel = new PaymentsModel();
         return $paymentsModel->changeStatus(input('param.id/d'),input('param.status'));
