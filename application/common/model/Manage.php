@@ -4,6 +4,7 @@ namespace app\common\model;
 
 use think\model\concern\SoftDelete;
 use think\Validate;
+use think\facade\Cache;
 
 class Manage extends BaseB2b2c
 {
@@ -38,7 +39,17 @@ class Manage extends BaseB2b2c
      */
     public static function isShopAdmin(int $id): bool
     {
-        return static::where('id', $id)->value('is_shop_admin') == self::IS_SHOP_ADMIN_YES;
+        $cache_key = 'manage_info-' . $id;
+        if (Cache::has($cache_key)) {
+            return Cache::get($cache_key)['is_shop_admin'] == self::IS_SHOP_ADMIN_YES;
+        } else {
+            $manage_info = self::get($id);
+            if ($manage_info == null) {
+                return false;
+            }
+            Cache::tag('manage')->set($cache_key, $manage_info->toArray());
+            return $manage_info->is_shop_admin == self::IS_SHOP_ADMIN_YES;
+        }
     }
 
     /**
