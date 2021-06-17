@@ -47,7 +47,8 @@ class Manage extends BaseB2b2c
             if ($manage_info == null) {
                 return false;
             }
-            Cache::tag('manage')->set($cache_key, $manage_info->toArray());
+            Cache::set($cache_key, $manage_info->toArray());
+            Cache::tag('manage', [$cache_key]);
             return $manage_info->is_shop_admin == self::IS_SHOP_ADMIN_YES;
         }
     }
