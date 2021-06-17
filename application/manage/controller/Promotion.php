@@ -71,7 +71,8 @@ class Promotion extends Manage
             $data['sort']      = input('param.sort/d', 100);
             $data['exclusive'] = input('param.exclusive/d', 1);
             $promotionModel    = new PromotionModel();
-            $id                = $promotionModel->insertGetId($data);
+            $promotionModel->allowField(true)->save($data);
+            $id                = $promotionModel->id;
             return [
                 'status' => true,
                 'data'   => url('promotion/edit', ['id' => $id]),
@@ -113,7 +114,8 @@ class Promotion extends Manage
 
             $data['params']     = json_encode($parmas);
 
-            $id = $promotionModel->insertGetId($data);
+            $promotionModel->allowField(true)->save($data);
+            $id = $promotionModel->id;
             return [
                 'status' => true,
                 'data'   => url('promotion/couponEdit', ['id' => $id]),
@@ -556,7 +558,8 @@ class Promotion extends Manage
                 return error_code(15017);
             }
             $data['params'] = json_encode($params);
-            $id             = $promotionModel->insertGetId($data);
+            $promotionModel->allowField(true)->save($data);
+            $id             = $promotionModel->id;
             return [
                 'status' => true,
                 'data'   => url('promotion/groupEdit', ['id' => $id]),
