@@ -27,11 +27,13 @@ class Manage extends Base
     protected function initialize()
     {
         parent::initialize();
-        //没有登陆，请先登录
+        //没有登录，请先登录
         if (!session('?manage')) {
             cookie('redirect_url', Container::get('request')->url(), 3600);
             $this->redirect('manage/common/login');
         }
+
+        $this->initConstants();
 
         $cont_name = request()->controller();
         $act_name  = request()->action();
@@ -63,11 +65,22 @@ class Manage extends Base
 
         $shop = Shop::get(static::$shop_id);
         $this->assign('shop', $shop);
+        $this->assign('shop_domain', url('/', '', false, $shop->subdomain . '.' . config('b2b2c.mall_subdomain') . '.' . request()->rootDomain()));
 
         //店铺名称
 //        $shop_name = getSetting('shop_name');
         $this->assign('shop_name', $shop['name']);
         $this->view->engine->layout('layout');
 
+    }
+
+    /**
+     * 初始化常量
+     */
+    final private function initConstants()
+    {
+        $manageInfo = session('manage');
+        defined('MANAGE_ID') or define('MANAGE_ID', $manageInfo->id);
+        defined('IS_SHOP_ADMIN') or define('IS_SHOP_ADMIN', $manageInfo->is_shop_admin);
     }
 }
