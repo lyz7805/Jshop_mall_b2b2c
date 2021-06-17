@@ -168,9 +168,7 @@ class Report extends Manage
             $legend = [
                 'payments_all' => '收款单',
                 'payments_order' => '订单收款',
-                'payments_order_refund' => '订单退款',
-                'payments_recharge' => '充值',
-                'payments_tocash' =>'提现'
+                'payments_order_refund' => '订单退款'
             ];
             $this->option['legend']['data'] = array_values($legend);
             $xData = $this->getXdata($date_re['data']);
@@ -208,24 +206,6 @@ class Report extends Manage
                         ";
                         $data = $this->refundMark($date_re['data'],$where,'utime');
                         break;
-                    case 'payments_recharge':
-                        $where = "
-                            and utime >" .$date_re['data']['start'].  "
-                            and utime <" .$date_re['data']['end'].  "
-                            and status = 2
-                            and type = 2
-                        ";
-                        $data = $this->paymentsMark($date_re['data'],$where,'utime');
-                        break;
-                    case 'payments_tocash':
-                        $where = "
-                            and utime >" .$date_re['data']['start'].  "
-                            and utime <" .$date_re['data']['end'].  "
-                            and type = 2
-                        ";
-                        $data = $this->tocashMark($date_re['data'],$where,'utime');
-                        break;
-
                 }
 
                 if($data['status']){
@@ -557,7 +537,7 @@ class Report extends Manage
                 (SELECT @xi:=-1) x0 limit 0,".$date_arr['num'].") tmp_x
             left join (
                 select * from `".config('database.prefix')."order`
-                where 1=1
+                where 1=1 AND `shop_id` = '" . static::$shop_id . "'
                 ".$where."
             ) o on tmp_x.x = (( cast(o.".$join_val." as signed) - ".$date_arr['start'].") div (".$date_arr['section']."))
             group by tmp_x.x
@@ -590,7 +570,7 @@ class Report extends Manage
                 (SELECT @xi:=-1) x0 limit 0,".$date_arr['num'].") tmp_x
             left join (
                 select * from `".config('database.prefix')."bill_payments`
-                where 1=1
+                where 1=1 AND `shop_id` = '" . static::$shop_id . "'
                 ".$where."
             ) o on tmp_x.x = (( cast(o.".$join_val." as signed)  - ".$date_arr['start'].") div (".$date_arr['section']."))
             group by tmp_x.x
@@ -620,40 +600,9 @@ class Report extends Manage
                 (SELECT @xi:=-1) x0 limit 0,".$date_arr['num'].") tmp_x
             left join (
                 select * from `".config('database.prefix')."bill_refund`
-                where 1=1
+                where 1=1 AND `shop_id` = '" . static::$shop_id . "'
                 ".$where."
             ) o on tmp_x.x = (( cast(o.".$join_val." as signed) - ".$date_arr['start'].") div (".$date_arr['section']."))
-            group by tmp_x.x
-        ";
-        $model = new Order();
-        $re = $model->query($sql);
-        $result['data'] = $re;
-        $result['sql'] = $sql;
-        $result['status'] = true;
-        return $result;
-    }
-
-    //用户提现报表
-    private function tocashMark($date_arr,$where,$join_val){
-        $result = [
-            'status' => false,
-            'data'   => [],
-            'msg'    => '',
-        ];
-
-        $sql = "
-            select tmp_x.x,ifnull(sum(o.money),0) as val,count(o.id) as num
-            from
-              (SELECT @xi:=@xi+1 as x from
-                (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) x1,
-                (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) x2,
-                (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10) x3,
-                (SELECT @xi:=-1) x0 limit 0,".$date_arr['num'].") tmp_x
-            left join (
-                select * from `".config('database.prefix')."user_tocash`
-                where 1=1
-                ".$where."
-            ) o on tmp_x.x = ((cast(o.".$join_val." as signed) - ".$date_arr['start'].") div (".$date_arr['section']."))
             group by tmp_x.x
         ";
         $model = new Order();
