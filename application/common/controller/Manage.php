@@ -13,7 +13,7 @@ use app\common\model\ManageRoleOperationRel;
 use app\common\model\Shop;
 use think\Container;
 use app\common\model\Operation;
-use Request;
+use think\facade\Request;
 
 
 class Manage extends Base
@@ -82,5 +82,7 @@ class Manage extends Base
         $manageInfo = session('manage');
         defined('MANAGE_ID') or define('MANAGE_ID', $manageInfo->id);
         defined('IS_SHOP_ADMIN') or define('IS_SHOP_ADMIN', $manageInfo->is_shop_admin);
+
+        defined('SHOP_ID') or define('SHOP_ID', get_shop_id());
     }
 }
