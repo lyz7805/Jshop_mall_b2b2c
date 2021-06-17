@@ -3,7 +3,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006-2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006-2018 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -12,14 +12,17 @@
 
 namespace think;
 
-define('ROOT_PATH',dirname(__FILE__));
-define('DS',DIRECTORY_SEPARATOR);
+define('ROOT_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
+define('DS', DIRECTORY_SEPARATOR);
 error_reporting(0);              //错误等级
-define('CRONTAB',FALSE);
-define('ADDON_PATH', ROOT_PATH . 'addons'   . DIRECTORY_SEPARATOR);
+define('CRONTAB', FALSE);
+define('ADDON_PATH', ROOT_PATH . 'addons' . DIRECTORY_SEPARATOR);
 
 // 加载基础文件
 require __DIR__ . '/thinkphp/base.php';
-// 执行应用
-Container::get('app', [__DIR__ . '/application/'])->initialize();
+
+// 应用初始化
+Container::get('app')->path(__DIR__ . '/application/')->initialize();
+
+// 控制台初始化
 Console::init();
