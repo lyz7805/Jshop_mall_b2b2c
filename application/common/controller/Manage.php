@@ -80,8 +80,8 @@ class Manage extends Base
     final private function initConstants()
     {
         $manageInfo = session('manage');
-        defined('MANAGE_ID') or define('MANAGE_ID', $manageInfo->id);
-        defined('IS_SHOP_ADMIN') or define('IS_SHOP_ADMIN', $manageInfo->is_shop_admin);
+        defined('MANAGE_ID') or define('MANAGE_ID', $manageInfo['id']);
+        defined('IS_SHOP_ADMIN') or define('IS_SHOP_ADMIN', $manageInfo['is_shop_admin']);
 
         defined('SHOP_ID') or define('SHOP_ID', get_shop_id());
     }
