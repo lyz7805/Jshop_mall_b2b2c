@@ -23,7 +23,8 @@
         "firephp/firephp-core": "^0.4.0",
         "apfelbox/php-file-download": "^2.1",
         "zoujingli/wechat-php-sdk": "^1.3",
-        "topthink/think-captcha": "^2.0"
+        "topthink/think-captcha": "^2.0",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
