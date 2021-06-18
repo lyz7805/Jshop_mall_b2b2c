@@ -380,7 +380,8 @@ class Report extends Manage
             $sql = "
                 from ".config('database.prefix')."goods_collection gc
                 left join `".config('database.prefix')."goods` g on gc.goods_id = g.id
-                where gc.ctime > ".$start."
+                where g.shop_id = '" . static::$shop_id . "'
+                and gc.ctime > ".$start."
                 and gc.ctime <= ".$end."
                 group by gc.goods_id
                 order by sum(gc.goods_id) ".$sort."
