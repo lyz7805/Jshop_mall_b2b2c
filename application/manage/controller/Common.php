@@ -1,11 +1,8 @@
 <?php
 
-namespace app\Manage\controller;
+namespace app\manage\controller;
 
-use app\common\model\Brand;
-use app\common\model\Goods;
-use Request;
-use think\Container;
+use think\facade\Request;
 use app\common\controller\Base;
 use app\common\model\Manage;
 use app\common\model\ManageLog;
@@ -15,6 +12,9 @@ class Common extends Base
     protected function initialize()
     {
         parent::initialize();
+
+        cache_shop_list();
+
         //此控制器不需要模板布局，所以屏蔽掉
         $this->view->engine->layout(false);
     }
@@ -25,7 +25,13 @@ class Common extends Base
      */
     public function login()
     {
-        $shop_name = getSetting('shop_name');
+        if (get_shop_id()) {
+            $shopList = cache(SHOP_LIST_WITH_ID_CACHE_KEY);
+            $shop = $shopList[get_shop_id()];
+            $shop_name = $shop['name'];
+        } else {
+            $shop_name = getSetting('shop_name');
+        }
         $this->assign('shop_name', $shop_name);
         if (session('?manage')) {
             $this->success('已经登录成功，跳转中...', redirect_url(url('index/index')));
