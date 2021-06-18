@@ -284,6 +284,7 @@ class Report extends Manage
                         from ".config('database.prefix')."order_items oi
                         left join `".config('database.prefix')."order` o on oi.order_id = o.order_id
                         where o.pay_status <> 1
+                        and o.shop_id = '" . static::$shop_id . "'
                         and o.payment_time > ".$start."
                         and o.payment_time <= ".$end." 
                     )
@@ -293,6 +294,7 @@ class Report extends Manage
                         from ".config('database.prefix')."bill_aftersales_items bai
                         left join `".config('database.prefix')."bill_aftersales` ba on bai.aftersales_id = ba.aftersales_id
                         where ba.status = 2
+                        and ba.shop_id = '" . static::$shop_id . "'
                         and ba.utime > ".$start."
                         and ba.utime <= ".$end."
                     )
