@@ -10,9 +10,9 @@
 namespace app\common\controller;
 
 use app\common\model\ManageRoleOperationRel;
-use app\common\model\Shop;
 use think\Container;
 use app\common\model\Operation;
+use think\facade\Cache;
 use think\facade\Request;
 
 
@@ -26,6 +26,8 @@ class Manage extends Base
 
     protected function initialize()
     {
+        cache_shop_list();
+
         parent::initialize();
         //没有登录，请先登录
         if (!session('?manage')) {
@@ -63,9 +65,10 @@ class Manage extends Base
         $jshopHost = Container::get('request')->domain();
         $this->assign('jshopHost', $jshopHost);
 
-        $shop = Shop::get(static::$shop_id);
+        $shopList = Cache::get(SHOP_LIST_WITH_ID_CACHE_KEY);
+        $shop = $shopList[static::$shop_id];
         $this->assign('shop', $shop);
-        $this->assign('shop_domain', url('/', '', false, $shop->subdomain . '.' . config('b2b2c.mall_subdomain') . '.' . request()->rootDomain()));
+        $this->assign('shop_domain', url('/', '', false, $shop['subdomain'] . '.' . config('b2b2c.mall_subdomain') . '.' . request()->rootDomain()));
 
         //店铺名称
 //        $shop_name = getSetting('shop_name');
