@@ -1,4 +1,5 @@
 <?php
+
 namespace app\Manage\controller;
 
 use app\common\controller\Manage;
@@ -10,7 +11,7 @@ class BillRefund extends Manage
 {
     public function index()
     {
-        if(Request::isAjax()){
+        if (Request::isAjax()) {
             $data = input('param.');
             $billRefundModel = new BillRefundModel();
             return $billRefundModel->tableData($data);
@@ -21,20 +22,20 @@ class BillRefund extends Manage
     public function view()
     {
         $this->view->engine->layout(false);
-        if(!input('?param.refund_id')){
+        if (!input('?param.refund_id')) {
             return error_code(13215);
         }
         $billRefundModel = new BillRefundModel();
         $where['refund_id'] = input('param.refund_id');
         $info = $billRefundModel->where($where)->find();
-        if(!$info){
+        if (!$info) {
             return error_code(13219);
         }
 
-        $this->assign('info',$info);
+        $this->assign('info', $info);
         return [
             'status' => true,
-            'data' => $this->fetch('view'),
+            'data' => $this->fetch('view')->getContent(),
             'msg' => ''
         ];
     }
@@ -45,7 +46,7 @@ class BillRefund extends Manage
     public function refund()
     {
         $this->view->engine->layout(false);
-        if(!input('?param.refund_id')){
+        if (!input('?param.refund_id')) {
             return error_code(13215);
         }
         $billRefundModel = new BillRefundModel();
@@ -53,37 +54,37 @@ class BillRefund extends Manage
         $where['refund_id'] = input('param.refund_id');
         $where['status'] = $billRefundModel::STATUS_NOREFUND;
         $info = $billRefundModel->where($where)->find();
-        if(!$info){
+        if (!$info) {
             return error_code(13219);
         }
 
-        if(Request::isPost()){
-            if(!input('?param.status')){
+        if (Request::isPost()) {
+            if (!input('?param.status')) {
                 return error_code(10000);
             }
 
-            if(!input('?param.payment_code')){
+            if (!input('?param.payment_code')) {
                 return error_code(10000);
             }
-            if(!input('?param.refund_id')){
+            if (!input('?param.refund_id')) {
                 return error_code(10000);
             }
 
 
-            return $billRefundModel->toRefund(input('param.refund_id'),input('param.status'),input('param.payment_code'));
+            return $billRefundModel->toRefund(input('param.refund_id'), input('param.status'), input('param.payment_code'));
         }
 
 
 
-        $this->assign('info',$info);
+        $this->assign('info', $info);
 
         //取当前商户的所有支付方式
         $paymentsModel = new Payments();
-        $this->assign('payment_list',$paymentsModel->getList(0));
+        $this->assign('payment_list', $paymentsModel->getList(0));
 
         return [
             'status' => true,
-            'data' => $this->fetch('refund'),
+            'data' => $this->fetch('refund')->getContent(),
             'msg' => ''
         ];
     }
@@ -94,7 +95,7 @@ class BillRefund extends Manage
     public function reaudit()
     {
         $this->view->engine->layout(false);
-        if(!input('?param.refund_id')){
+        if (!input('?param.refund_id')) {
             return error_code(13215);
         }
         $billRefundModel = new BillRefundModel();
@@ -102,13 +103,11 @@ class BillRefund extends Manage
         $where['refund_id'] = input('param.refund_id');
         $where['status'] = $billRefundModel::STATUS_FAIL;
         $info = $billRefundModel->where($where)->find();
-        if(!$info){
+        if (!$info) {
             return error_code(13224);
         }
 
 
         return $billRefundModel->paymentRefund(input('param.refund_id'));
-
     }
-
 }

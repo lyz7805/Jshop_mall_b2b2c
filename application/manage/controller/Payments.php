@@ -11,8 +11,7 @@ class Payments extends Manage
     public function index()
     {
         $paymentsModel = new PaymentsModel();
-        if(Request::isAjax())
-        {
+        if (Request::isAjax()) {
             $data = input('param.');
             return $paymentsModel->tableData($data);
         }
@@ -31,24 +30,24 @@ class Payments extends Manage
         $this->view->engine->layout(false);
         $paymentsModel = new PaymentsModel();
 
-        if(!input('?param.code')){
+        if (!input('?param.code')) {
             return error_code(10051);
         }
 
-        if(Request::isPost()){
+        if (Request::isPost()) {
             $data = input('param.');
             return $paymentsModel->editData($data);
         }
 
         $paymentInfo = $paymentsModel->getPayment(input('param.code'));
-        if(!$paymentInfo){
+        if (!$paymentInfo) {
             return error_code(10052);
         }
-        $paymentInfo['params'] = json_decode($paymentInfo['params'],true);
+        $paymentInfo['params'] = json_decode($paymentInfo['params'], true);
 
-        $this->assign('paymentInfo',$paymentInfo);
-        $this->assign('code',input('param.code'));
-        $result['data'] = $this->fetch();
+        $this->assign('paymentInfo', $paymentInfo);
+        $this->assign('code', input('param.code'));
+        $result['data'] = $this->fetch()->getContent();
         $result['status'] = true;
         return $result;
     }
@@ -56,6 +55,6 @@ class Payments extends Manage
     protected function changeStatus()
     {
         $paymentsModel = new PaymentsModel();
-        return $paymentsModel->changeStatus(input('param.id/d'),input('param.status'));
+        return $paymentsModel->changeStatus(input('param.id/d'), input('param.status'));
     }
 }

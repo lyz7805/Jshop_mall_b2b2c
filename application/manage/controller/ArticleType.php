@@ -50,7 +50,7 @@ class  ArticleType extends Manage
         return [
             'status' => true,
             'msg'    => '获取成功',
-            'data'   => $this->fetch('', ['list' => $articleTypeModel->getTree()])
+            'data'   => $this->fetch('', ['list' => $articleTypeModel->getTree()])->getContent()
         ];
     }
 
@@ -73,7 +73,7 @@ class  ArticleType extends Manage
         return [
             'status' => true,
             'msg'    => '获取成功',
-            'data'   => $this->fetch('addson', ['typeInfo' => $typeInfo])
+            'data'   => $this->fetch('addson', ['typeInfo' => $typeInfo])->getContent()
         ];
     }
 
@@ -99,7 +99,7 @@ class  ArticleType extends Manage
         return [
             'status' => true,
             'msg'    => '获取成功',
-            'data'   => $this->fetch('', ['typeInfo' => $typeInfo,'list' => $articleTypeModel->getTree()])
+            'data'   => $this->fetch('', ['typeInfo' => $typeInfo, 'list' => $articleTypeModel->getTree()])->getContent()
         ];
     }
 
@@ -122,8 +122,8 @@ class  ArticleType extends Manage
         } else {
             if (!$articleTypeModel->where('id', input('param.id/d'))->delete()) {
                 //$result['status'] = false;
-               // $result['msg']    = error_code(10023, true);
-		return error_code(10023);
+                // $result['msg']    = error_code(10023, true);
+                return error_code(10023);
             }
         }
 

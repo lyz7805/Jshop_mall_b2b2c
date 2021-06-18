@@ -50,7 +50,7 @@ class CarouselSeat extends Manage
             'data'   => $this->fetch('add', [
                     'list' => config('carousel_seat.list')
                 ]
-            )
+            )->getContent()
         ];
     }
 
@@ -78,7 +78,7 @@ class CarouselSeat extends Manage
         return [
             'status' => true,
             'msg'    => '获取成功',
-            'data'   => $this->fetch('', ['info' => $info])
+            'data'   => $this->fetch('', ['info' => $info])->getContent()
         ];
     }
 

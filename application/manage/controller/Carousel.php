@@ -49,7 +49,7 @@ class Carousel extends Manage
         return $this->fetch('add', [
             'list' => $positionList,
             'type' => config('params.carousel')['type']
-        ]);
+        ])->getContent();
     }
 
 
@@ -79,7 +79,7 @@ class Carousel extends Manage
             'positionList' => $positionList,
             'info' => $info,
             'type' => config('params.carousel')['type']
-        ]);
+        ])->getContent();
     }
 
 

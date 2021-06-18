@@ -55,7 +55,7 @@ class Hooks extends Manage
         return [
             'status' => true,
             'msg'    => '获取成功',
-            'data'   => $this->fetch()
+            'data'   => $this->fetch()->getContent()
         ];
     }
 
@@ -82,7 +82,7 @@ class Hooks extends Manage
         return [
             'status' => true,
             'msg'    => '获取成功',
-            'data'   => $this->fetch('edit', ['data' => $data])
+            'data'   => $this->fetch('edit', ['data' => $data])->getContent()
         ];
     }
 

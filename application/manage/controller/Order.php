@@ -22,10 +22,10 @@ use think\facade\Request;
  */
 class Order extends Manage
 {
-    const SHOPPING = 1;//购物清单
-    const DISTRIBUTION = 2;//配货单
-    const UNION = 3;//联合打印
-    const EXPRESS = 4;//联合打印
+    const SHOPPING = 1; //购物清单
+    const DISTRIBUTION = 2; //配货单
+    const UNION = 3; //联合打印
+    const EXPRESS = 4; //联合打印
 
     /**
      * 订单列表
@@ -62,7 +62,7 @@ class Order extends Manage
                 'order_id' => Request::param('order_id'),
                 'username' => Request::param('username'),
                 'ship_mobile' => Request::param('ship_mobile'),
-                'order_unified_status' => Request::param('order_unified_status',0),
+                'order_unified_status' => Request::param('order_unified_status', 0),
                 'date' => Request::param('date'),
                 'source' => Request::param('source'),
                 'page' => Request::param('page'),
@@ -85,7 +85,7 @@ class Order extends Manage
             } else {
                 $return_data = array(
                     'status' => false,
-                    'msg' => error_code(10036,true),
+                    'msg' => error_code(10036, true),
                     'count' => $data['count'],
                     'data' => $data['data']
                 );
@@ -121,7 +121,7 @@ class Order extends Manage
 
         $return['status'] = true;
         $return['msg'] = '成功';
-        $return['data'] = $this->fetch('view');
+        $return['data'] = $this->fetch('view')->getContent();
         return $return;
     }
 
@@ -151,7 +151,7 @@ class Order extends Manage
                 return error_code(13100);
             }
             $order_info = $orderModel->getOrderInfoByOrderID(input('param.id'));
-            if(!$order_info){
+            if (!$order_info) {
                 return error_code(10002);
             }
             $this->assign('order', $order_info);
@@ -160,7 +160,7 @@ class Order extends Manage
             $store_list = $storeModel->getAllList();
             $this->assign('store_list', $store_list);
             $result['status'] = true;
-            $result['data'] = $this->fetch('edit');
+            $result['data'] = $this->fetch('edit')->getContent();
             return $result;
         } else {
             return $orderModel->edit(input('param.'));
@@ -168,8 +168,9 @@ class Order extends Manage
     }
 
     //订单编辑的时候，显示订单明细商品
-    public function editItemsList(){
-        if(!input('?param.order_id')){
+    public function editItemsList()
+    {
+        if (!input('?param.order_id')) {
             return error_code(10000);
         }
         $orderItemsModel = new OrderItems();
@@ -177,12 +178,13 @@ class Order extends Manage
     }
 
     //订单编辑的时候，添加订单明细
-    public function editItemsAdd(){
-        if(!input('?param.order_id')){
+    public function editItemsAdd()
+    {
+        if (!input('?param.order_id')) {
             return error_code(10000);
         }
         //货品编号ids
-        if(!input('?param.ids')){
+        if (!input('?param.ids')) {
             return error_code(10000);
         }
 
@@ -190,12 +192,13 @@ class Order extends Manage
         return $orderItemsModel->orderEditItemsAdd(input('param.order_id'), input('param.ids'));
     }
     //订单编辑的时候，删除订单明细
-    public function editItemsDel(){
-        if(!input('?param.order_id')){
+    public function editItemsDel()
+    {
+        if (!input('?param.order_id')) {
             return error_code(10000);
         }
         //货品编号id
-        if(!input('?param.items_id')){
+        if (!input('?param.items_id')) {
             return error_code(10000);
         }
 
@@ -203,30 +206,31 @@ class Order extends Manage
         return $orderItemsModel->orderEditItemsDel(input('param.order_id'), input('param.items_id'));
     }
     //订单编辑的时候，更新单价或者数量
-    public function editItemsEdit(){
-        if(!input('?param.order_id')){
+    public function editItemsEdit()
+    {
+        if (!input('?param.order_id')) {
             return error_code(10000);
         }
         //货品编号id
-        if(!input('?param.items_id')){
+        if (!input('?param.items_id')) {
             return error_code(10000);
         }
-        if(!input('?param.price') && !input('?param.nums') && !input('?param.promotion_amount')){
+        if (!input('?param.price') && !input('?param.nums') && !input('?param.promotion_amount')) {
             return error_code(10000);
         }
         $data = [];
-        if(input('?param.price')){
+        if (input('?param.price')) {
             $data['price'] = input('param.price');
         }
-        if(input('?param.nums')){
+        if (input('?param.nums')) {
             $data['nums'] = input('param.nums');
         }
-        if(input('?param.promotion_amount')){
+        if (input('?param.promotion_amount')) {
             $data['promotion_amount'] = input('param.promotion_amount');
         }
 
         $orderItemsModel = new OrderItems();
-        return $orderItemsModel->orderEditItemsEdit(input('param.order_id'), input('param.items_id'),$data);
+        return $orderItemsModel->orderEditItemsEdit(input('param.order_id'), input('param.items_id'), $data);
     }
 
     /**
@@ -251,19 +255,19 @@ class Order extends Manage
                 input('param.logi_code'),
                 input('param.logi_no'),
                 input('param.items'),
-                input('param.store_id',0),
-                input('param.ship_name',""),
-                input('param.ship_mobile',""),
-                input('param.ship_area_id',0),
-                input('param.ship_address',""),
+                input('param.store_id', 0),
+                input('param.ship_name', ""),
+                input('param.ship_mobile', ""),
+                input('param.ship_area_id', 0),
+                input('param.ship_address', ""),
                 input('param.memo', "")
             );
             return $result;
         }
         //订单发货信息
-        if(!input('?param.order_id')){
+        if (!input('?param.order_id')) {
             return error_code(13100);
-        }else{
+        } else {
             $id = input('param.order_id');
         }
         $orderModel = new OrderModel();
@@ -274,22 +278,22 @@ class Order extends Manage
         $this->assign('order', $order_info['data']);
 
         //如果是门店自提的话，取门店列表信息
-        if($order_info['data']['store_id'] != 0){
+        if ($order_info['data']['store_id'] != 0) {
             $storeModel = new Store();
             $stores = $storeModel->select();
-        }else{
+        } else {
             $stores = [];
         }
-        $this->assign('stores',$stores);
+        $this->assign('stores', $stores);
 
 
         //获取默认配送方式,为了on物流公司
         $shipModel = new Ship();
-        $ship = $shipModel->where('id',$order_info['data']['logistics_id'])->find();
-        if($ship){
+        $ship = $shipModel->where('id', $order_info['data']['logistics_id'])->find();
+        if ($ship) {
             $ship_name = $ship['name'];
             $logi_code = $ship['logi_code'];
-        }else{
+        } else {
             $ship_name = "";
             $logi_code = "";
         }
@@ -301,7 +305,7 @@ class Order extends Manage
         $logi_info = $logisticsModel->getAll();
         $this->assign('logi', $logi_info);
         $return['status'] = true;
-        $return['data'] = $this->fetch('ship');
+        $return['data'] = $this->fetch('ship')->getContent();
         return $return;
     }
 
@@ -319,7 +323,7 @@ class Order extends Manage
         if (!$id) {
             return [
                 'status' => false,
-                'msg' => error_code(13100,true),
+                'msg' => error_code(13100, true),
                 'data' => ''
             ];
         }
@@ -387,30 +391,30 @@ class Order extends Manage
     }
 
 
-//    /**
-//     * 根据条件从数据库查询数据或者api请求获取快递信息
-//     * User:tianyu
-//     * @return array
-//     * @throws \think\db\exception\DataNotFoundException
-//     * @throws \think\db\exception\ModelNotFoundException
-//     * @throws \think\exception\DbException
-//     */
-//    public function logistics()
-//    {
-//        $return = [
-//            'status' => false,
-//            'msg' => error_code(10037,true),
-//            'data' => ''
-//        ];
-//        $this->view->engine->layout(false);
-//        $billDeliveryModel = new BillDelivery();
-//        $id = Request::param('order_id', '');
-//        $data = $billDeliveryModel->getLogisticsInformation($id);
-//        $return['status'] = true;
-//        $return['msg'] = '成功';
-//        $return['data'] = $this->fetch('logistics', ['data' => $data]);
-//        return $return;
-//    }
+    //    /**
+    //     * 根据条件从数据库查询数据或者api请求获取快递信息
+    //     * User:tianyu
+    //     * @return array
+    //     * @throws \think\db\exception\DataNotFoundException
+    //     * @throws \think\db\exception\ModelNotFoundException
+    //     * @throws \think\exception\DbException
+    //     */
+    //    public function logistics()
+    //    {
+    //        $return = [
+    //            'status' => false,
+    //            'msg' => error_code(10037,true),
+    //            'data' => ''
+    //        ];
+    //        $this->view->engine->layout(false);
+    //        $billDeliveryModel = new BillDelivery();
+    //        $id = Request::param('order_id', '');
+    //        $data = $billDeliveryModel->getLogisticsInformation($id);
+    //        $return['status'] = true;
+    //        $return['msg'] = '成功';
+    //        $return['data'] = $this->fetch('logistics', ['data' => $data])->getContent();
+    //        return $return;
+    //    }
 
 
     /**
@@ -467,7 +471,7 @@ class Order extends Manage
         $type = Request::param('type/d', self::SHOPPING);
 
         if (!$order_id) {
-            $this->error(error_code(10051,true));
+            $this->error(error_code(10051, true));
         }
         $orderModel = new OrderModel();
         $order_info = $orderModel->getOrderInfoByOrderID($order_id);
@@ -478,9 +482,9 @@ class Order extends Manage
         $this->assign('shop_name', $shop_name);
         $this->assign('shop_mobile', $shop_mobile);
 
-        if ($type == self::SHOPPING) {//购物清单
+        if ($type == self::SHOPPING) { //购物清单
             return $this->fetch('shopping');
-        } elseif ($type == self::DISTRIBUTION) {//配货单
+        } elseif ($type == self::DISTRIBUTION) { //配货单
             return $this->fetch('distribution');
         } elseif ($type == self::UNION) {
             return $this->fetch('union');
@@ -517,7 +521,7 @@ class Order extends Manage
     public function print_form()
     {
         $return = [
-            'msg' => error_code(10051,true),
+            'msg' => error_code(10051, true),
             'data' => '',
             'status' => false
         ];
@@ -535,7 +539,7 @@ class Order extends Manage
             $ship['logi_no'] = '';
             //获取是否获取电子面板
             if (!checkAddons('getPrintExpressInfo')) {
-                $this->error(error_code(10717,true));
+                $this->error(error_code(10717, true));
                 return;
             }
             $print_express = hook('getPrintExpressInfo', ['order_id' => $order_id]);
@@ -551,7 +555,7 @@ class Order extends Manage
             $this->assign('logi', $logi_info);
             $return['status'] = true;
             $return['msg'] = '成功';
-            $return['data'] = $this->fetch('print_form');
+            $return['data'] = $this->fetch('print_form')->getContent();
             return $return;
         }
     }
@@ -569,36 +573,37 @@ class Order extends Manage
         return $orderModel->saveMark($order_id, $mark);
     }
 
-    public function aftersales(){
+    public function aftersales()
+    {
         $this->view->engine->layout(false);
-        $order_id = input('order_id','');
-        if(!$order_id) return error_code(10003);
+        $order_id = input('order_id', '');
+        if (!$order_id) return error_code(10003);
         $aftersalesModel = new BillAftersales();
-        if(request()->isPost()){
+        if (request()->isPost()) {
             $data = input('post.');
             $items = [];
-            if(input('?post.order_items_id') && input('?post.aftersaleeItems')){
+            if (input('?post.order_items_id') && input('?post.aftersaleeItems')) {
                 $order_items_id = input('post.order_items_id/a');
                 $aftersaleeItems = input('post.aftersaleeItems/a');
-                foreach($order_items_id as $k => $v){
-                    if($aftersaleeItems[$k]){
+                foreach ($order_items_id as $k => $v) {
+                    if ($aftersaleeItems[$k]) {
                         $items[$k] = $aftersaleeItems[$k];
                     }
                 }
             }
-            return $aftersalesModel->manageSave($order_id,$data,$items);
+            return $aftersalesModel->manageSave($order_id, $data, $items);
         }
         $info = $aftersalesModel->manageAdd($order_id);
-        if(!$info['status']) return $info;
+        if (!$info['status']) return $info;
         $info = $info['data'];
-        $this->assign("info",$info);
-        $this->assign('order_items',$info['items']);
+        $this->assign("info", $info);
+        $this->assign('order_items', $info['items']);
         return [
-            'data'=>$this->fetch('bill_aftersales/add',[
-                'info'=>$info,
-                'order_items'=>$info['items']
+            'data' => $this->fetch('bill_aftersales/add', [
+                'info' => $info,
+                'order_items' => $info['items']
             ]),
-            'status'=>true
+            'status' => true
         ];
     }
 }

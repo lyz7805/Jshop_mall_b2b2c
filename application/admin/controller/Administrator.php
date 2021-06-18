@@ -75,7 +75,7 @@ class Administrator extends AdminController
         $this->assign('roleList', $manageRoleList);
         $result['status'] = true;
         $result['msg']    = '成功';
-        $result['data']   = $this->fetch('edit');
+        $result['data']   = $this->fetch('edit')->getContent();
         return $result;
     }
 
@@ -132,7 +132,7 @@ class Administrator extends AdminController
         $this->assign('manageInfo', $manageInfo);
         $result['status'] = true;
         $result['msg']    = '成功';
-        $result['data']   = $this->fetch('edit');
+        $result['data']   = $this->fetch('edit')->getContent();
         return $result;
     }
 

@@ -67,7 +67,7 @@ class BillDelivery extends Manage
         $res['data']['ship_address'] = get_area($res['data']['ship_area_id']) . '- ' . $res['data']['ship_address'];
         $res['data']['ctime'] = getTime($res['data']['ctime']);
         $this->assign('data', $res['data']);
-        $temp = $this->fetch('view');
+        $temp = $this->fetch('view')->getContent();
         $result = [
             'status' => true,
             'msg' => '获取成功',

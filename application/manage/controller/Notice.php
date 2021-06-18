@@ -43,9 +43,8 @@ class Notice extends Manage
         return [
             'status' => true,
             'msg'    => '获取成功',
-            'data'   => $this->fetch()
+            'data'   => $this->fetch()->getContent()
         ];
-
     }
 
 
@@ -72,7 +71,7 @@ class Notice extends Manage
         return [
             'status' => true,
             'msg'    => '获取成功',
-            'data'   => $this->fetch('edit', ['noticeInfo' => $noticeInfo])
+            'data'   => $this->fetch('edit', ['noticeInfo' => $noticeInfo])->getContent()
         ];
     }
 

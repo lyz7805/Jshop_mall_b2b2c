@@ -59,7 +59,7 @@ class GoodsParams extends Admin
         //获取添加页面
         $return_data['status'] = true;
         $return_data['msg'] = error_code(10037, true);
-        $return_data['data'] = $this->fetch('add');
+        $return_data['data'] = $this->fetch('add')->getContent();
         return $return_data;
     }
 
@@ -107,7 +107,7 @@ class GoodsParams extends Admin
         //获取添加页面
         $return_data['status'] = true;
         $return_data['msg'] = '成功';
-        $return_data['data'] = $this->fetch('edit');
+        $return_data['data'] = $this->fetch('edit')->getContent();
         return $return_data;
     }
 
@@ -151,7 +151,7 @@ class GoodsParams extends Admin
         $this->view->engine->layout(false);
         $return['status'] = true;
         $return['msg'] = '成功';
-        $return['data'] = $this->fetch('getlist');
+        $return['data'] = $this->fetch('getlist')->getContent();
         return $return;
     }
 }

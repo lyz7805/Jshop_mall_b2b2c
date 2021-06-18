@@ -22,8 +22,7 @@ class Brand extends Manage
      */
     public function index()
     {
-        if(Request::isAjax())
-        {
+        if (Request::isAjax()) {
             $brandModel = new BrandsModel();
             return $brandModel->tableData(input('param.'));
         }
@@ -38,8 +37,7 @@ class Brand extends Manage
     public function add()
     {
         $this->view->engine->layout(false);
-        if(Request::isPost())
-        {
+        if (Request::isPost()) {
             $brandModel = new BrandsModel();
             return $brandModel->addData(input('param.'));
         }
@@ -47,7 +45,7 @@ class Brand extends Manage
         return [
             'status' => true,
             'msg' => '获取成功',
-            'data' => $this->fetch()
+            'data' => $this->fetch()->getContent()
         ];
     }
 
@@ -63,11 +61,10 @@ class Brand extends Manage
     {
         $this->view->engine->layout(false);
         $brandModel = new BrandsModel();
-        if(Request::isPost())
-        {
+        if (Request::isPost()) {
             return $brandModel->saveData(input('param.'));
         }
-        $data = $brandModel->where('id',input('param.id/d'))->find();
+        $data = $brandModel->where('id', input('param.id/d'))->find();
         if (!$data) {
             return error_code(10002);
         }
@@ -75,7 +72,7 @@ class Brand extends Manage
         return [
             'status' => true,
             'msg' => '获取成功',
-            'data' => $this->fetch('edit',['data' => $data])
+            'data' => $this->fetch('edit', ['data' => $data])->getContent()
         ];
     }
 
@@ -89,7 +86,7 @@ class Brand extends Manage
     {
         $result = [
             'status' => false,
-            'msg' => error_code(10023,true),
+            'msg' => error_code(10023, true),
             'data' => []
         ];
         $brandModel = new BrandsModel();
@@ -107,7 +104,7 @@ class Brand extends Manage
     {
         $result     = [
             'status' => false,
-            'msg'    => error_code(10025,true),
+            'msg'    => error_code(10025, true),
             'data'   => [],
         ];
         $brandModel = new BrandsModel();
@@ -119,5 +116,4 @@ class Brand extends Manage
         }
         return $result;
     }
-
 }

@@ -204,7 +204,7 @@ class Form extends Manage
         $id     = input('id/d', 0);
         $result = [
             'status' => false,
-            'msg'    => error_code(10003,true),
+            'msg'    => error_code(10003, true),
             'data'   => ''
         ];
         if (!$id) {
@@ -259,11 +259,10 @@ class Form extends Manage
         $this->assign('total_submit', $total_submit);
         $this->assign('total_sum', getMoney($total_sum));
         $this->assign('id', $id);
-        $result['data']   = $this->fetch('report');
+        $result['data']   = $this->fetch('report')->getContent();
         $result['status'] = true;
         $result['msg']    = '获取成功';
         return $result;
-
     }
 
     /**
@@ -349,7 +348,7 @@ class Form extends Manage
         $this->view->engine->layout(false);
         $result['status'] = true;
         $result['msg']    = '获取成功';
-        $result['data']   = $this->fetch('submit_detail');
+        $result['data']   = $this->fetch('submit_detail')->getContent();
         return $result;
     }
 
@@ -384,7 +383,7 @@ class Form extends Manage
             $this->view->engine->layout(false);
             $result['status'] = true;
             $result['msg']    = '获取成功';
-            $result['data']   = $this->fetch('edit_form_submit');
+            $result['data']   = $this->fetch('edit_form_submit')->getContent();
             return $result;
         }
     }

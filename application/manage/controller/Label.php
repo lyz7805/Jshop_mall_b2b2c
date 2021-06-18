@@ -22,7 +22,7 @@ class Label extends Manage
     public function setLabel()
     {
         $ids        = input('ids/a', []);
-        $model      = input('model', '');//要设置的模型
+        $model      = input('model', ''); //要设置的模型
         $total_item = count($ids);
 
         $this->assign('total_item', $total_item);
@@ -32,7 +32,7 @@ class Label extends Manage
         $labels     = $labelModel->getAllLabel();
         $this->assign('labels', $labels);
         $this->view->engine->layout(false);
-        $content = $this->fetch('setLabel');
+        $content = $this->fetch('setLabel')->getContent();
         return [
             'status' => true,
             'data'   => $content,
@@ -53,9 +53,10 @@ class Label extends Manage
      * 删除标签
      * @return array
      */
-    public function delLabel(){
+    public function delLabel()
+    {
         $ids = input('ids/a', []);
-        $model = input('model', '');//要设置的模型
+        $model = input('model', ''); //要设置的模型
         $total_item = count($ids);
 
         $this->assign('total_item', $total_item);
@@ -63,25 +64,25 @@ class Label extends Manage
         //已存在标签
         $labelModel = new labelModel();
 
-        $labels = $labelModel->getAllSelectLabel($ids,$model);
-        $this->assign('labels', json_encode($labels,320));
+        $labels = $labelModel->getAllSelectLabel($ids, $model);
+        $this->assign('labels', json_encode($labels, 320));
 
         $this->view->engine->layout(false);
-        $content = $this->fetch('delLabel');
+        $content = $this->fetch('delLabel')->getContent();
         return [
-            'status'=>true,
-            'data'=>$content,
-            'msg'=>'获取成功',
+            'status' => true,
+            'data' => $content,
+            'msg' => '获取成功',
         ];
     }
 
-    public function doDelLabel(){
+    public function doDelLabel()
+    {
         if (Request::isPost()) {
             $data = input('param.');
-            $data['label'] = input('param.label/a',[]);
+            $data['label'] = input('param.label/a', []);
             $labelModel = new labelModel();
             return $labelModel->delData($data);
         }
     }
-
 }

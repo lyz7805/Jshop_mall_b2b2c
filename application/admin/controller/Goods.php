@@ -513,7 +513,7 @@ class Goods extends Admin
                 $goodsTypeParamsModel = new GoodsTypeParams();
                 $typeParams           = $goodsTypeParamsModel->getRelParams($type_id);
                 $this->assign('typeParams', $typeParams);
-                $html             = $this->fetch('getSpec');
+                $html             = $this->fetch('getSpec')->getContent();
                 $result['status'] = true;
                 $result['msg']    = '获取成功';
                 $result['data']   = $html;
@@ -589,7 +589,7 @@ class Goods extends Admin
             $erp_syn_on = false;
         }
         $this->assign('erp_syn_on', $erp_syn_on);
-        $html             = $this->fetch('getSpecHtml');
+        $html             = $this->fetch('getSpecHtml')->getContent();
         $result['data']   = $html;
         $result['status'] = true;
         $result['msg']    = '获取成功';
@@ -1083,7 +1083,7 @@ class Goods extends Admin
 
             $this->view->engine->layout(false);
 
-            $html = $this->fetch('editGetSpecHtml');
+            $html = $this->fetch('editGetSpecHtml')->getContent();
             $this->view->engine->layout(true);
 
             $result['status'] = true;
@@ -1248,7 +1248,7 @@ class Goods extends Admin
         $this->view->engine->layout(false);
         $result['status'] = true;
         $result['msg']    = '成功';
-        $result['data']   = $this->fetch('goodsSearch');
+        $result['data']   = $this->fetch('goodsSearch')->getContent();
         return $result;
     }
 
@@ -1360,7 +1360,7 @@ class Goods extends Admin
         $this->assign('total_goods', count($ids));
         $this->assign('ids', implode(',', $ids));
         $this->view->engine->layout(false);
-        $content = $this->fetch('batchModifyPrice');
+        $content = $this->fetch('batchModifyPrice')->getContent();
         return [
             'status' => true,
             'data'   => $content,
@@ -1476,7 +1476,7 @@ class Goods extends Admin
         $this->assign('total_goods', count($ids));
         $this->assign('ids', implode(',', $ids));
         $this->view->engine->layout(false);
-        $content = $this->fetch('batchModifyStock');
+        $content = $this->fetch('batchModifyStock')->getContent();
         return [
             'status' => true,
             'data'   => $content,

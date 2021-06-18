@@ -263,7 +263,7 @@ class Images extends Admin
                 ];
                 $this->assign('data', $response);
                 $this->view->engine->layout(false);
-                $response['image_html'] = $this->fetch('gimage');
+                $response['image_html'] = $this->fetch('gimage')->getContent();
             }
             return $response;
         }

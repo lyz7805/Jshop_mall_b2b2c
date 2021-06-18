@@ -103,7 +103,7 @@ class Pages extends Manage
         }
 
         $this->assign('list', config('pages.list'));
-        return $this->fetch();
+        return $this->fetch()->getContent();
     }
 
 

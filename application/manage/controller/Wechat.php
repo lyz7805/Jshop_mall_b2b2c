@@ -23,8 +23,8 @@ use app\common\model\Setting;
 class Wechat extends Manage
 {
 
-    private $author = [];//小程序授权信息
-    private $authorType = 'b2c';//授权类型
+    private $author = []; //小程序授权信息
+    private $authorType = 'b2c'; //授权类型
 
 
     /**
@@ -160,16 +160,16 @@ class Wechat extends Manage
         } else {
             $wx_appid = getSetting('wx_appid');
         }
-        $site_url = \request()->domain();//站点地址
+        $site_url = \request()->domain(); //站点地址
 
         $this->assign('id', $id);
-        $this->assign('pid', $pid);//父级菜单ID
+        $this->assign('pid', $pid); //父级菜单ID
         $this->assign('menu', $menu);
         $this->assign('site_url', $site_url);
         $this->assign('wx_appid', $wx_appid);
         $result['status'] = true;
         $result['msg']    = '成功';
-        $result['data']   = $this->fetch('edit_menu');
+        $result['data']   = $this->fetch('edit_menu')->getContent();
         return $result;
     }
 
@@ -211,7 +211,7 @@ class Wechat extends Manage
         $result = [
             'status' => false,
             'data'   => [],
-            'msg'    => '',//参数错误
+            'msg'    => '', //参数错误
         ];
         $id     = input('id/d', 0);
         $pid    = input('pid/d', 0);
@@ -230,13 +230,13 @@ class Wechat extends Manage
         if ($pid == 0) {
             $nums = $weixinMenu->where(['pid' => $id])->count();
             if ($nums > 0) {
-                $result['msg'] = error_code(11100,true);
+                $result['msg'] = error_code(11100, true);
                 return $result;
             }
         }
         $res = $weixinMenu->where(['pid' => $pid, 'menu_id' => $id])->delete();
         if (!$res) {
-            $result['msg'] = error_code(10023,true);
+            $result['msg'] = error_code(10023, true);
             return $result;
         }
         $result['status'] = true;
@@ -263,7 +263,7 @@ class Wechat extends Manage
         $menuData   = $weixinMenu->weixinMenu();
 
         if (!$menuData['button']) {
-            $result = $menu->deleteMenu();//删除菜单
+            $result = $menu->deleteMenu(); //删除菜单
         } else {
             $result = $menu->createMenu($menuData);
         }
@@ -284,7 +284,6 @@ class Wechat extends Manage
             $returnData['msg'] = $e->getMessage();
             return $returnData;
         }
-
     }
 
 
@@ -311,7 +310,7 @@ class Wechat extends Manage
     {
         $return = [
             'status' => false,
-            'msg'    => error_code(10037,true),
+            'msg'    => error_code(10037, true),
             'data'   => ''
         ];
         $this->view->engine->layout(false);
@@ -321,7 +320,7 @@ class Wechat extends Manage
         }
         $return['status'] = true;
         $return['msg']    = '成功';
-        $return['data']   = $this->fetch('add_message');
+        $return['data']   = $this->fetch('add_message')->getContent();
         return $return;
     }
 
@@ -370,7 +369,7 @@ class Wechat extends Manage
         $data['params']   = json_decode($data['params'], true);
         $return['status'] = true;
         $return['msg']    = '成功';
-        $return['data']   = $this->fetch('edit_message', ['data' => $data]);
+        $return['data']   = $this->fetch('edit_message', ['data' => $data])->getContent();
         return $return;
     }
 
@@ -383,7 +382,7 @@ class Wechat extends Manage
     {
         $id = input('id/d', 0);
         if (!$id) {
-            $this->error(error_code(10051,true));
+            $this->error(error_code(10051, true));
         }
         $weixinMessage = new WeixinMessage();
         $message       = $weixinMessage->getInfo($id);
@@ -401,7 +400,7 @@ class Wechat extends Manage
             }
         }
         $this->assign('id', $id);
-        $this->assign('mediaData', json_encode($mediaData,320));
+        $this->assign('mediaData', json_encode($mediaData, 320));
         $this->assign('mediaList', $mediaData);
         return $this->fetch('edit_media_message');
     }

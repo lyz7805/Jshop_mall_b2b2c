@@ -21,7 +21,7 @@ class Images extends Manage
     {
         $imageModel = new imageModel();
         $group = $this->groupList();
-        $this->assign('group',$group['data']);
+        $this->assign('group', $group['data']);
         if (Request::isAjax()) {
             $filter = input('request.');
             return $imageModel->tableData($filter);
@@ -76,7 +76,7 @@ class Images extends Manage
                 $response = [
                     'data'   => '',
                     'status' => false,
-                    'msg'    => error_code(10004,true)
+                    'msg'    => error_code(10004, true)
                 ];
                 echo json_encode($response);
                 exit;
@@ -123,20 +123,20 @@ class Images extends Manage
             case 'config':
                 $result = json_encode($CONFIG);
                 break;
-            /* 上传图片 */
+                /* 上传图片 */
             case 'uploadimage':
                 $this->uploadImage();
-            /* 列出图片 */
+                /* 列出图片 */
             case 'listimage':
                 $this->listimage();
                 break;
-            /* 列出图片 */
+                /* 列出图片 */
             case 'search':
                 $this->listimage();
                 break;
             default:
                 $result = json_encode(array(
-                    'state' => error_code(10048,true)
+                    'state' => error_code(10048, true)
                 ));
                 break;
         }
@@ -147,7 +147,7 @@ class Images extends Manage
                 echo htmlspecialchars($callback) . '(' . $result . ')';
             } else {
                 echo json_encode(array(
-                    'state' => error_code(10049,true)
+                    'state' => error_code(10049, true)
                 ));
             }
         } else {
@@ -164,7 +164,7 @@ class Images extends Manage
         $response = [
             'data'   => '',
             'status' => 'fail',
-            'msg'    => error_code(10104,true)
+            'msg'    => error_code(10104, true)
         ];
 
         if (!Request::isPost()) {
@@ -198,9 +198,9 @@ class Images extends Manage
         if ((stripos($imgUrl, 'http') !== false) || (stripos($imgUrl, 'https') !== false)) {
             $tmp_img = $image_model->getImage($imgUrl, $relpath);
             if ($tmp_img['error'] > 0) {
-                $response = Array(
+                $response = array(
                     "status"  => 'error',
-                    "message" => error_code(10104,true)
+                    "message" => error_code(10104, true)
                 );
             }
             $imgUrl = $tmp_img['save_path'];
@@ -234,7 +234,7 @@ class Images extends Manage
 
         if (!is_writable(dirname($output_filename))) {
             $response = [
-                'msg' => error_code(10104,true),
+                'msg' => error_code(10104, true),
             ];
             return $response;
         } else {
@@ -255,7 +255,7 @@ class Images extends Manage
             imagejpeg($final_image, $output_filename . $type, $jpeg_quality);
 
             //保存到image里面，删除之前文件
-            $url            = $output_file_path . $tempFileName . $type;//todo 带上域名
+            $url            = $output_file_path . $tempFileName . $type; //todo 带上域名
             $iData['id']    = md5(get_hash($file_name));
             $iData['type']  = 'local';
             $iData['name']  = $file_name;
@@ -272,11 +272,10 @@ class Images extends Manage
                 ];
                 $this->assign('data', $response);
                 $this->view->engine->layout(false);
-                $response['image_html'] = $this->fetch('gimage');
+                $response['image_html'] = $this->fetch('gimage')->getContent();
             }
             return $response;
         }
-
     }
 
     /**
@@ -398,23 +397,24 @@ class Images extends Manage
      * @throws \think\Exception
      * @throws \think\exception\PDOException
      */
-    public function moveGroup(){
+    public function moveGroup()
+    {
         $return_data  = [
             'status' => false,
             'msg'    => '',
             'data'   => ''
         ];
-        $data['images_ids'] = input('param.images_ids/a',[]);
+        $data['images_ids'] = input('param.images_ids/a', []);
         $data['group_id'] = input('param.group_id');
         $imagesModel = new imageModel();
-        if(!$data['images_ids']){
+        if (!$data['images_ids']) {
             return error_code(50004);
         }
-        if(isset($data['group_id']) && $data['group_id'] === ''){
+        if (isset($data['group_id']) && $data['group_id'] === '') {
             return error_code(50005);
         }
-        $imagesModel->where('id','in',$data['images_ids'])->update([
-            'group_id'=>$data['group_id']
+        $imagesModel->where('id', 'in', $data['images_ids'])->update([
+            'group_id' => $data['group_id']
         ]);
         $return_data['status'] = true;
         $return_data['msg']    = '操作成功';
@@ -450,5 +450,4 @@ class Images extends Manage
         $return_data['msg']    = '操作成功';
         return $return_data;
     }
-
 }

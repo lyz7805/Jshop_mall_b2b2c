@@ -64,7 +64,7 @@ class Invoice extends Manage
         $info = $invoiceModel->getInfo($id);
         if ($info['status']) {
             $this->assign('info', $info['data']);
-            $return['data'] = $this->fetch();
+            $return['data'] = $this->fetch()->getContent();
             $return['status'] = true;
             $return['msg'] = '成功';
         } else {
@@ -92,7 +92,7 @@ class Invoice extends Manage
         $info = $invoiceModel->getInfo($id);
         if ($info['status']) {
             $this->assign('info', $info['data']);
-            $return['data'] = $this->fetch();
+            $return['data'] = $this->fetch()->getContent();
             $return['status'] = true;
             $return['msg'] = '成功';
         } else {

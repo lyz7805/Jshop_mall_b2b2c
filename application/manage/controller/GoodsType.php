@@ -165,7 +165,7 @@ class GoodsType extends Manage
         //获取添加页面
         $return['status'] = true;
         $return['msg'] = '成功';
-        $return['data'] = $this->fetch('add');
+        $return['data'] = $this->fetch('add')->getContent();
         return $return;
     }
 
@@ -204,7 +204,7 @@ class GoodsType extends Manage
             $this->assign('typeSids', $typeSids);
             $return['status'] = true;
             $return['msg'] = '成功';
-            $return['data'] = $this->fetch('addRel');
+            $return['data'] = $this->fetch('addRel')->getContent();
             return $return;
         } else {
             $return_data = [
@@ -267,7 +267,7 @@ class GoodsType extends Manage
         }
         $result['status'] = true;
         $result['msg'] = '成功';
-        $result['data'] = $this->fetch('edit');
+        $result['data'] = $this->fetch('edit')->getContent();
         return $result;
     }
 
@@ -352,7 +352,7 @@ class GoodsType extends Manage
 
             $return['status'] = true;
             $return['msg'] = '成功';
-            $return['data'] = $this->fetch('addParams');
+            $return['data'] = $this->fetch('addParams')->getContent();
             return $return;
         } else {
             //存储添加内容

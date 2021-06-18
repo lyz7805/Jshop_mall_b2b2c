@@ -29,7 +29,6 @@ class Promotion extends Manage
             return $promotionModel->tableData($request);
         }
         return $this->fetch();
-
     }
 
     /**
@@ -45,7 +44,6 @@ class Promotion extends Manage
             return $promotionModel->tableData($request);
         }
         return $this->fetch();
-
     }
 
     //添加促销
@@ -133,7 +131,7 @@ class Promotion extends Manage
         $where['type']  = $promotionModel::TYPE_PROMOTION;
         $info           = $promotionModel->where($where)->find();
         if (!$info) {
-            $this->error(error_code(15019,true));
+            $this->error(error_code(15019, true));
         }
         $info['params'] = json_decode($info['params']);
 
@@ -177,7 +175,7 @@ class Promotion extends Manage
         $where['type']  = $promotionModel::TYPE_COUPON;
         $info           = $promotionModel->where($where)->find();
         if (!$info) {
-            $this->error(error_code(15020,true));
+            $this->error(error_code(15020, true));
         }
         $info = $info->toArray();
         //优惠券条件
@@ -304,7 +302,7 @@ class Promotion extends Manage
         $this->assign('code', $conditionModel->code);
         return [
             'status' => true,
-            'data'   => $this->fetch('conditionAdd'),
+            'data'   => $this->fetch('conditionAdd')->getContent(),
             'msg'    => ''
         ];
     }
@@ -373,7 +371,7 @@ class Promotion extends Manage
 
         return [
             'status' => true,
-            'data'   => $this->fetch("../extend/org/promotion/condition/tpl/".$conditionModel->code[$code]['class'].".html"),
+            'data'   => $this->fetch("../extend/org/promotion/condition/tpl/" . $conditionModel->code[$code]['class'] . ".html")->getContent(),
             'msg'    => ''
         ];
     }
@@ -422,7 +420,7 @@ class Promotion extends Manage
         $resultModel = new PromotionResult();
         $type        = input('type', 'promotion');
 
-        if ($type && $type == 'group') {//团购时不要订单促销
+        if ($type && $type == 'group') { //团购时不要订单促销
             foreach ($resultModel->code as $key => $value) {
                 if ($key != 'GOODS_REDUCE' && $key != 'GOODS_DISCOUNT' && $key != 'GOODS_ONE_PRICE') {
                     unset($resultModel->code[$key]);
@@ -432,7 +430,7 @@ class Promotion extends Manage
         $this->assign('code', $resultModel->code);
         return [
             'status' => true,
-            'data'   => $this->fetch('resultAdd'),
+            'data'   => $this->fetch('resultAdd')->getContent(),
             'msg'    => ''
         ];
     }
@@ -485,7 +483,7 @@ class Promotion extends Manage
 
         return [
             'status' => true,
-            'data'   => $this->fetch("../extend/org/promotion/result/tpl/".$resultModel->code[$code]['class'].".html"),
+            'data'   => $this->fetch("../extend/org/promotion/result/tpl/" . $resultModel->code[$code]['class'] . ".html")->getContent(),
             'msg'    => ''
         ];
     }
@@ -547,8 +545,8 @@ class Promotion extends Manage
             $data['exclusive'] = input('param.exclusive/d', 2);
 
             $params                   = input('param.params/a', []);
-            $params['max_nums']       = input('param.max_nums/d', 0);//每人限购
-            $params['max_goods_nums'] = input('param.max_goods_nums/d', 0);//总量
+            $params['max_nums']       = input('param.max_nums/d', 0); //每人限购
+            $params['max_goods_nums'] = input('param.max_goods_nums/d', 0); //总量
 
             if (isset($params['salesnum']) && !$params['salesnum']) {
                 $params['salesnum'] = rand(1, 10);
@@ -579,7 +577,7 @@ class Promotion extends Manage
         $where[] = ['type', 'in', [$promotionModel::TYPE_GROUP, $promotionModel::TYPE_SKILL]];
         $info    = $promotionModel->where($where)->find();
         if (!$info) {
-            $this->error(error_code(15019,true));
+            $this->error(error_code(15019, true));
         }
         //取促销信息
         $conditionModel    = new PromotionCondition();
@@ -612,8 +610,8 @@ class Promotion extends Manage
             $data['type']      = input('param.type/d', 3);
             $params            = input('param.params/a', []);
 
-            $params['max_nums']       = input('param.max_nums/d', 0);//每人限购
-            $params['max_goods_nums'] = input('param.max_goods_nums/d', 0);//总量
+            $params['max_nums']       = input('param.max_nums/d', 0); //每人限购
+            $params['max_goods_nums'] = input('param.max_goods_nums/d', 0); //总量
 
             if (isset($params['salesnum']) && !$params['salesnum']) {
                 $params['salesnum'] = rand(1, 10);
@@ -639,7 +637,7 @@ class Promotion extends Manage
                     $result = [
                         'status' => false,
                         'data'   => 0,
-                        'msg'    => error_code(12014,true,$goods['goods_name'],$goods['name']),
+                        'msg'    => error_code(12014, true, $goods['goods_name'], $goods['name']),
                     ];
                     return $result;
                 }

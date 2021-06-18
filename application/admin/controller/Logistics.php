@@ -21,12 +21,11 @@ class Logistics extends Admin
      */
     public function index()
     {
-        if(Request::isAjax()) {
+        if (Request::isAjax()) {
             $logModel = new LogisticsModel();
             return $logModel->tableData(input('request.'));
         }
         return $this->fetch();
-
     }
 
 
@@ -38,12 +37,11 @@ class Logistics extends Admin
     {
         $return_data = [
             'status' => false,
-            'msg'    => error_code(10019,true),
+            'msg'    => error_code(10019, true),
             'data'   => ''
         ];
         $this->view->engine->layout(false);
-        if(Request::isPost())
-        {
+        if (Request::isPost()) {
             //存储添加内容
             $data = [
                 'logi_name' => input('post.logi_name'),
@@ -52,8 +50,7 @@ class Logistics extends Admin
             ];
             $logModel = new LogisticsModel();
             $result = $logModel->add($data);
-            if($result !== false)
-            {
+            if ($result !== false) {
                 $return_data = [
                     'status' => true,
                     'msg'    => '添加成功',
@@ -64,7 +61,7 @@ class Logistics extends Admin
         }
         $return_data['status'] = true;
         $return_data['msg'] = '成功';
-        $return_data['data'] = $this->fetch('add');
+        $return_data['data'] = $this->fetch('add')->getContent();
         return $return_data;
     }
 
@@ -78,15 +75,14 @@ class Logistics extends Admin
         $return = error_code(10037);
         $this->view->engine->layout(false);
         $logModel = new LogisticsModel();
-        if(Request::isPost())
-        {
+        if (Request::isPost()) {
             return $logModel->saveData(input('param.'));
         }
         $data = $logModel->getInfo(input('param.id/d'));
-        $this->assign('data',$data);
+        $this->assign('data', $data);
         $return['status'] = true;
         $return['msg'] = '成功';
-        $return['data'] = $this->fetch('edit');
+        $return['data'] = $this->fetch('edit')->getContent();
         return $return;
     }
 
@@ -101,13 +97,11 @@ class Logistics extends Admin
     {
         $return_data = error_code(10023);
         $logModel = new LogisticsModel();
-        $id = input('post.id/d',0);
-        if(!$id)
-        {
+        $id = input('post.id/d', 0);
+        if (!$id) {
             return $return_data;
         }
-        if($logModel->where(['id'=>$id])->delete())
-        {
+        if ($logModel->where(['id' => $id])->delete()) {
             $return_data['msg'] = '删除成功';
             $return_data['status'] = true;
         }

@@ -85,7 +85,7 @@ class User extends Manage
         $this->assign('point', $user_info['point']);
         $result['status'] = true;
         $result['msg'] = '获取成功';
-        $result['data'] = $this->fetch('editPoint');
+        $result['data'] = $this->fetch('editPoint')->getContent();
         return $result;
     }
 
@@ -152,8 +152,8 @@ class User extends Manage
             $goodsCommentModel = new GoodsComment();
             return $goodsCommentModel->tableData($post);
         }
-        $goods_id = input('goods_id',0);
-        $this->assign('goods_id',$goods_id);
+        $goods_id = input('goods_id', 0);
+        $this->assign('goods_id', $goods_id);
         return $this->fetch('comment');
     }
 
@@ -176,7 +176,7 @@ class User extends Manage
         $this->assign('grade', $userGrade);
         $result['status'] = true;
         $result['msg'] = '获取成功';
-        $result['data'] = $this->fetch('addUser');
+        $result['data'] = $this->fetch('addUser')->getContent();
         return $result;
     }
 
@@ -208,7 +208,7 @@ class User extends Manage
         $this->assign('grade', $userGrade);
         $result['status'] = true;
         $result['msg'] = '获取成功';
-        $result['data'] = $this->fetch('editUser');
+        $result['data'] = $this->fetch('editUser')->getContent();
         return $result;
     }
 
@@ -234,7 +234,7 @@ class User extends Manage
     //        $this->assign('info', $info);
     //        $result['status'] = true;
     //        $result['msg'] = '获取成功';
-    //        $result['data'] = $this->fetch('details');
+    //        $result['data'] = $this->fetch('details')->getContent();
     //        return $result;
     //    }
 
@@ -266,7 +266,7 @@ class User extends Manage
         $this->assign('money', $user_info['balance']);
         $result['status'] = true;
         $result['msg'] = '';
-        $result['data'] = $this->fetch('editMoney');
+        $result['data'] = $this->fetch('editMoney')->getContent();
         return $result;
     }
 
@@ -317,7 +317,7 @@ class User extends Manage
         }
         $result['status'] = true;
         $result['msg'] = '成功';
-        $result['data'] = $this->fetch('grade_edit');
+        $result['data'] = $this->fetch('grade_edit')->getContent();
         return $result;
     }
 

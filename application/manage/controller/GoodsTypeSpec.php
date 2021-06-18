@@ -7,6 +7,7 @@
 // | Author: mark <jima@jihainet.com>
 // +----------------------------------------------------------------------
 namespace app\Manage\controller;
+
 use app\common\controller\Manage;
 use Request;
 use app\common\model\GoodsType as typeModel;
@@ -29,8 +30,7 @@ class GoodsTypeSpec extends Manage
      */
     public function index()
     {
-        if(Request::isAjax())
-        {
+        if (Request::isAjax()) {
             $typeSpecModel = new typeSpecModel();
             $filter = input('request.');
             return $typeSpecModel->tableData($filter);
@@ -51,20 +51,17 @@ class GoodsTypeSpec extends Manage
     {
         $return = [
             'status' => false,
-            'msg' => error_code(10037,true),
+            'msg' => error_code(10037, true),
             'data' => ''
         ];
         $this->view->engine->layout(false);
-        if(!Request::instance()->isPost())
-        {
+        if (!Request::instance()->isPost()) {
             //获取添加页面
             $return['status'] = true;
             $return['msg'] = '成功';
-            $return['data'] = $this->fetch('add');
+            $return['data'] = $this->fetch('add')->getContent();
             return $return;
-        }
-        else
-        {
+        } else {
             $specModel = new typeSpecModel();
             $specModel::startTrans();
             $name = input('name');
@@ -76,12 +73,10 @@ class GoodsTypeSpec extends Manage
             ];
 
             $result = $specModel->add($spec);
-            if($result !== false)
-            {
+            if ($result !== false) {
                 //保存属性值
                 $specId = $specModel->getLastInsID();
-                foreach((array)$value as $key => $val)
-                {
+                foreach ((array)$value as $key => $val) {
                     $specValue[] = [
                         'spec_id' => $specId,
                         'value'   => $val,
@@ -89,27 +84,22 @@ class GoodsTypeSpec extends Manage
                 }
                 $specValueModel = new GoodsTypeSpecValue();
                 $result = $specValueModel->addAll($specValue);
-                if($result)
-                {
+                if ($result) {
                     $specModel::commit();
                     $return = [
                         'status' => true,
                         'msg' => '添加成功',
                         'data' => $result,
                     ];
-                }
-                else
-                {
+                } else {
                     $specModel::rollback();
                     $return = [
                         'status' => false,
-                        'msg' => error_code(10019,true),
+                        'msg' => error_code(10019, true),
                         'data' => $result,
                     ];
                 }
-            }
-            else
-            {
+            } else {
                 $specModel::rollback();
                 return error_code(10019);
             }
@@ -127,7 +117,7 @@ class GoodsTypeSpec extends Manage
     {
         $result = [
             'status' => false,
-            'msg' => error_code(10004,true),
+            'msg' => error_code(10004, true),
             'data' => '',
         ];
         $this->view->engine->layout(false);
@@ -141,8 +131,7 @@ class GoodsTypeSpec extends Manage
         $typeSpec['value'] = $specValueModel::all(['spec_id' => $id]);
 
         $this->assign('typeSpec', $typeSpec);
-        if(Request::isPost())
-        {
+        if (Request::isPost()) {
             $goodsTypeModel = new typeSpecModel();
             $specValueModel = new GoodsTypeSpecValue();
             $data = [
@@ -156,10 +145,8 @@ class GoodsTypeSpec extends Manage
                 return error_code(12011);
             }
             $goodsTypeModel->startTrans();
-            if($specValueModel::get(['spec_id' => $data['id']]))
-            {
-                if(!$specValueModel::destroy(['spec_id' => $data['id']]))
-                {
+            if ($specValueModel::get(['spec_id' => $data['id']])) {
+                if (!$specValueModel::destroy(['spec_id' => $data['id']])) {
                     $goodsTypeModel->rollback();
                     // $result['msg'] = error_code(12012, true);
                     return error_code(12012);
@@ -167,16 +154,14 @@ class GoodsTypeSpec extends Manage
             }
             $goodsTypeModel::update($data, $filter);
             $valueData = [];
-            foreach((array)$value as $key => $val)
-            {
+            foreach ((array)$value as $key => $val) {
                 $valueData[] = [
                     'spec_id' => $data['id'],
                     'value' => $val,
                     'sort' => $data['sort'] ? $data['sort'] : 100,
                 ];
             }
-            if(!$specValueModel->saveAll($valueData))
-            {
+            if (!$specValueModel->saveAll($valueData)) {
                 $goodsTypeModel->rollback();
                 // $result['msg'] = error_code(12013, true);
                 return error_code(12013);
@@ -191,7 +176,7 @@ class GoodsTypeSpec extends Manage
         }
         $result['status'] = true;
         $result['msg'] = '成功';
-        $result['data'] = $this->fetch('edit');
+        $result['data'] = $this->fetch('edit')->getContent();
         return $result;
     }
 
@@ -208,36 +193,30 @@ class GoodsTypeSpec extends Manage
     {
         $result = [
             'status' => false,
-            'msg' => error_code(10023,true),
+            'msg' => error_code(10023, true),
             'data' => '',
         ];
         $id = input('post.id', 0);
-        if($id)
-        {
+        if ($id) {
             $goodsTypeModel = new typeSpecModel();
             $goodsTypeModel->startTrans();
             $filter = [
                 'id' => $id,
             ];
-            if($goodsTypeModel::destroy($filter))
-            {
+            if ($goodsTypeModel::destroy($filter)) {
                 $specValueModel = new GoodsTypeSpecValue();
-                if(!$specValueModel::get(['spec_id' => $id]))
-                {
+                if (!$specValueModel::get(['spec_id' => $id])) {
                     $goodsTypeModel->commit();
                     $result['status'] = true;
                     $result['msg'] = '删除成功';
                     return $result;
                 }
 
-                if($specValueModel::destroy(['spec_id' => $id]))
-                {
+                if ($specValueModel::destroy(['spec_id' => $id])) {
                     $result['status'] = true;
                     $result['msg'] = '删除成功';
                     $goodsTypeModel->commit();
-                }
-                else
-                {
+                } else {
                     $goodsTypeModel->rollback();
                 }
             }
@@ -254,13 +233,13 @@ class GoodsTypeSpec extends Manage
     {
         $result = [
             'status' => false,
-            'msg' => error_code(10037,true),
+            'msg' => error_code(10037, true),
             'data' => ''
         ];
         $this->view->engine->layout(false);
         $result['status'] = true;
         $result['msg'] = '成功';
-        $result['data'] = $this->fetch('getlist');
+        $result['data'] = $this->fetch('getlist')->getContent();
         return $result;
     }
 }

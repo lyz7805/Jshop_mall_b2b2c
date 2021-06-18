@@ -19,13 +19,12 @@ class Pintuan extends Manage
      */
     public function index()
     {
-        if(Request::isAjax()) {
+        if (Request::isAjax()) {
             $pintuanRuleModel = new PintuanRule();
             $request = input('param.');
             return $pintuanRuleModel->tableData($request);
         }
         return $this->fetch();
-
     }
 
 
@@ -37,10 +36,10 @@ class Pintuan extends Manage
             return error_code(10051);
         }
         $pintuanRuleModel = new PintuanRule();
-        $pintuanRuleModel->where(['id'=>input('param.id')])->delete();
+        $pintuanRuleModel->where(['id' => input('param.id')])->delete();
 
         $pintuanGoodsModel = new PintuanGoods();
-        $pintuanGoodsModel->where(['rule_id'=>input('param.id')])->delete();
+        $pintuanGoodsModel->where(['rule_id' => input('param.id')])->delete();
 
 
         return [
@@ -51,7 +50,8 @@ class Pintuan extends Manage
     }
 
     //添加&编辑拼团
-    public function edit(){
+    public function edit()
+    {
         $this->view->engine->layout(false);
         $result = [
             'status' => true,
@@ -69,27 +69,27 @@ class Pintuan extends Manage
         }
 
         //如果是编辑，取数据
-        if(input('?param.id')){
-            $info = $pintuanRuleModel->where('id',input('param.id'))->find();
-            if(!$info){
+        if (input('?param.id')) {
+            $info = $pintuanRuleModel->where('id', input('param.id'))->find();
+            if (!$info) {
                 return error_code(10001);
             }
 
-            $info['date'] = date('Y-m-d H:i:s',$info['stime'])." 到 ".date('Y-m-d H:i:s',$info['etime']);
+            $info['date'] = date('Y-m-d H:i:s', $info['stime']) . " 到 " . date('Y-m-d H:i:s', $info['etime']);
 
-            $this->assign('info',$info);
+            $this->assign('info', $info);
             $pintuanGoodsModel = new PintuanGoods();
-            $list = $pintuanGoodsModel->where('rule_id',input('param.id'))->select();
+            $list = $pintuanGoodsModel->where('rule_id', input('param.id'))->select();
             $ids = "";
-            if(!$list->isEmpty()){
+            if (!$list->isEmpty()) {
                 $list = $list->toArray();
-                $ids = implode(',',array_column($list,'goods_id'));
+                $ids = implode(',', array_column($list, 'goods_id'));
             }
-            $this->assign('goods',$ids);
+            $this->assign('goods', $ids);
         }
 
 
-        $result['data'] = $this->fetch();
+        $result['data'] = $this->fetch()->getContent();
         return $result;
     }
     //排序更改
@@ -104,7 +104,7 @@ class Pintuan extends Manage
         }
 
         $pintuanRuleModel = new PintuanRule();
-        $rel = $pintuanRuleModel->where('id','eq',$id)->update([$field => $value]);
+        $rel = $pintuanRuleModel->where('id', 'eq', $id)->update([$field => $value]);
         if ($rel) {
             $result['msg']    = '更新成功';
             $result['status'] = true;
@@ -127,13 +127,12 @@ class Pintuan extends Manage
         $state = input('param.state/s', 'true');
 
         if (!$id) return $result;
-        if($state == 'true'){
+        if ($state == 'true') {
             $status = $pintuanRuleModel::STATUS_ON;
-        }else{
+        } else {
             $status = $pintuanRuleModel::STATUS_OFF;
         }
-        if ($pintuanRuleModel->save(['status'=>$status], ['id' => $id]))
-        {
+        if ($pintuanRuleModel->save(['status' => $status], ['id' => $id])) {
             $result['status'] = true;
             $result['msg'] = '设置成功';
         } else {
@@ -144,7 +143,7 @@ class Pintuan extends Manage
 
     public function record()
     {
-        if(Request::isAjax()) {
+        if (Request::isAjax()) {
             $pintuanRecordModel = new PintuanRecord();
             $request = input('param.');
             return $pintuanRecordModel->tableData($request);

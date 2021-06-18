@@ -1,5 +1,7 @@
 <?php
+
 namespace app\Manage\controller;
+
 use app\common\controller\Manage;
 use app\common\model\ManageRole;
 use app\common\model\ManageRoleOperationRel;
@@ -16,8 +18,7 @@ class Role extends Manage
      */
     public function index()
     {
-        if(Request::isAjax())
-        {
+        if (Request::isAjax()) {
             $manageRoleModel = new ManageRole();
             $data = input('param.');
             return $manageRoleModel->tableData($data);
@@ -32,17 +33,15 @@ class Role extends Manage
      */
     public function add()
     {
-//        $result = [
-//            'status' => false,
-//            'msg' => error_code(10037,true),
-//            'data' => ''
-//        ];
+        //        $result = [
+        //            'status' => false,
+        //            'msg' => error_code(10037,true),
+        //            'data' => ''
+        //        ];
         $this->view->engine->layout(false);
         $manageRoleModel = new ManageRole();
-        if(Request::isPost())
-        {
-            if(!input('?param.name'))
-            {
+        if (Request::isPost()) {
+            if (!input('?param.name')) {
                 return error_code(11070);
             }
 
@@ -54,7 +53,7 @@ class Role extends Manage
         }
         $result['status'] = true;
         $result['msg'] = '成功';
-        $result['data'] = $this->fetch('edit');
+        $result['data'] = $this->fetch('edit')->getContent();
         return $result;
     }
 
@@ -65,8 +64,7 @@ class Role extends Manage
      */
     public function del()
     {
-        if(!input('?param.id'))
-        {
+        if (!input('?param.id')) {
             return error_code(10000);
         }
         $ManageRoleModel = new ManageRole();
@@ -85,14 +83,12 @@ class Role extends Manage
             'data' => [],
         ];
 
-        if (!input('?param.id'))
-        {
+        if (!input('?param.id')) {
             return error_code(10000);
         }
         $manageRoleModel = new ManageRole();
-        $re = $manageRoleModel->getRoleOperation(input('param.id/d'),session('manage')['id']);
-        if(!$re['status'])
-        {
+        $re = $manageRoleModel->getRoleOperation(input('param.id/d'), session('manage')['id']);
+        if (!$re['status']) {
             return $re;
         }
         $return_data['data'] = $re['data'];
@@ -109,23 +105,20 @@ class Role extends Manage
     public function savePerm()
     {
         $post = input('param.');
-        if(!isset($post['id']))
-        {
+        if (!isset($post['id'])) {
             return error_code(10000);
         }
-        if(!isset($post['data']))
-        {
+        if (!isset($post['data'])) {
             return error_code(11072);
         }
         //保存角色信息
         $manageRoleModel = new ManageRole();
-        $manageRoleInfo = $manageRoleModel->where(['id'=>$post['id']])->find();
-        if(!$manageRoleInfo)
-        {
+        $manageRoleInfo = $manageRoleModel->where(['id' => $post['id']])->find();
+        if (!$manageRoleInfo) {
             return error_code(11071);
         }
         $mrorModel = new ManageRoleOperationRel();
-        $mrorModel->savePerm($post['id'],$post['data']);
+        $mrorModel->savePerm($post['id'], $post['data']);
         return [
             'status' => true,
             'data' => '',

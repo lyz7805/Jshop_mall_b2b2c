@@ -28,8 +28,7 @@ class GoodsParams extends Manage
      */
     public function index()
     {
-        if(Request::isAjax())
-        {
+        if (Request::isAjax()) {
             $goodsParamsModel = new GPmodel();
             $filter = input('request.');
             return $goodsParamsModel->tableData($filter);
@@ -48,8 +47,7 @@ class GoodsParams extends Manage
     public function add()
     {
         $this->view->engine->layout(false);
-        if (Request::isPost())
-        {
+        if (Request::isPost()) {
             //存储添加内容
             $data = [
                 'name' => input('post.name'),
@@ -58,8 +56,7 @@ class GoodsParams extends Manage
             ];
             $goodsParamsModel = new GPmodel();
             $result = $goodsParamsModel->doAdd($data);
-            if($result !== false)
-            {
+            if ($result !== false) {
                 $return_data = [
                     'status' => true,
                     'msg' => '保存成功',
@@ -70,8 +67,8 @@ class GoodsParams extends Manage
         }
         //获取添加页面
         $return_data['status'] = true;
-        $return_data['msg'] = error_code(10037,true);
-        $return_data['data'] = $this->fetch('add');
+        $return_data['msg'] = error_code(10037, true);
+        $return_data['data'] = $this->fetch('add')->getContent();
         return $return_data;
     }
 
@@ -93,17 +90,15 @@ class GoodsParams extends Manage
             return error_code(10013);
         }
         $this->view->engine->layout(false);
-        if(Request::isPost())
-        {
+        if (Request::isPost()) {
             //存储添加内容
             $data = [
                 'name' => input('post.name'),
                 'type' => input('post.type'),
                 'value' => input('post.value'),
             ];
-            $result = $goodsParamsModel->doAdd($data,$id);
-            if($result !== false)
-            {
+            $result = $goodsParamsModel->doAdd($data, $id);
+            if ($result !== false) {
                 $return_data = [
                     'status' => true,
                     'msg' => '保存成功',
@@ -112,17 +107,16 @@ class GoodsParams extends Manage
             }
             return $return_data;
         }
-        $data = $goodsParamsModel->where(['id'=>$id])->find();
-        if(!$data)
-        {
-            $return_data['msg'] = error_code(10002,true);
+        $data = $goodsParamsModel->where(['id' => $id])->find();
+        if (!$data) {
+            $return_data['msg'] = error_code(10002, true);
             return $return_data;
         }
         $this->assign($data->toArray());
         //获取添加页面
         $return_data['status'] = true;
         $return_data['msg'] = '成功';
-        $return_data['data'] = $this->fetch('edit');
+        $return_data['data'] = $this->fetch('edit')->getContent();
         return $return_data;
     }
 
@@ -135,17 +129,15 @@ class GoodsParams extends Manage
     {
         $result = [
             'status' => false,
-            'msg' => error_code(10023,true),
+            'msg' => error_code(10023, true),
             'data' => ''
         ];
         $id = input('post.id', 0);
-        if($id)
-        {
+        if ($id) {
             $goodsParamsModel = new GPmodel();
             $filter['id'] = $id;
             $res = $goodsParamsModel->doDel($filter);
-            if($res)
-            {
+            if ($res) {
                 $result['msg'] = '删除成功';
                 $result['status'] = true;
             }
@@ -162,13 +154,13 @@ class GoodsParams extends Manage
     {
         $return = [
             'status' => false,
-            'msg' => error_code(10037,true),
+            'msg' => error_code(10037, true),
             'data' => ''
         ];
         $this->view->engine->layout(false);
         $return['status'] = true;
         $return['msg'] = '成功';
-        $return['data'] = $this->fetch('getlist');
+        $return['data'] = $this->fetch('getlist')->getContent();
         return $return;
     }
 }

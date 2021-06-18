@@ -1,4 +1,5 @@
 <?php
+
 namespace app\Manage\controller;
 
 use app\common\controller\Manage;
@@ -11,7 +12,7 @@ class BillReship extends Manage
 
     public function index()
     {
-        if(Request::isAjax()){
+        if (Request::isAjax()) {
             $data = input('param.');
             $billReshipModel = new BillReshipModel;
             return $billReshipModel->tableData($data);
@@ -21,66 +22,65 @@ class BillReship extends Manage
     public function reship()
     {
         $this->view->engine->layout(false);
-        if(!input('?param.reship_id')){
+        if (!input('?param.reship_id')) {
             return error_code(13220);
         }
         $reship_id = input('reship_id');
         $billReshipModel = new BillReshipModel();
-        $reship = $billReshipModel->with('items')->where('reship_id',$reship_id)->find();
-        if(!$reship) return \error_code(10002);
-        if($reship['status'] != $billReshipModel::STATUS_WAIT_SHIP) return \error_code(10000);
-        if(request()->isPost()){
-            $logi_code = input('post.logi_code','');
-            $logi_no = input('post.logi_no','');
+        $reship = $billReshipModel->with('items')->where('reship_id', $reship_id)->find();
+        if (!$reship) return \error_code(10002);
+        if ($reship['status'] != $billReshipModel::STATUS_WAIT_SHIP) return \error_code(10000);
+        if (request()->isPost()) {
+            $logi_code = input('post.logi_code', '');
+            $logi_no = input('post.logi_no', '');
             // $status = input('post.status');
-            if(!$logi_code || !$logi_no ) return \error_code(10003);
+            if (!$logi_code || !$logi_no) return \error_code(10003);
             $data = [];
             $data['logi_code'] = $logi_code;
             $data['logi_no'] = $logi_no;
-             $data['status'] = $billReshipModel::STATUS_SHIPPED;
-            if($billReshipModel->where('reship_id',$reship_id)->update($data)){
+            $data['status'] = $billReshipModel::STATUS_SHIPPED;
+            if ($billReshipModel->where('reship_id', $reship_id)->update($data)) {
                 return [
-                    'status'=>true,
-                    'msg'=>'',
-                    'data'=>[]
+                    'status' => true,
+                    'msg' => '',
+                    'data' => []
                 ];
-            }else{
+            } else {
                 return \error_code(10004);
             }
-            
         }
         // 获取退货单信息
-        $this->assign('reship',$reship);
+        $this->assign('reship', $reship);
         // 获取物流公司
         $logisticsModel = new Logistics();
         $logi_info = $logisticsModel->getAll();
         $this->assign('logi', $logi_info);
         return  [
-            'data'=>$this->fetch(),
-            'status'=>true
+            'data' => $this->fetch(),
+            'status' => true
         ];
     }
 
     public function view()
     {
         $this->view->engine->layout(false);
-        if(!input('?param.reship_id')){
+        if (!input('?param.reship_id')) {
             return error_code(13220);
         }
         $billReshipModel = new BillReshipModel();
         $where['reship_id'] = input('param.reship_id');
         $info = $billReshipModel->where($where)->find();
-        if(!$info){
+        if (!$info) {
             return error_code(13221);
         }
-        if($info->items){
+        if ($info->items) {
             $info['items_json'] = json_encode($info->items);
         }
 
-        $this->assign('info',$info);
+        $this->assign('info', $info);
         return [
             'status' => true,
-            'data' => $this->fetch('view'),
+            'data' => $this->fetch('view')->getContent(),
             'msg' => ''
         ];
     }
@@ -89,7 +89,7 @@ class BillReship extends Manage
     public function confirmReship()
     {
         $this->view->engine->layout(false);
-        if(!input('?param.reship_id')){
+        if (!input('?param.reship_id')) {
             return error_code(13220);
         }
         $billReshipModel = new BillReshipModel();

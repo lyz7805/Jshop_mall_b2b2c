@@ -49,7 +49,7 @@ class Setting extends Manage
             $filter = input('request.');
             return $videosModel->tableData($filter);
         }
-        return $this->fetch();
+        return $this->fetch()->getContent();
     }
 
 
@@ -63,7 +63,7 @@ class Setting extends Manage
             $videosModel = new VideosModel();
             return $videosModel->addData(input('param.'));
         }
-        return $this->fetch('setting/video_add');
+        return $this->fetch('setting/video_add')->getContent();
     }
 
 
