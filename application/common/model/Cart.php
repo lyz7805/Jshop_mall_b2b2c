@@ -169,7 +169,8 @@ class Cart extends BaseB2b2c
             $data['user_id']    = $user_id;
             $data['type']       = $type;
 
-            $result['data'] = $this->insertGetId($data);
+            $this->allowField(true)->save($data);
+            $result['data'] = $this->id;
         }
         $result['msg']    = '加入成功';
         $result['status'] = true;
