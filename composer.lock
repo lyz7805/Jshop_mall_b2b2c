@@ -52,6 +52,10 @@
             "keywords": [
                 "download"
             ],
+            "support": {
+                "issues": "https://github.com/apfelbox/PHP-File-Download/issues",
+                "source": "https://github.com/apfelbox/PHP-File-Download/tree/master"
+            },
             "time": "2014-02-10T17:12:20+00:00"
         },
         {
@@ -94,6 +98,11 @@
             ],
             "description": "Traditional FirePHPCore library for sending PHP variables to the browser.",
             "homepage": "https://github.com/firephp/firephp-core",
+            "support": {
+                "forum": "http://groups.google.com/group/firephp-dev",
+                "issues": "https://github.com/firephp/firephp-core/issues",
+                "source": "https://github.com/firephp/firephp-core"
+            },
             "time": "2013-04-23T15:28:20+00:00"
         },
         {
@@ -121,6 +130,7 @@
                 "topthink/think-helper": ">=1.0.4",
                 "topthink/think-installer": ">=1.0.10"
             },
+            "default-branch": true,
             "type": "think-extend",
             "autoload": {
                 "psr-4": {
@@ -141,6 +151,10 @@
                 }
             ],
             "description": "Thinkphp 5.1 Addons Library",
+            "support": {
+                "issues": "https://github.com/myxland/think-addons/issues",
+                "source": "https://github.com/myxland/think-addons/tree/master"
+            },
             "time": "2018-01-15T11:59:48+00:00"
         },
         {
@@ -199,6 +213,10 @@
                 "mime",
                 "mimetype"
             ],
+            "support": {
+                "issues": "https://github.com/skyzyx/mimetypes/issues",
+                "source": "https://github.com/skyzyx/mimetypes/tree/master"
+            },
             "time": "2013-03-31T11:50:02+00:00"
         },
         {
@@ -256,6 +274,10 @@
                 "orm",
                 "thinkphp"
             ],
+            "support": {
+                "issues": "https://github.com/top-think/framework/issues",
+                "source": "https://github.com/top-think/framework/tree/v5.1.41"
+            },
             "time": "2021-01-11T02:51:29+00:00"
         },
         {
@@ -301,20 +323,24 @@
                 }
             ],
             "description": "captcha package for thinkphp5",
+            "support": {
+                "issues": "https://github.com/top-think/think-captcha/issues",
+                "source": "https://github.com/top-think/think-captcha/tree/2.0"
+            },
             "time": "2017-12-31T16:37:49+00:00"
         },
         {
             "name": "topthink/think-helper",
-            "version": "v3.0.0",
+            "version": "v3.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-helper.git",
-                "reference": "8ba5f66e68106369fcc3211e7d2dbaf7bc9ce455"
+                "reference": "c28d37743bda4a0455286ca85b17b5791d626e10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-helper/zipball/8ba5f66e68106369fcc3211e7d2dbaf7bc9ce455",
-                "reference": "8ba5f66e68106369fcc3211e7d2dbaf7bc9ce455",
+                "url": "https://api.github.com/repos/top-think/think-helper/zipball/c28d37743bda4a0455286ca85b17b5791d626e10",
+                "reference": "c28d37743bda4a0455286ca85b17b5791d626e10",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -323,10 +349,13 @@
                     }
                 ]
             },
+            "require": {
+                "php": ">=7.1.0"
+            },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "think\\helper\\": "src"
+                    "think\\": "src"
                 },
                 "files": [
                     "src/helper.php"
@@ -342,21 +371,25 @@
                     "email": "448901948@qq.com"
                 }
             ],
-            "description": "The ThinkPHP5 Helper Package",
-            "time": "2019-03-14T09:28:59+00:00"
+            "description": "The ThinkPHP6 Helper Package",
+            "support": {
+                "issues": "https://github.com/top-think/think-helper/issues",
+                "source": "https://github.com/top-think/think-helper/tree/3.0"
+            },
+            "time": "2019-11-08T08:01:10+00:00"
         },
         {
             "name": "topthink/think-installer",
-            "version": "v2.0.0",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-installer.git",
-                "reference": "f5400a12c60e513911aef41fe443fa6920952675"
+                "reference": "38ba647706e35d6704b5d370c06f8a160b635f88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-installer/zipball/f5400a12c60e513911aef41fe443fa6920952675",
-                "reference": "f5400a12c60e513911aef41fe443fa6920952675",
+                "url": "https://api.github.com/repos/top-think/think-installer/zipball/38ba647706e35d6704b5d370c06f8a160b635f88",
+                "reference": "38ba647706e35d6704b5d370c06f8a160b635f88",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -366,10 +399,10 @@
                 ]
             },
             "require": {
-                "composer-plugin-api": "^1.0"
+                "composer-plugin-api": "^1.0||^2.0"
             },
             "require-dev": {
-                "composer/composer": "1.0.*@dev"
+                "composer/composer": "^1.0||^2.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -390,7 +423,11 @@
                     "email": "448901948@qq.com"
                 }
             ],
-            "time": "2018-05-11T06:45:42+00:00"
+            "support": {
+                "issues": "https://github.com/top-think/think-installer/issues",
+                "source": "https://github.com/top-think/think-installer/tree/v2.0.5"
+            },
+            "time": "2021-01-14T12:12:14+00:00"
         },
         {
             "name": "topthink/think-queue",
@@ -442,20 +479,24 @@
                 }
             ],
             "description": "The ThinkPHP5 Queue Package",
+            "support": {
+                "issues": "https://github.com/top-think/think-queue/issues",
+                "source": "https://github.com/top-think/think-queue/tree/2.0"
+            },
             "time": "2018-05-11T06:55:55+00:00"
         },
         {
             "name": "zoujingli/wechat-php-sdk",
-            "version": "v1.3.17",
+            "version": "v1.3.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zoujingli/wechat-php-sdk.git",
-                "reference": "afb0dfd1a0fd71cfe58b6811d559b6b0fc8f9de0"
+                "reference": "d37d0c1919ede2ee54e65100ac3792e947b1e0ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zoujingli/wechat-php-sdk/zipball/afb0dfd1a0fd71cfe58b6811d559b6b0fc8f9de0",
-                "reference": "afb0dfd1a0fd71cfe58b6811d559b6b0fc8f9de0",
+                "url": "https://api.github.com/repos/zoujingli/wechat-php-sdk/zipball/d37d0c1919ede2ee54e65100ac3792e947b1e0ef",
+                "reference": "d37d0c1919ede2ee54e65100ac3792e947b1e0ef",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -465,6 +506,9 @@
                 ]
             },
             "require": {
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "ext-simplexml": "*",
                 "php": ">=5.3.3"
             },
             "type": "project",
@@ -482,7 +526,11 @@
             "keywords": [
                 "wechat-php-sdk"
             ],
-            "time": "2018-10-23T09:57:56+00:00"
+            "support": {
+                "issues": "https://github.com/zoujingli/wechat-php-sdk/issues",
+                "source": "https://github.com/zoujingli/wechat-php-sdk/tree/v1.3.18"
+            },
+            "time": "2019-10-10T09:42:15+00:00"
         }
     ],
     "packages-dev": [],
@@ -498,5 +546,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.1.0"
 }

@@ -17,9 +17,9 @@ class SendConfig extends Command
     public function execute(Input $input, Output $output)
     {
         //获取默认配置文件
-        $content = file_get_contents(ROOT_PATH . 'vendor/' . 'myxland/think-addons/src/config.php');
+        $content = file_get_contents(Env::get('root_path') . 'vendor/' . 'myxland/think-addons/src/config.php');
 
-        $configPath = ROOT_PATH . 'config/';
+        $configPath = Env::get('root_path') . 'config/';
         $configFile = $configPath . 'addons.php';
 
         //判断目录是否存在

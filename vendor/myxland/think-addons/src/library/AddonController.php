@@ -2,11 +2,8 @@
 
 namespace myxland\addons\library;
 
-use think\Container;
-use think\facade\Request;
 use think\Loader;
 use think\Controller;
-use think\response\Json;
 
 /**
  * 插件基类控制器
@@ -37,73 +34,37 @@ class AddonController extends Controller
         'tpl_end'      => '}',
         'taglib_begin' => '{',
         'taglib_end'   => '}',
-        'taglib_pre_load' => 'app\\common\\taglib\\Jshop',
-
     ];
 
     /**
      * 架构函数
      *
-     * @param Request3 $request Request对象
+     * @param Request $request Request对象
      * @access public
      */
-    public function __construct($request = null)
+    public function __construct(Request $request = null)
     {
-
         // 生成request对象
         $this->request = is_null($request) ? request() : $request;
-
         // 初始化配置信息
         $this->config = config('template.') ?: $this->config;
-
         // 处理路由参数
-        $path = $this->request->path();
-        $url = explode('/',$path);
-        $param = explode('-', $url[1]);
-
-
+        $route = $this->request->param('route', '');
+        $param = explode('-', $route);
         // 是否自动转换控制器和操作名
         $convert = config('app.url_convert');
         // 格式化路由的插件位置
         $this->action     = $convert ? strtolower(array_pop($param)) : array_pop($param);
         $this->controller = $convert ? strtolower(array_pop($param)) : array_pop($param);
         $this->addon      = $convert ? strtolower(array_pop($param)) : array_pop($param);
-        $addonName        = Loader::parseName($this->addon, 1);
-		
-        if (!get_addons_status($addonName)) {
-            if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-                header("Access-Control-Allow-Origin: *");
-                header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-                header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE,OPTIONS,PATCH');
-                exit;
-            }
-            if(Request::isPost()||Request::isAjax()){
-                header("Access-Control-Allow-Origin: *");
-                header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-                header('Access-Control-Allow-Methods: GET, POST, PUT,DELETE,OPTIONS,PATCH');
-                $error = [
-                    'status' => false,
-                    'msg'    => '该插件未安装或未启用，请安装后使用',
-                    'data'   => []
-                ];
-                echo json_encode($error, 320);exit;
-            }else{
-                $this->error('该插件未安装或未启用，请安装后使用');
-            }
-        }
-		
+
         // 生成view_path
-        $view_path = $this->config['view_path'] ? 'view' : 'view';
+        $view_path = $this->config['view_path'] ?: 'view';
 
         // 重置配置
-        config('template.view_path', ADDON_PATH . $addonName . DIRECTORY_SEPARATOR . $view_path . DIRECTORY_SEPARATOR);
+        config('template.view_path', ADDON_PATH . $this->addon . DIRECTORY_SEPARATOR . $view_path . DIRECTORY_SEPARATOR);
 
         parent::__construct($request);
-        $jshopHost = Container::get('request')->domain();
-        $this->assign('jshopHost', $jshopHost);
-        //店铺名称
-        $shop_name = getSetting('shop_name');
-        $this->assign('shop_name', $shop_name);
     }
 
     /**
@@ -119,19 +80,17 @@ class AddonController extends Controller
     protected function fetch($template = '', $vars = [], $replace = [], $config = [])
     {
         $controller = Loader::parseName($this->controller);
-
         if ('think' == strtolower($this->config['type']) && $controller && 0 !== strpos($template, '/')) {
             $depr     = $this->config['view_depr'];
-
             $template = str_replace(['/', ':'], $depr, $template);
             if ('' == $template) {
                 // 如果模板文件名为空 按照默认规则定位
                 $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . $this->action;
-
             } elseif (false === strpos($template, $depr)) {
                 $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . $template;
             }
         }
+
         return parent::fetch($template, $vars, $replace, $config);
     }
 }

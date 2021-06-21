@@ -1,16 +1,24 @@
 <?php
+
 namespace myxland\addons;
 
-use think\Db;
-use think\Controller;
+use think\facade\View;
+
 /**
  * 插件基类
  * Class Addons
  *
  * @package myxland\addons
  */
-abstract class Addons extends Controller
+abstract class Addons
 {
+    /**
+     * 视图实例对象
+     *
+     * @var view
+     * @access protected
+     */
+    protected $view = null;
 
     // 当前错误信息
     protected $error;
@@ -44,8 +52,16 @@ abstract class Addons extends Controller
         if (is_file($this->addons_path . 'config.php')) {
             $this->config_file = $this->addons_path . 'config.php';
         }
+
+        // 初始化视图模型
+        $config     = ['view_path' => $this->addons_path];
+        $config     = array_merge(config('template.'), $config);
+        $this->view = new View($config, config('template.tpl_replace_string'));
+
         // 控制器初始化
-        parent::__construct();
+        if (method_exists($this, 'initialize')) {
+            $this->initialize();
+        }
     }
 
     /**
@@ -66,12 +82,10 @@ abstract class Addons extends Controller
         $map['name']   = $name;
         $map['status'] = 1;
         $config        = [];
-
         if (is_file($this->config_file)) {
             $temp_arr = include $this->config_file;
-
             foreach ($temp_arr as $key => $value) {
-                if (isset($value['type']) && $value['type'] == 'group') {
+                if ($value['type'] == 'group') {
                     foreach ($value['options'] as $gkey => $gvalue) {
                         foreach ($gvalue['options'] as $ikey => $ivalue) {
                             $config[$ikey] = $ivalue['value'];
@@ -96,8 +110,8 @@ abstract class Addons extends Controller
     final public function getName()
     {
         $data = explode('\\', get_class($this));
-        $class_name = array_pop($data);
-        return array_pop($data);
+
+        return strtolower(array_pop($data));
     }
 
     /**
@@ -109,7 +123,7 @@ abstract class Addons extends Controller
     {
         $info_check_keys = ['name', 'title', 'description', 'status', 'author', 'version'];
         foreach ($info_check_keys as $value) {
-            if (!array_key_exists($value, $this->info)) {
+            if (! array_key_exists($value, $this->info)) {
                 return false;
             }
         }
@@ -128,18 +142,50 @@ abstract class Addons extends Controller
      * @return mixed
      * @throws \Exception
      */
-    protected function fetch($template = '', $vars = [], $replace = [], $config = [])
+    public function fetch($template = '', $vars = [], $replace = [], $config = [])
     {
-        if (!is_file($template)) {
+        if (! is_file($template)) {
             $template = '/' . $template;
         }
         // 关闭模板布局
         $this->view->engine->layout(false);
-        $this->view->engine(['view_path'=>  $this->addons_path]);
-        return parent::fetch($template, $vars, $replace, $config);
+
+        echo $this->view->fetch($template, $vars, $replace, $config);
     }
 
+    /**
+     * 渲染内容输出
+     *
+     * @access public
+     * @param string $content 内容
+     * @param array $vars 模板输出变量
+     * @param array $replace 替换内容
+     * @param array $config 模板参数
+     * @return mixed
+     */
+    public function display($content, $vars = [], $replace = [], $config = [])
+    {
+        // 关闭模板布局
+        $this->view->engine->layout(false);
 
+        echo $this->view->display($content, $vars, $replace, $config);
+    }
+
+    /**
+     * 渲染内容输出
+     *
+     * @access public
+     * @param string $content 内容
+     * @param array $vars 模板输出变量
+     * @return mixed
+     */
+    public function show($content, $vars = [])
+    {
+        // 关闭模板布局
+        $this->view->engine->layout(false);
+
+        echo $this->view->fetch($content, $vars, [], [], true);
+    }
 
     /**
      * 模板变量赋值
@@ -149,9 +195,9 @@ abstract class Addons extends Controller
      * @param mixed $value 变量的值
      * @return void
      */
-    protected function assign($name, $value = '')
+    public function assign($name, $value = '')
     {
-       return parent::assign($name, $value);
+        $this->view->assign($name, $value);
     }
 
     /**
@@ -169,27 +215,4 @@ abstract class Addons extends Controller
 
     //必须卸载插件方法
     abstract public function uninstall();
-
-    //必须实现配置函数
-    abstract public function config();
-
-    //获取弹窗配置
-    public function getDialog()
-    {
-        $info = $this->info;
-        $dialog['width'] = $info['dialog_width']?$info['dialog_width']:'600px';
-        $dialog['height'] = $info['dialog_height']?$info['dialog_height']:'520px';
-        $dialog['btn'] = isset($info['dialog_btn']) ?$info['dialog_btn']:['保存','关闭'];
-        return $dialog;
-    }
-
-    /**
-     * 显示错误信息
-     * @param $msg
-     */
-    public function showError($msg){
-        header("Content-type: text/html; charset=utf-8");
-        echo $msg;return;
-    }
-
 }

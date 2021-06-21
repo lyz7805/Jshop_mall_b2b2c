@@ -16,7 +16,6 @@ class ComposerStaticInitd7a1a5f41e2fb6148a8b8c876faba931
     public static $prefixLengthsPsr4 = array (
         't' => 
         array (
-            'think\\helper\\' => 13,
             'think\\composer\\' => 15,
             'think\\captcha\\' => 14,
             'think\\' => 6,
@@ -40,10 +39,6 @@ class ComposerStaticInitd7a1a5f41e2fb6148a8b8c876faba931
     );
 
     public static $prefixDirsPsr4 = array (
-        'think\\helper\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/topthink/think-helper/src',
-        ),
         'think\\composer\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-installer/src',
@@ -54,7 +49,8 @@ class ComposerStaticInitd7a1a5f41e2fb6148a8b8c876faba931
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/think-queue/src',
+            0 => __DIR__ . '/..' . '/topthink/think-helper/src',
+            1 => __DIR__ . '/..' . '/topthink/think-queue/src',
         ),
         'myxland\\addons\\' => 
         array (
@@ -85,6 +81,7 @@ class ComposerStaticInitd7a1a5f41e2fb6148a8b8c876faba931
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'FB' => __DIR__ . '/..' . '/firephp/firephp-core/lib/FirePHPCore/fb.php',
         'FirePHP' => __DIR__ . '/..' . '/firephp/firephp-core/lib/FirePHPCore/FirePHP.class.php',
     );
