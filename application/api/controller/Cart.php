@@ -7,9 +7,13 @@
 // | Author: keinx <keinx@jihainet.com>
 // +----------------------------------------------------------------------
 namespace app\api\controller;
+
 use app\common\controller\Api;
-use think\facade\Request;
 use app\common\model\Cart as CartModel;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
+use think\facade\Request;
 
 /**
  * 购物车
@@ -19,8 +23,10 @@ use app\common\model\Cart as CartModel;
  */
 class Cart extends Api
 {
+    /**
+     * @var CartModel
+     */
     private $cartModel = null;
-
 
     protected function initialize()
     {
@@ -28,19 +34,12 @@ class Cart extends Api
         $this->cartModel = new CartModel();
     }
 
-
     /**
      * 单个加入购物车
      * @return array
      */
-    public function add()
+    public function add(): array
     {
-        $result = [
-            'status' => false,
-            'data'   => [],
-            'msg'    => ''
-        ];
-
         if (!input("?param.product_id")) {
             // $result['msg'] = error_code(14011);
             return error_code(14011);
@@ -56,7 +55,6 @@ class Cart extends Api
         return $this->cartModel->add($this->userId, input('product_id'), input('nums'), $type, $cart_type, $params);
     }
 
-
     /**
      * 移除购物车
      * @param array ids
@@ -64,13 +62,12 @@ class Cart extends Api
      */
     public function del()
     {
-        $ids = input('param.ids',"");
+        $ids = input('param.ids', "");
         $user_id = $this->userId;
-        $type = input('param.order_type',1);
+        $type = input('param.order_type', 1);
 
-        $result = $this->cartModel->del($user_id,$ids,$type);
-        if($result)
-        {
+        $result = $this->cartModel->del($user_id, $ids, $type);
+        if ($result) {
             $return_data = array(
                 'status' => true,
                 'msg' => '移除购物车成功',
@@ -82,40 +79,37 @@ class Cart extends Api
         return $return_data;
     }
 
-
     /**
      * 获取购物车列表
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
     public function getList()
     {
         $ids = Request::param('ids', '');
-        $type = input('param.order_type',1);
+        $type = input('param.order_type', 1);
         $area_id = Request::param('area_id', false);
         $point = Request::param('point', 0);
         $coupon_code = Request::param('coupon_code', '');
         $receipt_type = Request::param('receipt_type', 1);      //配送方式是否包邮   1=快递配送（要去算运费）生成订单记录快递方式  2=门店自提（不需要计算运费）生成订单记录门店自提信息
         $params = Request::param('params', '');//购物车扩展信息,json对象，传团购秒杀id或其他信息
-        if($receipt_type == 1){
+        if ($receipt_type == 1) {
             $free_freight = false;
-        }else{
+        } else {
             $free_freight = true;
         }
         //是否显示完整的购物车，用在购物车页面
-        if(input('?param.display')){
+        if (input('?param.display')) {
             $display = true;
-        }else{
+        } else {
             $display = false;
         }
 
-        $params = json_decode($params,true);
-        $result = $this->cartModel->info($this->userId, $ids, $type, $display, $area_id, $point, $coupon_code, $free_freight,1,$params);
-        return $result;
+        $params = json_decode($params, true);
+        return $this->cartModel->info($this->userId, $ids, $type, $display, $area_id, $point, $coupon_code, $free_freight, 1, $params);
     }
-
 
     /**
      * 设置购物车数量接口
@@ -123,11 +117,6 @@ class Cart extends Api
      */
     public function setNums()
     {
-        $result = [
-            'status' => false,
-            'data' => [],
-            'msg' => ''
-        ];
         if (!input('?param.id')) {
             // $result['msg'] = error_code(14011, true);
             return error_code(14011);
@@ -135,19 +124,16 @@ class Cart extends Api
             $id = input('param.id');
         }
         $nums = input('nums', 1);
-        if($nums <= 0)
-        {
+        if ($nums <= 0) {
             $nums = 1;
         }
-        $order_type = input('param.order_type',1);
+        $order_type = input('param.order_type', 1);
         $result = $this->cartModel->setNums($this->userId, $id, $nums, $order_type);
-        if(!$result['status'])
-        {
+        if (!$result['status']) {
             return $result;
         }
-        return $this->cartModel->info($this->userId,  input('param.ids',""),$order_type);
+        return $this->cartModel->info($this->userId, input('param.ids', ""), $order_type);
     }
-
 
     /**
      * 获取购物车数量
@@ -160,12 +146,11 @@ class Cart extends Api
             'msg' => '获取成功',
             'data' => []
         ];
-        $type = input('param.order_type',1);
+        $type = input('param.order_type', 1);
         $where[] = ['user_id', 'eq', $this->userId];
         $where[] = ['type', 'eq', $type];
         $vclass = getSetting('virtual_card_class');
-        if($vclass)
-        {
+        if ($vclass) {
             $where[] = ['g.goods_cat_id', 'neq', $vclass];
         }
         $cartNums = $this->cartModel->alias('c')
@@ -177,13 +162,12 @@ class Cart extends Api
         return $result;
     }
 
-
     /**
      * 商品列表页批量快速下单加入购物车
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
     public function batchSetCart()
     {
@@ -195,9 +179,9 @@ class Cart extends Api
     /**
      * 获取全部购物车列表
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
     public function getListSelectAll()
     {
