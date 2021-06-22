@@ -2,21 +2,30 @@
 
 namespace app\common\model;
 
-
+/**
+ * 短信验证码
+ * Class Sms
+ * @package app\common\model
+ */
 class Sms extends BaseAdmin
 {
+    /**
+     * 验证码状态 未使用
+     */
+    const STATUS_UNUSED = 1;
+    /**
+     * 验证码状态 已使用
+     */
+    const STATUS_USED = 2;
 
-    const STATUS_UNUSED = 1;        //状态 未使用
-    const STATUS_USED = 2;          //已使用
-
-    //短信类型，这里的短信类型千万不要和message_center表里的类型冲突掉，哪里是总的类型，这里的是此模型特有的类型
+    //短信类型，这里的短信类型千万不要和message_center表里的类型冲突掉，那里是总的类型，这里的是此模型特有的类型
     public $sms_tpl = [
         'reg' => [
             'name' => '用户注册',
             'check' => true
         ],
         'login' => [
-            'name' => '用户登陆',
+            'name' => '用户登录',
             'check' => true
         ],
         'veri' => [
@@ -27,20 +36,18 @@ class Sms extends BaseAdmin
             'name' => '用户绑定',
             'check' => true
         ],
-
-
     ];
 
-    public function send($mobile,$code,$params)
+    public function send($mobile, $code, $params)
     {
-        if(!$mobile){
+        if (!$mobile) {
             return error_code(11051);
         }
         //如果是登陆注册等的短信，增加校验
-        if($code == 'reg' || $code == 'login' || $code== 'veri' || $code== 'bind'){
+        if ($code == 'reg' || $code == 'login' || $code == 'veri' || $code == 'bind') {
             $where[] = ['mobile', 'eq', $mobile];
             $where[] = ['code', 'eq', $code];
-            $where[] = ['ctime', 'gt', time()-60*10];
+            $where[] = ['ctime', 'gt', time() - 60 * 10];
             //$where[] = ['ip', 'eq', get_client_ip()];  //先暂时注释，不做ip检查
             $where[] = ['status', 'eq', self::STATUS_UNUSED];
 
@@ -49,20 +56,20 @@ class Sms extends BaseAdmin
                 if (time() - $smsInfo['ctime'] < 60) {
                     return error_code(16003);
                 }
-                $params = json_decode($smsInfo['params'],true);
-            }else{
+                $params = json_decode($smsInfo['params'], true);
+            } else {
                 $params = [
-                    'code'=> rand(100000,999999)
+                    'code' => rand(100000, 999999)
                 ];
             }
             $status = self::STATUS_UNUSED;
-        }else{
+        } else {
             $status = self::STATUS_USED;
         }
 
-        $str = $this->temp($code,$params);
+        $str = $this->temp($code, $params);
 
-        if($str == ''){
+        if ($str == '') {
             return error_code(10009);
         }
         $data['mobile'] = $mobile;
@@ -70,18 +77,23 @@ class Sms extends BaseAdmin
         $data['params'] = json_encode($params);
         $data['content'] = $str;
         $data['ctime'] = time();
-        $data['ip'] = get_client_ip(0,true);
+        $data['ip'] = get_client_ip(0, true);
         $data['status'] = $status;
         $this->save($data);
 
 
-
-        $re = $this->send_sms($mobile,$str,$code,$params);
-        return $re;
+        return $this->send_sms($mobile, $str, $code, $params);
     }
 
-    public function check($phone,$ver_code,$code){
-
+    /**
+     * 验证码校验
+     * @param $phone
+     * @param $ver_code
+     * @param $code
+     * @return bool
+     */
+    public function check($phone, $ver_code, $code): bool
+    {
         $where[] = ['mobile', 'eq', $phone];
         $where[] = ['code', 'eq', $code];
         $where[] = ['ctime', 'gt', time()-60*10];
@@ -90,42 +102,42 @@ class Sms extends BaseAdmin
 
         $where[] = ['status', 'eq', self::STATUS_UNUSED];
         $sms_info = $this->where($where)->order('id desc')->find();
-        if($sms_info){
-            $params = json_decode($sms_info['params'],true);
-            if($params['code'] == $ver_code){
-                $this->save(array('status'=>self::STATUS_USED),$where);
+        if ($sms_info) {
+            $params = json_decode($sms_info['params'], true);
+            if ($params['code'] == $ver_code) {
+                $this->save(array('status' => self::STATUS_USED), ['id' => $sms_info['id']]);
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
 
-    private function temp($code,$params){
+    private function temp($code, $params)
+    {
         $msg = '';
-        switch ($code)
-        {
+        switch ($code) {
             case 'reg':
                 // 账户注册
                 // $params['code'] = 验证码
-                $msg = "您正在注册账号，验证码是".$params['code']."，请勿告诉他人。";
+                $msg = "您正在注册账号，验证码是" . $params['code'] . "，请勿告诉他人。";
                 break;
             case 'login':
                 // 账户登录
                 // $params['code'] = 验证码
-                $msg = "您正在登陆账号，验证码是".$params['code']."，请勿告诉他人。";
+                $msg = "您正在登陆账号，验证码是" . $params['code'] . "，请勿告诉他人。";
                 break;
             case 'bind':
                 // 账户登录
                 // $params['code'] = 验证码
-                $msg = "您正在绑定新手机号码，验证码是".$params['code']."，请勿告诉他人。";
+                $msg = "您正在绑定新手机号码，验证码是" . $params['code'] . "，请勿告诉他人。";
                 break;
             case 'veri':
                 // 验证验证码
                 // $params['code'] = 验证码
-                $msg = "您的验证码是".$params['code']."，请勿告诉他人。";
+                $msg = "您的验证码是" . $params['code'] . "，请勿告诉他人。";
                 break;
             case 'create_order':
                 // 订单创建
@@ -164,7 +176,7 @@ class Sms extends BaseAdmin
             case 'order_cancle':
                 // $params['order_id'] = 订单号
                 // $params['memo'] = 下单买家备注
-                $msg = "您的订单：".$params['order_id']."已取消";
+                $msg = "您的订单：" . $params['order_id'] . "已取消";
                 break;
             case 'remind_order_pay':
                 // 未支付催单
@@ -210,12 +222,12 @@ class Sms extends BaseAdmin
                 // $params['order_id'] = 订单号
                 // $params['refund'] = 退款价格
                 // $params['aftersales_status'] = 售后状态文本 如审核通过、审核拒绝
-                // $params['mark'] = 平台备注   
+                // $params['mark'] = 平台备注
                 // $params['status'] = 售后状态  1 拒绝 2 同意
                 // $params['type'] = 发货的状态
                 // $params['items'] = 处理售后的商品和数量
                 // $params['aftersales_id'] = 售后单号
-                $msg = "你好，您的售后单".$params['aftersales_id']."平台已处理。";
+                $msg = "你好，您的售后单" . $params['aftersales_id'] . "平台已处理。";
                 break;
             case 'refund_success':
                 // 退款已处理
@@ -271,46 +283,43 @@ class Sms extends BaseAdmin
             'code'    => $code,
             'params'  => $params,
         ]]);
-        if($re && is_array($re)){
+        if ($re && is_array($re)) {
             if (isset($re[0]['status']) && $re[0]['status']) {
-//                $result['status'] = true;
-//                $result['msg'] = '发送成功';
+                return $result;
             } else {
-                $result['status'] = false;
-                $result['msg'] = isset($re[0]['msg']) ? $re[0]['msg'] : error_code(10065,true);
+                return error_code(10065, true);
             }
         }
         return $result;
     }
 
-
     protected function tableWhere($post)
     {
         $where = [];
 
-        if(isset($post['id']) && $post['id'] != ""){
+        if (isset($post['id']) && $post['id'] != "") {
             $where[] = ['id', 'eq', $post['id']];
         }
-        if(isset($post['mobile']) && $post['mobile'] != ""){
+        if (isset($post['mobile']) && $post['mobile'] != "") {
             $where[] = ['mobile', 'eq', $post['mobile']];
         }
-        if(isset($post['code']) && $post['code'] != ""){
+        if (isset($post['code']) && $post['code'] != "") {
             $where[] = ['code', 'eq', $post['code']];
         }
-        if(isset($post['ip']) && $post['ip'] != ""){
+        if (isset($post['ip']) && $post['ip'] != "") {
             $where[] = ['ip', 'eq', $post['ip']];
         }
 
-        if(input('?param.date')){
-            $theDate = explode(' 到 ',input('param.date'));
-            if(count($theDate) == 2){
+        if (input('?param.date')) {
+            $theDate = explode(' 到 ', input('param.date'));
+            if (count($theDate) == 2) {
                 $where[] = ['ctime', '<', strtotime($theDate[1])];
                 $where[] = ['ctime', '>', strtotime($theDate[0])];
             }
         }
 
 
-        if(isset($post['status']) && $post['status'] != ""){
+        if (isset($post['status']) && $post['status'] != "") {
             $where[] = ['status', 'eq', $post['status']];
         }
 
@@ -341,7 +350,7 @@ class Sms extends BaseAdmin
             }
             if (isset($tpl[$v['code']])) {
                 $list[$k]['code'] = $tpl[$v['code']]['name'] . '(' . $v['code'] . ')';
-            } else  if (isset($msg_tpl[$v['code']])) {
+            } else if (isset($msg_tpl[$v['code']])) {
                 $list[$k]['code'] = $msg_tpl[$v['code']]['name'] . '(' . $v['code'] . ')';
             }
         }
