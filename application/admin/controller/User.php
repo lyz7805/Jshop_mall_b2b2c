@@ -5,13 +5,23 @@ namespace app\admin\controller;
 use app\common\controller\Admin;
 use app\common\model\Balance;
 use app\common\model\GoodsComment;
+use app\common\model\User as UserModel;
 use app\common\model\UserGrade;
 use app\common\model\UserLog;
-use app\common\model\User as UserModel;
 use app\common\model\UserPointLog;
 use app\common\model\UserWx;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\Exception;
+use think\exception\DbException;
 use think\facade\Request;
+use think\Paginator;
 
+/**
+ * 会员管理
+ * Class User
+ * @package app\admin\controller
+ */
 class User extends Admin
 {
     /**
@@ -26,18 +36,17 @@ class User extends Admin
         }
         //所有用户等级
         $gradeModel = new UserGrade();
-        $gradeList = $gradeModel->select();
+        $gradeList = $gradeModel->getAll();
         $this->assign('grade', $gradeList);
         return $this->fetch('index');
     }
 
-
     /**
      * 获取积分记录
-     * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @return mixed
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
     public function pointLog()
     {
@@ -55,25 +64,24 @@ class User extends Admin
         return $this->fetch('pointLog');
     }
 
-
     /**
      * 编辑积分
      * @return array
-     * @throws \think\Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws Exception
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
-    public function editPoint()
+    public function editPoint(): array
     {
-        $result =  error_code(10037);
+        $result = error_code(10037);
         $this->view->engine->layout(false);
         $user_id = input('user_id');
         $flag = input('flag', 'false');
 
         if ($flag == 'true') {
-            $point        = input('point');
-            $memo         = input('memo');
+            $point = input('point');
+            $memo = input('memo');
             $userPointLog = new UserPointLog();
             return $userPointLog->setPoint($user_id, $point, $userPointLog::POINT_TYPE_ADMIN_EDIT, $memo);
         }
@@ -89,33 +97,31 @@ class User extends Admin
         return $result;
     }
 
-
     /**
      * 取当前店铺的所有用户的登陆退出消息,现在是绑定死一个用户，以后可能有多个用户
-     * @return \think\Paginator
+     * @return Paginator
      */
-    public function userLogList()
+    public function userLogList(): Paginator
     {
         $userLogModel = new UserLog();
 
         return $userLogModel->getList();
     }
 
-
     /**
      * 用户统计
      * @return array
      */
-    public function statistics()
+    public function statistics(): array
     {
-        $userModel = new \app\common\model\User();
-        $list_reg   = $userModel->statistics(7);
+        $userModel = new UserModel();
+        $list_reg = $userModel->statistics(7);
         $list_order = $userModel->statisticsOrder(7);
-        $data       = [
+        $data = [
             'legend' => [
                 'data' => ['新增记录', '活跃记录']
             ],
-            'xAxis'  => [
+            'xAxis' => [
                 [
                     'type' => 'category',
                     'data' => $list_order['day']
@@ -137,13 +143,9 @@ class User extends Admin
         return $data;
     }
 
-
     /**
      * 评价列表
      * @return array|mixed
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
     public function comment()
     {
@@ -157,19 +159,17 @@ class User extends Admin
         return $this->fetch('comment');
     }
 
-
     /**
      * 添加用户
      * @return array
      */
-    public function addUser()
+    public function addUser(): array
     {
         $this->view->engine->layout(false);
         if (Request::isPost()) {
             $input = Request::param();
             $userModel = new UserModel();
-            $result = $userModel->manageAdd($input);
-            return $result;
+            return $userModel->manageAdd($input);
         }
         $gradeModel = new UserGrade();
         $userGrade = $gradeModel->getAll();
@@ -180,12 +180,11 @@ class User extends Admin
         return $result;
     }
 
-
     /**
      * 编辑用户
      * @return array
      */
-    public function editUser()
+    public function editUser(): array
     {
         $result = error_code(10037);
         $this->view->engine->layout(false);
@@ -193,8 +192,7 @@ class User extends Admin
 
         if (Request::isPost()) {
             $input = Request::param();
-            $result = $userModel->manageEdit($input);
-            return $result;
+            return $userModel->manageEdit($input);
         }
 
         $user_id = Request::param('user_id');
@@ -211,7 +209,6 @@ class User extends Admin
         $result['data'] = $this->fetch('editUser')->getContent();
         return $result;
     }
-
 
     //    /**
     //     * 用户详情
@@ -238,17 +235,16 @@ class User extends Admin
     //        return $result;
     //    }
 
-
     /**
      * 编辑余额
      * @return array|mixed
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
     public function editMoney()
     {
-        $result =  error_code(10037);
+        $result = error_code(10037);
         $this->view->engine->layout(false);
         $user_id = input('user_id');
         $flag = input('flag', 'false');
@@ -270,7 +266,6 @@ class User extends Admin
         return $result;
     }
 
-
     /**
      * 用户等级列表
      * @return mixed
@@ -284,15 +279,11 @@ class User extends Admin
         return $this->fetch('grade_index');
     }
 
-
     /**
      * 用户等级新增和编辑，都走这里
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
-    public function gradeAdd()
+    public function gradeAdd(): array
     {
         $result = error_code(10037);
         $this->view->engine->layout(false);
@@ -304,7 +295,7 @@ class User extends Admin
                 $result['msg'] = $validate->getError();
                 return $result;
             }
-            return $userGradeModel->toEdit(input('param.id'), input('param.name'), input('param.is_def', 2));
+            return $userGradeModel->toEdit(input('param.id'), input('param.name'), input('param.is_def', UserGrade::IS_DEF_NO));
         }
 
         if (input('?param.id')) {
@@ -325,15 +316,11 @@ class User extends Admin
     /**
      * 用户等级删除
      * @return array|mixed
-     * @throws \think\Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     * @throws \think\exception\PDOException
+     * @throws \Exception
      */
     public function gradeDel()
     {
-        $result = error_code(10037);
+        $result = ['status' => true, 'msg' => '', 'data' => ''];
 
         $userGradeModel = new UserGrade();
         if (!input('?param.id')) {
@@ -345,14 +332,13 @@ class User extends Admin
             // $result['msg'] = error_code(11030, true);
             return error_code(11030);
         }
-        $re = $userGradeModel->where('id', input('param.id'))->delete();
-        if ($re) {
-            $result['status'] = true;
+
+        if ($info->delete()) {
+            $result['msg'] = '删除成功';
+            return $result;
         } else {
-            // $result['msg'] = error_code(10023, true);
             return error_code(10023);
         }
-        return $result;
     }
 
 
@@ -383,6 +369,7 @@ class User extends Admin
         }
         return $result;
     }
+
     public function userwx()
     {
         if (Request::isAjax()) {
@@ -391,6 +378,7 @@ class User extends Admin
         }
         return $this->fetch('userwx');
     }
+
     public function userwxdel()
     {
         if (!input('?param.id')) {
