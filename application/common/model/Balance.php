@@ -1,7 +1,10 @@
 <?php
-namespace app\common\model;
-use think\Db;
 
+namespace app\common\model;
+
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 
 /**
  * 用户余额
@@ -30,7 +33,6 @@ class Balance extends BaseAdmin
 
     }
 
-
     /**
      * 余额变动记录
      * @param $user_id  //当前用户id,当是店铺的时候，取店铺创始人的user_id
@@ -39,9 +41,9 @@ class Balance extends BaseAdmin
      * @param string $source_id //资源id
      * @param int $cate_money   //服务费金额 (提现)
      * @return array|mixed
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
     public function change($user_id, $type, $money, $source_id = "", $cate_money = 0)
     {
@@ -51,38 +53,32 @@ class Balance extends BaseAdmin
             'msg' => '操作成功'
         ];
 
-        if($money != 0)
-        {
+        if ($money != 0) {
             //取用户实际余额
             $userModel = new User();
-            $userInfo = $userModel::withTrashed()->where([ 'id' => $user_id ])->find();
-            if(!$userInfo)
-            {
+            $userInfo = $userModel::withTrashed()->where(['id' => $user_id])->find();
+            if (!$userInfo) {
                 return error_code(11004);
             }
 
             //取描述，并简单校验
             $re = $this->getMemo($type, $money, $source_id, $cate_money);
-            if(!$re['status'])
-            {
+            if (!$re['status']) {
                 return $re;
             }
             $memo = $re['data'];
 
-            (float)$money = $money;
-            if($type != self::TYPE_ADMIN)
-            {
+            $money = (float)$money;
+            if ($type != self::TYPE_ADMIN) {
                 //后台充值或调不改绝对值
                 $money = abs($money);
             }
             //如果是减余额的操作，还是加余额操作
-            if($type == self::TYPE_PAY || /* $type == self::TYPE_REFUND || //退款是往账户上加钱的 */$type == self::TYPE_TOCASH)
-            {
-                $money = - $money - $cate_money;
+            if ($type == self::TYPE_PAY || /* $type == self::TYPE_REFUND || //退款是往账户上加钱的 */ $type == self::TYPE_TOCASH) {
+                $money = -$money - $cate_money;
             }
-            $balance = $userInfo[ 'balance' ] + $money;
-            if(($balance) < 0)
-            {
+            $balance = $userInfo['balance'] + $money;
+            if (($balance) < 0) {
                 return error_code(11007);
             }
 
@@ -93,8 +89,8 @@ class Balance extends BaseAdmin
             $data['source_id'] = $source_id;
             $data['memo'] = $memo;
             $data['ctime'] = time();
-            $blanceModel = new Balance();
-            $blanceModel->save($data);  //为啥要now在save，是因为存在多个余额更新的时候，只会更新一条
+            $balanceModel = new Balance();
+            $balanceModel->save($data);  //为啥要now在save，是因为存在多个余额更新的时候，只会更新一条
             //上面保存好主体表，下面保存明细表
             $userInfo->balance = $balance;
             $userInfo->save();
@@ -103,7 +99,6 @@ class Balance extends BaseAdmin
         $result['status'] = true;
         return $result;
     }
-
 
     /**
      * 取得描述，并做简单校验
@@ -121,8 +116,7 @@ class Balance extends BaseAdmin
             'msg' => ''
         ];
 
-        switch($type)
-        {
+        switch ($type) {
             case self::TYPE_PAY:
                 $result['data'] = '消费了' . $money . '元';
                 break;
@@ -134,7 +128,7 @@ class Balance extends BaseAdmin
                 break;
             case self::TYPE_TOCASH:
                 $result['data'] = '提现了' . $money . '元';
-                $result['data'] .= $cate_money ? ',手续费'. $cate_money . '元' : '';
+                $result['data'] .= $cate_money ? ',手续费' . $cate_money . '元' : '';
                 break;
             case self::TYPE_DISTRIBUTION:
                 $result['data'] = '佣金' . $money . '元';
@@ -143,7 +137,7 @@ class Balance extends BaseAdmin
                 $result['data'] = '后台操作' . $money . '元';
                 break;
             case self::TYPE_PRIZE:
-                $result['data'] = '抽奖活动奖励'. $money . '元';
+                $result['data'] = '抽奖活动奖励' . $money . '元';
                 break;
             default:
                 return error_code(10000);
@@ -152,23 +146,19 @@ class Balance extends BaseAdmin
         return $result;
     }
 
-
     /**
      * 返回layui的table所需要的格式
      * @param $post
-     * @return mixed
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
-    public function tableData($post)
+    public function tableData($post): array
     {
-        if(isset($post['limit']))
-        {
+        if (isset($post['limit'])) {
             $limit = $post['limit'];
-        }
-        else
-        {
+        } else {
             $limit = config('paginate.list_rows');
         }
         $tableWhere = $this->tableWhere($post);
@@ -183,15 +173,14 @@ class Balance extends BaseAdmin
         return $re;
     }
 
-
     /**
      * @param $post
-     * @return mixed
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
-    protected function tableWhere($post)
+    protected function tableWhere($post): array
     {
         $where = [];
         if (isset($post['user_id']) && $post['user_id'] != "") {
@@ -210,11 +199,11 @@ class Balance extends BaseAdmin
             $user_list = $userModel->where([['nickname', 'like', '%' . $post['nickname'] . '%']])->field('id')->select();
             if (!$user_list->isEmpty()) {
                 $user_list = $user_list->toArray();
-                $user_ids  = array_column($user_list, 'id');
-                $where[]   = ['user_id', 'in', $user_ids];
-            }else{
+                $user_ids = array_column($user_list, 'id');
+                $where[] = ['user_id', 'in', $user_ids];
+            } else {
                 // 没有的时候给个不会存在的值
-                $where[]   = ['user_id', 'in', 0];
+                $where[] = ['user_id', 'in', 0];
             }
         }
         if (isset($post['type']) && $post['type'] != "") {
@@ -222,16 +211,15 @@ class Balance extends BaseAdmin
         }
         if (isset($post['datetime']) && $post['datetime'] != "") {
             $datetime = explode(' 到 ', $post['datetime']);
-            $sd       = strtotime($datetime[0] . ' 00:00:00');
-            $ed       = strtotime($datetime[1] . ' 23:59:59');
-            $where[]  = ['ctime', 'BETWEEN', [$sd, $ed]];
+            $sd = strtotime($datetime[0] . ' 00:00:00');
+            $ed = strtotime($datetime[1] . ' 23:59:59');
+            $where[] = ['ctime', 'BETWEEN', [$sd, $ed]];
         }
         $result['where'] = $where;
         $result['field'] = "*";
         $result['order'] = 'ctime desc';
         return $result;
     }
-
 
     /**
      * 根据查询结果，格式化数据
@@ -241,20 +229,17 @@ class Balance extends BaseAdmin
     protected function tableFormat($list)
     {
         $paymentRelModel = new BillPaymentsRel();
-        foreach($list as $k => $v)
-        {
-            if($v['ctime'])
-            {
+        foreach ($list as $k => $v) {
+            if ($v['ctime']) {
                 $list[$k]['ctime'] = getTime($v['ctime']);
             }
-            if($v['type'])
-            {
+            if ($v['type']) {
                 $list[$k]['type'] = config('params.balance')['type'][$v['type']];
             }
-            $rel = $paymentRelModel->where([['payment_id','=',$v['source_id']]])->cache(true)->find();
-            if($rel){
+            $rel = $paymentRelModel->where([['payment_id', '=', $v['source_id']]])->cache(true)->find();
+            if ($rel) {
                 $list[$k]['order_id'] = $rel['source_id'];
-            }else{
+            } else {
                 $list[$k]['order_id'] = '';
             }
         }
@@ -274,7 +259,6 @@ class Balance extends BaseAdmin
         ]);
     }
 
-
     /**
      * 获取用户的余额明细记录
      * @param $user_id
@@ -283,11 +267,8 @@ class Balance extends BaseAdmin
      * @param int $limit
      * @param int $type
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
-    public function getBalanceList($user_id, $order = '', $page = 1, $limit = 10, $type = 0)
+    public function getBalanceList($user_id, string $order = '', int $page = 1, int $limit = 10, int $type = 0): array
     {
         $result = [
             'status' => true,
@@ -296,22 +277,19 @@ class Balance extends BaseAdmin
         ];
 
         $where[] = ['user_id', 'eq', $user_id];
-        if($type != 0)
-        {
+        if ($type != 0) {
             $where[] = ['type', 'eq', $type];
         }
         $paymentRelModel = new BillPaymentsRel();
         $data = $this->where($where)->order($order)->page($page, $limit)->select();
-        if(!$data->isEmpty())
-        {
-            foreach($data as $v)
-            {
+        if (!$data->isEmpty()) {
+            foreach ($data as $v) {
                 $v['type'] = config('params.balance')['type'][$v['type']];
                 $v['ctime'] = getTime($v['ctime']);
-                $rel = $paymentRelModel->where([['payment_id','=',$v['source_id']]])->cache(true)->find();
-                if($rel){
+                $rel = $paymentRelModel->where([['payment_id', '=', $v['source_id']]])->cache(true)->find();
+                if ($rel) {
                     $v['order_id'] = $rel['source_id'];
-                }else{
+                } else {
                     $v['order_id'] = '';
                 }
             }
@@ -320,10 +298,9 @@ class Balance extends BaseAdmin
         $count = $this
             ->where($where)
             ->count();
-        $result['total'] = ceil($count/$limit);
+        $result['total'] = ceil($count / $limit);
         return $result;
     }
-
 
     /**
      * 获取用户的邀请佣金
@@ -334,7 +311,7 @@ class Balance extends BaseAdmin
     {
         $return = [
             'status' => false,
-            'msg' => error_code(10025,true),
+            'msg' => error_code(10025, true),
             'data' => 0
         ];
 
@@ -342,8 +319,7 @@ class Balance extends BaseAdmin
         $where[] = ['type', 'eq', self::TYPE_DISTRIBUTION];
         $return['data'] = $this->where($where)->sum('money');
 
-        if($return['data'] !== false)
-        {
+        if ($return['data'] !== false) {
             $return['status'] = true;
             $return['msg'] = '获取成功';
         }
@@ -356,7 +332,7 @@ class Balance extends BaseAdmin
      * 设置csv header
      * @return array
      */
-    public function csvHeader()
+    public function csvHeader(): array
     {
         return [
             [
@@ -402,13 +378,13 @@ class Balance extends BaseAdmin
      * 获取csv数据
      * @param $post
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
-    public function getCsvData($post)
+    public function getCsvData($post): array
     {
-        $result =  error_code(10083);
+        $result = error_code(10083);
         $header = $this->csvHeader();
         $data = $this->getExportList($post);
 
@@ -417,24 +393,16 @@ class Balance extends BaseAdmin
             $body = [];
             $i = 0;
 
-            foreach($tempBody as $key => $val)
-            {
+            foreach ($tempBody as $key => $val) {
                 $i++;
-                foreach($header as $hk => $hv)
-                {
-                    if(isset($val[$hv['id']]) && $val[$hv['id']] && isset($hv['modify']))
-                    {
-                        if(function_exists($hv['modify']))
-                        {
+                foreach ($header as $hk => $hv) {
+                    if (isset($val[$hv['id']]) && $val[$hv['id']] && isset($hv['modify'])) {
+                        if (function_exists($hv['modify'])) {
                             $body[$i][$hk] = $hv['modify']($val[$hv['id']]);
                         }
-                    }
-                    elseif(isset($val[$hv['id']]) &&!empty($val[$hv['id']]))
-                    {
+                    } elseif (isset($val[$hv['id']]) && !empty($val[$hv['id']])) {
                         $body[$i][$hk] = $val[$hv['id']];
-                    }
-                    else
-                    {
+                    } else {
                         $body[$i][$hk] = '';
                     }
                 }
@@ -442,62 +410,47 @@ class Balance extends BaseAdmin
             $result['status'] = true;
             $result['msg'] = '导出成功';
             $result['data'] = $body;
-            return $result;
         }
-        else
-        {
-            //失败，导出失败
-            return $result;
-        }
+        return $result;
     }
-
 
     /**
      * 导出格式
      * @param array $post
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
-    public function getExportList($post = [])
+    public function getExportList(array $post = []): array
     {
         $return_data = [
             'status' => false,
-            'msg' => error_code(10025,true),
+            'msg' => error_code(10025, true),
             'data' => '',
             'count' => 0
         ];
 
         $where = [];
-        if(isset($post['user_id']) && $post['user_id'] != "" )
-        {
+        if (isset($post['user_id']) && $post['user_id'] != "") {
             $where[] = ['user_id', 'eq', $post['user_id']];
-        }
-        else
-        {
-            if(isset($post['mobile']) && $post['mobile'] != "")
-            {
-                if($user_id = get_user_id($post['mobile']))
-                {
+        } else {
+            if (isset($post['mobile']) && $post['mobile'] != "") {
+                if ($user_id = get_user_id($post['mobile'])) {
                     $where[] = ['user_id', 'eq', $user_id];
-                }
-                else
-                {
+                } else {
                     $where[] = ['user_id', 'eq', '99999999'];   //如果没有此用户，那么就赋值个数值，让他查不出数据
                 }
             }
         }
-        if(isset($post['type']) && $post['type'] != "")
-        {
+        if (isset($post['type']) && $post['type'] != "") {
             $where[] = ['type', 'eq', $post['type']];
         }
-        if(isset($post['datetime']) && $post['datetime'] != "")
-        {
+        if (isset($post['datetime']) && $post['datetime'] != "") {
             $post['datetime'] = urldecode($post['datetime']);
             $datetime = explode(' 到 ', $post['datetime']);
-            $sd = strtotime($datetime[0].' 00:00:00');
-            $ed = strtotime($datetime[1].' 23:59:59');
+            $sd = strtotime($datetime[0] . ' 00:00:00');
+            $ed = strtotime($datetime[1] . ' 23:59:59');
             $where[] = ['ctime', 'BETWEEN', [$sd, $ed]];
         }
 
@@ -505,33 +458,26 @@ class Balance extends BaseAdmin
             ->order('ctime desc')
             ->select();
 
-        if($list)
-        {
+        if ($list) {
             $count = $this->where($where)->count();
             $paymentRelModel = new BillPaymentsRel();
-            foreach($list as $k => $v)
-            {
-                if($v['user_id'])
-                {
+            foreach ($list as $k => $v) {
+                if ($v['user_id']) {
                     $list[$k]['user_id'] = get_user_info($v['user_id']);
                 }
 
-                if($v['type'])
-                {
+                if ($v['type']) {
                     $list[$k]['type'] = config('params.balance')['type'][$v['type']];
                 }
-                if(isset($v['ctime']) && $v['ctime'])
-                {
-                    $list[$k]['ctime'] = date('Y-m-d H:i:s',$v['ctime']);
-                }
-                else
-                {
+                if (isset($v['ctime']) && $v['ctime']) {
+                    $list[$k]['ctime'] = date('Y-m-d H:i:s', $v['ctime']);
+                } else {
                     $list[$k]['ctime'] = '';
                 }
-                $rel = $paymentRelModel->where([['payment_id','=',$v['source_id']]])->cache(true)->find();
-                if($rel){
+                $rel = $paymentRelModel->where([['payment_id', '=', $v['source_id']]])->cache(true)->find();
+                if ($rel) {
                     $list[$k]['order_id'] = $rel['source_id'];
-                }else{
+                } else {
                     $list[$k]['order_id'] = '';
                 }
             }
