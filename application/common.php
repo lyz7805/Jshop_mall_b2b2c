@@ -1468,7 +1468,7 @@ function get_addons_status($name)
     }
     $addonModel = new \app\common\model\Addons();
     $info       = $addonModel->where(['name' => $name])->field('status')->find();
-    return (isset($info['status']) && ($info['status'] == $addonModel::INSTALL_STATUS)) ? $info['status'] : false;
+    return (isset($info['status']) && ($info['status'] == $addonModel::STATUS_ENABLE)) ? $info['status'] : false;
 }
 
 

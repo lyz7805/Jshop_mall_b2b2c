@@ -24,7 +24,7 @@ class Addons extends BaseAdmin
     protected $createTime = 'ctime';
     protected $updateTime = 'utime';
 
-    const INSTALL_STATUS = 1;//已安装
+    const STATUS_ENABLE = 1;//已安装
     const STATUS_DISENABLE = 2; //禁用
 
     /**
@@ -184,7 +184,7 @@ class Addons extends BaseAdmin
             'name'        => $data['name'],
             'title'       => $data['title'],
             'description' => $data['description'],
-            'status'      => self::INSTALL_STATUS,
+            'status'      => self::STATUS_ENABLE,
             'author'      => $data['author'],
             'version'     => $data['version'],
         ];
@@ -206,10 +206,10 @@ class Addons extends BaseAdmin
         if (!$addon) {
             return false;
         }
-        if ($addon['status'] == self::INSTALL_STATUS) {
+        if ($addon['status'] == self::STATUS_ENABLE) {
             $uData['status'] = self::STATUS_DISENABLE;
         } else {
-            $uData['status'] = self::INSTALL_STATUS;
+            $uData['status'] = self::STATUS_ENABLE;
         }
         $res = $this->save($uData, ['id' => $addon['id']]);
         if ($res !== false) {

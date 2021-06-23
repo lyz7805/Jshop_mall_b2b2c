@@ -38,7 +38,7 @@ class InitHooks
                 foreach ($hooks as $name => $value) {
                     $where = [];
                     //取出可用插件，然后把可用插件加入钩子
-                    $where[] = ['status', 'eq', $addonsModel::INSTALL_STATUS];
+                    $where[] = ['status', 'eq', $addonsModel::STATUS_ENABLE];
                     $names = explode(',', $value);
                     $where[] = ['name', 'in', $names];
                     $data = $addonsModel->where($where)->column('name');
