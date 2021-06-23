@@ -27,73 +27,73 @@ if (! is_dir(ADDON_PATH)) {
 Loader::addNamespace('addons', ADDON_PATH);
 
 // 闭包自动识别插件目录配置
-Hook::add('app_init', function () {
-    // 获取开关
-    $autoload = (bool) Config::get('addons.autoload', false);
-    // 非正是返回
-    if (! $autoload) {
-        return;
-    }
-    // 当debug时不缓存配置
-    $config = config('app.app_debug') ? [] : Cache::get('addons', []);
-    if (empty($config)) {
-        // 读取addons的配置
-        $config = config('addons.');
-        // 读取插件目录及钩子列表
-        $base = get_class_methods("\\myxland\\Addons");
-        // 读取插件目录中的php文件
-        foreach (glob(ADDON_PATH . '*/*.php') as $addons_file) {
-            // 格式化路径信息
-            $info = pathinfo($addons_file);
-            // 获取插件目录名
-            $name = pathinfo($info['dirname'], PATHINFO_FILENAME);
-            // 找到插件入口文件
-            if (strtolower($info['filename']) == strtolower($name)) {
-                // 读取出所有公共方法
-                $methods = (array) get_class_methods("\\addons\\" . $name . "\\" . $info['filename']);
-                // 跟插件基类方法做比对，得到差异结果
-                $hooks = array_diff($methods, $base);
-                // 循环将钩子方法写入配置中
-                foreach ($hooks as $hook) {
-                    if (! isset($config['hooks'][$hook])) {
-                        $config['hooks'][$hook] = [];
-                    }
-                    // 兼容手动配置项
-                    if (is_string($config['hooks'][$hook])) {
-                        $config['hooks'][$hook] = explode(',', $config['hooks'][$hook]);
-                    }
-                    if (! in_array($name, $config['hooks'][$hook])) {
-                        $config['hooks'][$hook][] = $name;
-                    }
-                }
-            }
-        }
-        config($config, 'addons');
-    }
-    config($config, 'addons');
-});
+//Hook::add('app_init', function () {
+//    // 获取开关
+//    $autoload = (bool) Config::get('addons.autoload', false);
+//    // 非正是返回
+//    if (! $autoload) {
+//        return;
+//    }
+//    // 当debug时不缓存配置
+//    $config = config('app.app_debug') ? [] : Cache::get('addons', []);
+//    if (empty($config)) {
+//        // 读取addons的配置
+//        $config = config('addons.');
+//        // 读取插件目录及钩子列表
+//        $base = get_class_methods("\\myxland\\Addons");
+//        // 读取插件目录中的php文件
+//        foreach (glob(ADDON_PATH . '*/*.php') as $addons_file) {
+//            // 格式化路径信息
+//            $info = pathinfo($addons_file);
+//            // 获取插件目录名
+//            $name = pathinfo($info['dirname'], PATHINFO_FILENAME);
+//            // 找到插件入口文件
+//            if (strtolower($info['filename']) == strtolower($name)) {
+//                // 读取出所有公共方法
+//                $methods = (array) get_class_methods("\\addons\\" . $name . "\\" . $info['filename']);
+//                // 跟插件基类方法做比对，得到差异结果
+//                $hooks = array_diff($methods, $base);
+//                // 循环将钩子方法写入配置中
+//                foreach ($hooks as $hook) {
+//                    if (! isset($config['hooks'][$hook])) {
+//                        $config['hooks'][$hook] = [];
+//                    }
+//                    // 兼容手动配置项
+//                    if (is_string($config['hooks'][$hook])) {
+//                        $config['hooks'][$hook] = explode(',', $config['hooks'][$hook]);
+//                    }
+//                    if (! in_array($name, $config['hooks'][$hook])) {
+//                        $config['hooks'][$hook][] = $name;
+//                    }
+//                }
+//            }
+//        }
+//        config($config, 'addons');
+//    }
+//    config($config, 'addons');
+//});
 
 // 闭包初始化行为
-Hook::add('action_begin', function () {
-    // 获取系统配置
-    $data   = config('app.app_debug') ? [] : Cache::get('hooks', []);
-    $addons = (array) config('addons.hooks');
-    if (empty($data)) {
-        // 初始化钩子
-        foreach ($addons as $key => $values) {
-            if (is_string($values)) {
-                $values = explode(',', $values);
-            } else {
-                $values = (array) $values;
-            }
-            $addons[$key] = array_filter(array_map('get_addon_class', $values));
-            Hook::add($key, $addons[$key]);
-        }
-        Cache::set('hooks', $addons);
-    } else {
-        Hook::import($data, false);
-    }
-});
+//Hook::add('action_begin', function () {
+//    // 获取系统配置
+//    $data   = config('app.app_debug') ? [] : Cache::get('hooks', []);
+//    $addons = (array) config('addons.hooks');
+//    if (empty($data)) {
+//        // 初始化钩子
+//        foreach ($addons as $key => $values) {
+//            if (is_string($values)) {
+//                $values = explode(',', $values);
+//            } else {
+//                $values = (array) $values;
+//            }
+//            $addons[$key] = array_filter(array_map('get_addon_class', $values));
+//            Hook::add($key, $addons[$key]);
+//        }
+//        Cache::set('hooks', $addons);
+//    } else {
+//        Hook::import($data, false);
+//    }
+//});
 
 /**
  * 处理插件钩子
@@ -117,7 +117,7 @@ function hook($hook, $params = [])
  */
 function get_addon_class($name, $type = 'hook', $class = null)
 {
-    $name = Loader::parseName($name);
+    $name = Loader::parseName($name, 1);
     // 处理多级控制器情况
     if (! is_null($class) && strpos($class, '.')) {
         $class = explode('.', $class);

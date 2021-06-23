@@ -8,18 +8,17 @@
 // +----------------------------------------------------------------------
 namespace app\common\behavior;
 
+use app\common\model\Addons;
+use app\common\model\Hooks;
+use think\facade\Cache;
+use think\facade\Hook;
+
 /**
  * 钩子初始化
  * User: mark
  * Date: 2018/9/6
  * Time: 下午12:06
  */
-
-use think\facade\Cache;
-use think\facade\Hook;
-use app\common\model\Hooks;
-use app\common\model\Addons;
-
 class InitHooks
 {
     /**
@@ -30,35 +29,29 @@ class InitHooks
     {
         //if(isset($_GET['m']) && $_GET['m'] === 'Install') return; //屏蔽安装程序
         $data = Cache::get('hooks');
-        $hooksModel  = new Hooks();
-        $addonsModel = new Addons();
+        $hooksModel = new Hooks();
         if (!$data) {
-            $hooks = $hooksModel->field('name,addons')->select();
-            if (!$hooks->isEmpty()) {
-                $hooks = $hooks->toArray();
-                foreach ($hooks as $key => $value) {
-                    if ($value) {
-                        $where = [];
-                        //取出可用插件，然后把可用插件加入钩子
-                        $where[] = ['status', 'eq', $addonsModel::INSTALL_STATUS];
-                        $names   = explode(',', $value['addons']);
-                        $where[] = ['name', 'in', $names];
-                        $data    = $addonsModel->where($where)->field('name')->select();
-                        if (!$data->isEmpty()) {
-                            $data        = $data->toArray();
-                            $data        = array_column($data, 'name');
-                            $addons      = array_intersect($names, $data);
-                            $addons_list = array_filter(array_map('get_addon_class', $addons));
-                            Hook::add($value['name'], $addons_list);
-                        }
+            $hooks = $hooksModel->where([['addons', 'neq', ''], ['addons', 'not null']])
+                ->column('addons', 'name');
+            if ($hooks) {
+                $addonsModel = new Addons();
+                foreach ($hooks as $name => $value) {
+                    $where = [];
+                    //取出可用插件，然后把可用插件加入钩子
+                    $where[] = ['status', 'eq', $addonsModel::INSTALL_STATUS];
+                    $names = explode(',', $value);
+                    $where[] = ['name', 'in', $names];
+                    $data = $addonsModel->where($where)->column('name');
+                    if ($data) {
+                        $addons = array_intersect($names, $data);
+                        $addons_list = array_filter(array_map('get_addon_class', $addons));
+                        Hook::add($name, $addons_list);
                     }
                 }
                 Cache::set('hooks', Hook::get());
             }
         } else {
-
             Hook::import($data, false);
         }
     }
-
 }
