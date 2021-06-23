@@ -5,7 +5,6 @@ namespace app\common\controller;
 use app\common\model\AdminRoleOperationRel;
 use think\Container;
 use app\common\model\AdminOperation;
-use Request;
 
 /**
  * B2B2C平台管理后台控制器基类
@@ -31,7 +30,7 @@ class Admin extends Base
         $arorModel = new AdminRoleOperationRel();
         $permRe    = $arorModel->checkPerm(session('admin.id'), $operationModel::MENU_ADMIN, $cont_name, $act_name);
         if (!$permRe['status']) {
-            if (Request::isAjax()) {
+            if (IS_AJAX) {
                 $err = [
                     'status' => false,
                     'data'   => '',

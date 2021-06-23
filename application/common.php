@@ -956,8 +956,12 @@ function bankCardNoFormat($cardNo)
  * @param string $key
  * @return mixed|string
  */
-function getSetting($key = '')
+function getSetting(string $key = '')
 {
+    if (strtolower(\think\facade\Request::module()) == 'admin') {
+        $adminSettingModel = new \app\common\model\AdminSetting();
+        return $adminSettingModel->getValue($key);
+    }
     $systemSettingModel = new \app\common\model\Setting();
     return $systemSettingModel->getValue($key);
 }
@@ -965,14 +969,15 @@ function getSetting($key = '')
 
 /**
  * 获取多个系统设置
- * @param string $key //多个英文逗号分隔
+ * @param string $key 多个英文逗号分隔
  * @return array
- * @throws \think\db\exception\DataNotFoundException
- * @throws \think\db\exception\ModelNotFoundException
- * @throws \think\exception\DbException
  */
-function getMultipleSetting($key = '')
+function getMultipleSetting(string $key = ''): array
 {
+    if (strtolower(\think\facade\Request::module()) == 'admin') {
+        $adminSettingModel = new \app\common\model\AdminSetting();
+        return $adminSettingModel->getMultipleSetting($key);
+    }
     $systemSettingModel = new \app\common\model\Setting();
     return $systemSettingModel->getMultipleValue($key);
 }
