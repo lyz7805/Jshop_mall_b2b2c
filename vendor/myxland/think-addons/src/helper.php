@@ -13,7 +13,7 @@ use think\facade\Cache;
 use think\facade\Route;
 
 // 插件目录
-define('ADDON_PATH', Env::get('root_path') . 'addons' . DIRECTORY_SEPARATOR);
+defined('ROOT_PATH') or define('ADDON_PATH', Env::get('root_path') . 'addons' . DIRECTORY_SEPARATOR);
 
 // 定义路由
 Route::any('addons/execute/:route', "\\myxland\\addons\\library\\Route@execute");
