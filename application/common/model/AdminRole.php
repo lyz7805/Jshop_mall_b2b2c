@@ -2,6 +2,7 @@
 
 namespace app\common\model;
 
+use Exception;
 use think\Db;
 
 class AdminRole extends BaseAdmin
@@ -59,7 +60,7 @@ class AdminRole extends BaseAdmin
             Db::commit();
             $result['status'] = true;
             $result['msg'] = '删除成功';
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Db::rollback();
             $result['msg'] = $e->getMessage();
         }
@@ -99,9 +100,9 @@ class AdminRole extends BaseAdmin
             $nodeList = array_merge($nodeList, $list);
         }
 
-        $operationModel = new Operation();
+        $operationModel = new AdminOperation();
         $adminMenu = $operationModel->adminMenu($admin_id, $operationModel::PERM_TYPE_HALFSUB);           //当前登陆者的后台菜单树
-        $result['data'] = $operationModel->setRoleManageMenu($adminMenu, $nodeList);
+        $result['data'] = $operationModel->setRoleAdminMenu($adminMenu, $nodeList);
 
         return $result;
     }
