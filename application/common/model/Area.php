@@ -9,6 +9,7 @@
 
 namespace app\common\model;
 
+use think\Collection;
 use think\Db;
 use think\facade\Cache;
 use think\Validate;
@@ -50,7 +51,7 @@ class Area extends BaseAdmin
     /**
      * 指定region id的下级信息
      * @param $areaId
-     * @return array|\PDOStatement|string|\think\Collection 所有地区数据数组
+     * @return array|\PDOStatement|string|Collection 所有地区数据数组
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
@@ -81,50 +82,38 @@ class Area extends BaseAdmin
         $where1[] = ['depth', 'eq', self::COUNTY_DEPTH];
         $county = $this->where($where1)
             ->select();
-        if(count($county) > 0)
-        {
-            if(count($county) > 1)
-            {
+        if (count($county) > 0) {
+            if (count($county) > 1) {
                 $where2[] = ['name', 'eq', $cityName];
                 $where2[] = ['depth', 'eq', self::CITY_DEPTH];
                 $city = $this->where($where2)
                     ->find();
-                foreach($county as $k => $v)
-                {
-                    if($v['parent_id'] == $city['id'])
-                    {
+                foreach ($county as $k => $v) {
+                    if ($v['parent_id'] == $city['id']) {
                         $id = $v['id'];
                     }
                 }
-            }
-            else
-            {
+            } else {
                 $id = $county[0]['id'];
             }
-        }
-        else
-        {
+        } else {
             $where2[] = ['name', 'eq', $cityName];
             $where2[] = ['depth', 'eq', self::CITY_DEPTH];
             $city = $this->where($where2)
                 ->find();
-            if($city)
-            {
+            if ($city) {
                 //创建区域
                 $county_data['parent_id']   = $city['id'];
                 $county_data['depth']       = self::COUNTY_DEPTH;
                 $county_data['name']        = $countyName;
                 $county_data['postal_code'] = $postalCode;
                 $id                         = $this->insertGetId($county_data);
-            }
-            else
-            {
+            } else {
                 $where3[] = ['name', 'eq', $provinceName];
                 $where3[] = ['depth', 'eq', self::PROVINCE_DEPTH];
                 $province = $this->where($where3)
                     ->find();
-                if($province)
-                {
+                if ($province) {
                     //创建城市
                     $city_data['parent_id'] = $province['id'];
                     $city_data['depth']     = self::CITY_DEPTH;
@@ -137,9 +126,7 @@ class Area extends BaseAdmin
                     $county_data['name']        = $countyName;
                     $county_data['postal_code'] = $postalCode;
                     $id                         = $this->insertGetId($county_data);
-                }
-                else
-                {
+                } else {
                     //创建省份
                     $province_data['parent_id'] = self::PROVINCE_PARENT_ID;
                     $province_data['depth']     = self::PROVINCE_DEPTH;
@@ -209,7 +196,6 @@ class Area extends BaseAdmin
         }
     }
 
-
     /**
      * 地区结果转换
      * @param $data
@@ -224,22 +210,15 @@ class Area extends BaseAdmin
         return $new_data;
     }
 
-
     /**
      * 获取地区列表
-     * @param $type
-     * @param $id
-     * @return array|\PDOStatement|string|\think\Collection
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @param string $type
+     * @param int $id
+     * @return Area[]|Collection
      */
-    public function getAreaList($type, $id)
+    public function getAreaList(string $type, int $id)
     {
         switch ($type) {
-            case 'province':
-                $depth = self::PROVINCE_DEPTH;
-                break;
             case 'city':
                 $depth = self::CITY_DEPTH;
                 break;
@@ -249,18 +228,17 @@ class Area extends BaseAdmin
             case 'four':
                 $depth = self::FOUR_DEPTH;
                 break;
+            case 'province':
             default:
                 $depth = self::PROVINCE_DEPTH;
                 break;
         }
 
-        $data = $this->field('name, id')
+        return $this->field('name, id')
             ->where('depth', 'eq', $depth)
             ->where('parent_id', 'eq', $id)
             ->select();
-        return $data;
     }
-
 
     /**
      * 添加地区
@@ -269,82 +247,70 @@ class Area extends BaseAdmin
      */
     public function add($data)
     {
-        Cache::set('area_tree', '');//清理地区缓存
+        Cache::set('area_tree', ''); //清理地区缓存
 
         $validate = new Validate($this->rule, $this->msg);
-        $result = ['status'=>true,'msg'=>'保存成功','data'=>''];
-        if(!$validate->check($data))
-        {
+        $result = ['status' => true, 'msg' => '保存成功', 'data' => ''];
+        if (!$validate->check($data)) {
             $result['status'] = false;
             $result['msg'] = $validate->getError();
         } else {
-            if (!$this->allowField(true)->save($data))
-            {
+            if (!$this->allowField(true)->save($data)) {
                 $result['status'] = false;
-                $result['msg'] = error_code(10004,true);
+                $result['msg'] = error_code(10004, true);
             }
         }
         return $result;
     }
 
-
     /**
      * 获取详情
      * @param $id
      * @return null|static
-     * @throws \think\exception\DbException
      */
-    public function getAreaInfo($id)
+    public function getAreaInfo($id): ?Area
     {
         return $this->get($id);
     }
-
 
     /**
      * 编辑存储
      * @param $id
      * @param $data
      * @return array
-     * @throws \think\Exception
-     * @throws \think\exception\PDOException
      */
-    public function edit($id, $data)
+    public function edit($id, $data): array
     {
-        Cache::set('area_tree', '');//清理地区缓存
+        Cache::set('area_tree', ''); //清理地区缓存
 
         $validate = new Validate($this->rule, $this->msg);
-        $result = ['status'=>true,'msg'=>'保存成功','data'=>''];
-        if(!$validate->check($data))
-        {
+        $result = ['status' => true, 'msg' => '保存成功', 'data' => ''];
+        if (!$validate->check($data)) {
             $result['status'] = false;
             $result['msg'] = $validate->getError();
-        } else {
-            if (!$this->where('id', 'eq', $id)->update($data))
-            {
-                $result['status'] = false;
-                $result['msg'] = error_code(10004,true);
-            }
+            return $result;
+        }
+        if (!$this->where('id', 'eq', $id)->update($data)) {
+            $result['status'] = false;
+            $result['msg'] = error_code(10004, true);
+            return $result;
         }
         return $result;
     }
-
 
     /**
      * 删除地区
      * @param $id
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
-    public function del($id)
+    public function del($id): array
     {
-        Cache::set('area_tree', '');//清理地区缓存
+        Cache::set('area_tree', ''); //清理地区缓存
         $is_parent = $this->where('parent_id', 'eq', $id)->find();
         if ($is_parent) {
             $result = array(
                 'status' => false,
-                'msg'    => error_code(10840,true), //该地区下存在关联地区，无法删除
+                'msg'    => error_code(10840, true), //该地区下存在关联地区，无法删除
                 'data'   => []
             );
         } else {
@@ -358,14 +324,13 @@ class Area extends BaseAdmin
             } else {
                 $result = array(
                     'status' => false,
-                    'msg'    => error_code(10023,true),
+                    'msg'    => error_code(10023, true),
                     'data'   => [],
                 );
             }
         }
         return $result;
     }
-
 
     /**
      * 根据id来返回省市区信息，如果没有查到，就返回省的列表
@@ -423,22 +388,22 @@ class Area extends BaseAdmin
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getTreeArea($checked = [],$parent_id=0,$currentChecked='0')
+    public function getTreeArea($checked = [], $parent_id = 0, $currentChecked = '0')
     {
         $return_data = [
             'status' => false,
-            'msg'    => error_code(10027,true),
+            'msg'    => error_code(10027, true),
             'data'   => [],
         ];
-       /* $area_tree = Cache::get('area_tree');
+        /* $area_tree = Cache::get('area_tree');
         if ($area_tree) {
             $list = json_decode($area_tree, true);
         } else {
             $list = $this->where(['parent_id'=>$parent_id])->select()->toArray();
             Cache::set('area_tree', json_encode($list));
         }*/
-        $list = $this->where(['parent_id'=>$parent_id])->select()->toArray();
-        $tree = $this->resolve2($list, $checked,$currentChecked);
+        $list = $this->where(['parent_id' => $parent_id])->select()->toArray();
+        $tree = $this->resolve2($list, $checked, $currentChecked);
         $return_data['data'] = $tree;
         $return_data['msg'] = '查询成功';
         $return_data['status'] = true;
@@ -503,7 +468,7 @@ class Area extends BaseAdmin
         }
         $result['where'] = $where;
         $result['field'] = "*";
-        $result['order'] = ['sort'=>'ASC','id'=>'DESC'];
+        $result['order'] = ['sort' => 'ASC', 'id' => 'DESC'];
         return $result;
     }
 
@@ -533,7 +498,7 @@ class Area extends BaseAdmin
      * 递归循环取出
      * @param $areaId
      * @param array $ids
-     * @return array|\PDOStatement|string|\think\Collection
+     * @return array|\PDOStatement|string|Collection
      */
     public function getAllChildArea($areaId, &$ids = [])
     {
@@ -576,6 +541,4 @@ class Area extends BaseAdmin
         }
         return $pdata;
     }
-
-
 }
