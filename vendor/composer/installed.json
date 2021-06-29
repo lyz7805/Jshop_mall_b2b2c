@@ -97,56 +97,6 @@
             "install-path": "../firephp/firephp-core"
         },
         {
-            "name": "myxland/think-addons",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/myxland/think-addons.git",
-                "reference": "3cfa9b9ec698ae51a147b60536fe17225053fa22"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/myxland/think-addons/zipball/3cfa9b9ec698ae51a147b60536fe17225053fa22",
-                "reference": "3cfa9b9ec698ae51a147b60536fe17225053fa22",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "php": ">=5.6.0",
-                "topthink/think-helper": ">=1.0.4",
-                "topthink/think-installer": ">=1.0.10"
-            },
-            "time": "2018-01-15T11:59:48+00:00",
-            "type": "think-extend",
-            "installation-source": "source",
-            "autoload": {
-                "psr-4": {
-                    "myxland\\addons\\": "src/"
-                },
-                "files": [
-                    "src/helper.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "HWJ",
-                    "email": "myxland@gmail.com"
-                }
-            ],
-            "description": "Thinkphp 5.1 Addons Library",
-            "install-path": "../myxland/think-addons"
-        },
-        {
             "name": "skyzyx/mimetypes",
             "version": "1.1.1",
             "version_normalized": "1.1.1.0",

@@ -9,7 +9,6 @@ return array(
     'think\\composer\\' => array($vendorDir . '/topthink/think-installer/src'),
     'think\\captcha\\' => array($vendorDir . '/topthink/think-captcha/src'),
     'think\\' => array($vendorDir . '/topthink/think-helper/src', $vendorDir . '/topthink/think-queue/src'),
-    'myxland\\addons\\' => array($vendorDir . '/myxland/think-addons/src'),
     'app\\' => array($baseDir . '/application'),
     'Wechat\\' => array($vendorDir . '/zoujingli/wechat-php-sdk/Wechat'),
     'Apfelbox\\FileDownload\\' => array($vendorDir . '/apfelbox/php-file-download/src'),

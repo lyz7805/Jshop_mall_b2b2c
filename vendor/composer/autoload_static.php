@@ -8,9 +8,9 @@ class ComposerStaticInitd7a1a5f41e2fb6148a8b8c876faba931
 {
     public static $files = array (
         '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
-        '1a97f75693790a971bff284d69bc93a2' => __DIR__ . '/..' . '/myxland/think-addons/src/helper.php',
         '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
         'cc56288302d9df745d97c934d6a6e5f0' => __DIR__ . '/..' . '/topthink/think-queue/src/common.php',
+        'aef54cfedb8dca2afde7ec3875d1b151' => __DIR__ . '/../..' . '/extend/myxland/addons/helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -19,10 +19,6 @@ class ComposerStaticInitd7a1a5f41e2fb6148a8b8c876faba931
             'think\\composer\\' => 15,
             'think\\captcha\\' => 14,
             'think\\' => 6,
-        ),
-        'm' => 
-        array (
-            'myxland\\addons\\' => 15,
         ),
         'a' => 
         array (
@@ -51,10 +47,6 @@ class ComposerStaticInitd7a1a5f41e2fb6148a8b8c876faba931
         array (
             0 => __DIR__ . '/..' . '/topthink/think-helper/src',
             1 => __DIR__ . '/..' . '/topthink/think-queue/src',
-        ),
-        'myxland\\addons\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/myxland/think-addons/src',
         ),
         'app\\' => 
         array (

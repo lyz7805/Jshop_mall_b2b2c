@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7a11d13931c6b53f186c59f3ee49d8a8",
+    "content-hash": "fc56d9de8fd6e1bf5fd647ac042655ff",
     "packages": [
         {
             "name": "apfelbox/php-file-download",
@@ -104,58 +104,6 @@
                 "source": "https://github.com/firephp/firephp-core"
             },
             "time": "2013-04-23T15:28:20+00:00"
-        },
-        {
-            "name": "myxland/think-addons",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/myxland/think-addons.git",
-                "reference": "3cfa9b9ec698ae51a147b60536fe17225053fa22"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/myxland/think-addons/zipball/3cfa9b9ec698ae51a147b60536fe17225053fa22",
-                "reference": "3cfa9b9ec698ae51a147b60536fe17225053fa22",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "php": ">=5.6.0",
-                "topthink/think-helper": ">=1.0.4",
-                "topthink/think-installer": ">=1.0.10"
-            },
-            "default-branch": true,
-            "type": "think-extend",
-            "autoload": {
-                "psr-4": {
-                    "myxland\\addons\\": "src/"
-                },
-                "files": [
-                    "src/helper.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "HWJ",
-                    "email": "myxland@gmail.com"
-                }
-            ],
-            "description": "Thinkphp 5.1 Addons Library",
-            "support": {
-                "issues": "https://github.com/myxland/think-addons/issues",
-                "source": "https://github.com/myxland/think-addons/tree/master"
-            },
-            "time": "2018-01-15T11:59:48+00:00"
         },
         {
             "name": "skyzyx/mimetypes",
@@ -536,9 +484,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "myxland/think-addons": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

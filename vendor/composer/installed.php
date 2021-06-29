@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'e680acee06cbf59375ca9de650e89f90f79b0a49',
+        'reference' => '94777e467a60e9cfac8d7939c21e605ba5b5f024',
         'name' => 'jihainet/jshop',
         'dev' => true,
     ),
@@ -34,18 +34,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'e680acee06cbf59375ca9de650e89f90f79b0a49',
-            'dev_requirement' => false,
-        ),
-        'myxland/think-addons' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'type' => 'think-extend',
-            'install_path' => __DIR__ . '/../myxland/think-addons',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
-            'reference' => '3cfa9b9ec698ae51a147b60536fe17225053fa22',
+            'reference' => '94777e467a60e9cfac8d7939c21e605ba5b5f024',
             'dev_requirement' => false,
         ),
         'skyzyx/mimetypes' => array(

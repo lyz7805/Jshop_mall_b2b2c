@@ -1,42 +1,67 @@
-Thinkphp5.1 扩展Addon
-======
+# Thinkphp5.1 扩展 Addon
+
+## 说明
+
+此扩展是根据[myxland/think-addons](https://github.com/myxland/think-addons)修改的
+
+## 原因
+
+因为 myxland/think-addons 扩展未发布稳定版，而且也已年久失修，另外一个问题就是作为 composer 依赖再修改不便于项目维护，所以将相关文件移入 extend 中作为扩展库使用
+
+## 注意
+
+使用时需要在 `composer.json` 中添加 `autoload.files`，引入 `helper.php` 文件，比如：
+
+```json
+"autoload": {
+    "psr-4": {
+        "app\\": "application"
+    },
+    "files": [
+        "extend/myxland/addons/helper.php"
+    ]
+},
+```
 
 ## 安装
-~~~
-composer require myxland/think-addons
+
+```cmd
 php think addons:config
-~~~
+```
 
 ## 创建插件
-> 创建的插件可以在view视图中使用，也可以在php业务中使用
- 
+
+> 创建的插件可以在 view 视图中使用，也可以在 php 业务中使用
+
 安装完成后访问系统时会在项目根目录生成名为`addons`的目录，在该目录中创建需要的插件。
 
 下面写一个例子：
 
-### 创建test插件
-> 在addons目录中创建test目录
+### 创建 test 插件
+
+> 在 addons 目录中创建 test 目录
 
 ### 创建钩子实现类
-> 在test目录中创建Test.php类文件。注意：类文件首字母需大写
 
-```
+> 在 test 目录中创建 Test.php 类文件。注意：类文件首字母需大写
+
+```php
 <?php
-namespace addons\test;	// 注意命名空间规范
+namespace addons\test; // 注意命名空间规范
 
 use myxland\addons\Addons;
 
 /**
  * 插件测试
  */
-class Test extends Addons	// 需继承myxland\addons\Addons类
+class Test extends Addons // 需继承myxland\addons\Addons类
 {
-	// 该插件的基础信息
+    // 该插件的基础信息
     public $info = [
-        'name' => 'test',	// 插件标识
-        'title' => '插件测试',	// 插件名称
-        'description' => 'thinkph5插件测试',	// 插件简介
-        'status' => 0,	// 状态
+        'name' => 'test', // 插件标识
+        'title' => '插件测试', // 插件名称
+        'description' => 'thinkph5插件测试', // 插件简介
+        'status' => 0, // 状态
         'author' => 'byron sampson',
         'version' => '0.1'
     ];
@@ -65,11 +90,11 @@ class Test extends Addons	// 需继承myxland\addons\Addons类
      */
     public function testhook($param)
     {
-		// 调用钩子时候的参数信息
+        // 调用钩子时候的参数信息
         print_r($param);
-		// 当前插件的配置信息，配置信息存在当前目录的config.php文件中，见下方
+        // 当前插件的配置信息，配置信息存在当前目录的config.php文件中，见下方
         print_r($this->getConfig());
-		// 可以返回模板，模板文件默认读取的为插件目录中的文件。模板名不能为空！
+        // 可以返回模板，模板文件默认读取的为插件目录中的文件。模板名不能为空！
         return $this->fetch('info');
     }
 
@@ -77,9 +102,10 @@ class Test extends Addons	// 需继承myxland\addons\Addons类
 ```
 
 ### 创建插件配置文件
-> 在test目录中创建config.php类文件，插件配置文件可以省略。
 
-```
+> 在 test 目录中创建 config.php 类文件，插件配置文件可以省略。
+
+```php
 <?php
 return [
     'display' => [
@@ -95,9 +121,10 @@ return [
 ```
 
 ### 创建钩子模板文件
-> 在test目录中创建info.html模板文件，钩子在使用fetch方法时对应的模板文件。
 
-```
+> 在 test 目录中创建 info.html 模板文件，钩子在使用 fetch 方法时对应的模板文件。
+
+```html
 <h1>hello tpl</h1>
 
 如果插件中需要有链接或提交数据的业务，可以在插件中创建controller业务文件，
@@ -108,11 +135,12 @@ return [
 test为插件名，Action为controller中的类名，link为controller中的方法
 ```
 
-### 创建插件的controller文件
-> 在test目录中创建controller目录，在controller目录中创建Action.php文件
-> controller类的用法与tp5中的controller一致
+### 创建插件的 controller 文件
 
-```
+> 在 test 目录中创建 controller 目录，在 controller 目录中创建 Action.php 文件
+> controller 类的用法与 tp5 中的 controller 一致
+
+```php
 <?php
 namespace addons\test\controller;
 
@@ -124,10 +152,11 @@ class Action
     }
 }
 ```
-> 如果需要使用view模板则需要继承`\myxland\addons\library\Controller`类
-> 模板文件所在位置为插件目录的view中，规则与模块中的view规则一致
 
-```
+> 如果需要使用 view 模板则需要继承`\myxland\addons\library\Controller`类
+> 模板文件所在位置为插件目录的 view 中，规则与模块中的 view 规则一致
+
+```php
 <?php
 namespace addons\test\controller;
 
@@ -143,26 +172,29 @@ class Action extends Controller
 ```
 
 ## 使用钩子
+
 > 创建好插件后就可以在正常业务中使用该插件中的钩子了
 > 使用钩子的时候第二个参数可以省略
 
 ### 模板中使用钩子
 
-```
+```html
 <div>{:hook('testhook', ['id'=>1])}</div>
 ```
 
-### php业务中使用
-> 只要是thinkphp5正常流程中的任意位置均可以使用
+### php 业务中使用
 
-```
+> 只要是 thinkphp5 正常流程中的任意位置均可以使用
+
+```php
 hook('testhook', ['id'=>1])
 ```
 
 ## 插件目录结构
+
 ### 最终生成的目录结构为
 
-```
+```txt
 tp5
  - addons
  -- test
