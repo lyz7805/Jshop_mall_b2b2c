@@ -728,9 +728,16 @@ ALTER TABLE `jshop_manage` ADD COLUMN `is_shop_admin` tinyint(1) UNSIGNED NOT NU
 ALTER TABLE `jshop_setting` DROP PRIMARY KEY, ADD PRIMARY KEY (`shop_id`, `skey`) USING BTREE;
 
 UPDATE `jshop_admin_operation` SET `code` = 'AdminOperationLog' WHERE `code` = 'OperationLog' AND `type` = 'c';
-UPDATE `jshop_admin_operation` SET `name` = '平台节点控制器', `code` = 'AdminOperation' WHERE `code` = 'Operation' AND `type` = 'c';
-UPDATE `jshop_admin_operation` SET `name` = '平台后台菜单' WHERE `parent_id` = 434 AND `code` = 'index' AND `type` = 'a';
-UPDATE `jshop_admin_operation` SET `name` = '平台节点删除' WHERE `parent_id` = 434 AND `code` = 'del' AND `type` = 'a';
-UPDATE `jshop_admin_operation` SET `name` = '平台节点编辑' WHERE `parent_id` = 434 AND `code` = 'add' AND `type` = 'a';
+
+-- id：434
+UPDATE `jshop_admin_operation` SET `name` = '商户节点控制器' WHERE `code` = 'Operation' AND `type` = 'c';
+UPDATE `jshop_admin_operation` SET `name` = '商户后台菜单' WHERE `parent_id` = 434 AND `code` = 'index' AND `type` = 'a';
+UPDATE `jshop_admin_operation` SET `name` = '商户节点删除' WHERE `parent_id` = 434 AND `code` = 'del' AND `type` = 'a';
+UPDATE `jshop_admin_operation` SET `name` = '商户节点编辑' WHERE `parent_id` = 434 AND `code` = 'add' AND `type` = 'a';
+
+INSERT INTO `jshop_admin_operation` VALUES (607, 5, '平台节点控制器', 'AdminOperation', 'c', 5, 3, 300);
+INSERT INTO `jshop_admin_operation` VALUES (608, 607, '平台后台菜单', 'index', 'a', 266, 1, 100);
+INSERT INTO `jshop_admin_operation` VALUES (609, 607, '平台节点编辑', 'add', 'a', 608, 2, 100);
+INSERT INTO `jshop_admin_operation` VALUES (610, 607, '平台节点删除', 'del', 'a', 608, 2, 100);
 
 SET FOREIGN_KEY_CHECKS = 1;
