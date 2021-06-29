@@ -740,4 +740,11 @@ INSERT INTO `jshop_admin_operation` VALUES (608, 607, '平台后台菜单', 'ind
 INSERT INTO `jshop_admin_operation` VALUES (609, 607, '平台节点编辑', 'add', 'a', 608, 2, 100);
 INSERT INTO `jshop_admin_operation` VALUES (610, 607, '平台节点删除', 'del', 'a', 608, 2, 100);
 
+-- 平台管理菜单增加店铺管理
+INSERT INTO `jshop_admin_operation` VALUES (611, 5, '店铺管理', 'Shop', 'c', 5, 1, 300);
+INSERT INTO `jshop_admin_operation` VALUES (612, 611, '店铺列表', 'index', 'a', 611, 1, 100);
+INSERT INTO `jshop_admin_operation` VALUES (613, 611, '店铺增加', 'add', 'a', 612, 2, 100);
+INSERT INTO `jshop_admin_operation` VALUES (614, 611, '店铺删除', 'del', 'a', 612, 2, 100);
+INSERT INTO `jshop_admin_operation` VALUES (615, 611, '店铺编辑', 'edit', 'a', 612, 2, 100);
+
 SET FOREIGN_KEY_CHECKS = 1;

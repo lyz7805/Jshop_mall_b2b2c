@@ -3,35 +3,18 @@
 namespace app\admin\controller;
 
 use app\common\controller\Admin;
-use app\common\model\BillAftersales;
-use app\common\model\Notice;
-use app\common\model\Operation;
-use app\common\model\Order;
-use app\common\model\PintuanGoods;
-use app\common\model\Promotion;
 use app\common\model\Shop as ShopModel;
-use app\common\model\User;
-use app\common\model\UserGrade;
-use think\Console;
-use think\facade\Cache;
-use app\common\model\WeixinAuthor;
-use app\common\model\Goods;
-use app\common\model\Brand;
-use app\common\model\Products;
-use think\facade\Request;
 
+/**
+ * 店铺管理
+ * Class Shop
+ * @package app\admin\controller
+ */
 class Shop extends Admin
 {
-    public function initialize()
-    {
-        parent::initialize();
-
-        $this->view->engine->layout('layout/shop');
-    }
-
     public function index()
     {
-        if (Request::isAjax()) {
+        if (IS_AJAX) {
             $shopModel = new ShopModel();
             return $shopModel->tableData(input('param.'));
         }
@@ -58,11 +41,12 @@ class Shop extends Admin
 
     /**
      * 新增
+     * @param ShopModel $shop
      * @return array|mixed
      */
     public function add(ShopModel $shop)
     {
-        if (Request::isAjax()) {
+        if (IS_AJAX) {
             return $shop->addShop(input('param.'));
         }
 
@@ -75,7 +59,7 @@ class Shop extends Admin
      */
     public function edit(ShopModel $shop)
     {
-        if (Request::isAjax()) {
+        if (IS_AJAX) {
             return $shop->editData(input('param.'));
         }
 
