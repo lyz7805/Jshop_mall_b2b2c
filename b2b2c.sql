@@ -728,5 +728,9 @@ ALTER TABLE `jshop_manage` ADD COLUMN `is_shop_admin` tinyint(1) UNSIGNED NOT NU
 ALTER TABLE `jshop_setting` DROP PRIMARY KEY, ADD PRIMARY KEY (`shop_id`, `skey`) USING BTREE;
 
 UPDATE `jshop_admin_operation` SET `code` = 'AdminOperationLog' WHERE `code` = 'OperationLog' AND `type` = 'c';
+UPDATE `jshop_admin_operation` SET `name` = '平台节点控制器', `code` = 'AdminOperation' WHERE `code` = 'Operation' AND `type` = 'c';
+UPDATE `jshop_admin_operation` SET `name` = '平台后台菜单' WHERE `parent_id` = 434 AND `code` = 'index' AND `type` = 'a';
+UPDATE `jshop_admin_operation` SET `name` = '平台节点删除' WHERE `parent_id` = 434 AND `code` = 'del' AND `type` = 'a';
+UPDATE `jshop_admin_operation` SET `name` = '平台节点编辑' WHERE `parent_id` = 434 AND `code` = 'add' AND `type` = 'a';
 
 SET FOREIGN_KEY_CHECKS = 1;
