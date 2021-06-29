@@ -56,7 +56,9 @@ abstract class Addons
         // 初始化视图模型
         $config     = ['view_path' => $this->addons_path];
         $config     = array_merge(config('template.'), $config);
-        $this->view = new View($config, config('template.tpl_replace_string'));
+        // $this->view = new View($config, config('template.tpl_replace_string'));
+        $this->view = app('view');
+        $this->view->engine($config);
 
         // 控制器初始化
         if (method_exists($this, 'initialize')) {
@@ -150,7 +152,7 @@ abstract class Addons
         // 关闭模板布局
         $this->view->engine->layout(false);
 
-        echo $this->view->fetch($template, $vars, $replace, $config);
+        return $this->view->fetch($template, $vars, $replace, $config);
     }
 
     /**
@@ -215,4 +217,28 @@ abstract class Addons
 
     //必须卸载插件方法
     abstract public function uninstall();
+
+    //必须实现配置函数
+    abstract public function config();
+
+    //获取弹窗配置
+    public function getDialog()
+    {
+        $info = $this->info;
+        $dialog['width'] = $info['dialog_width'] ? $info['dialog_width'] : '600px';
+        $dialog['height'] = $info['dialog_height'] ? $info['dialog_height'] : '520px';
+        $dialog['btn'] = isset($info['dialog_btn']) ? $info['dialog_btn'] : ['保存', '关闭'];
+        return $dialog;
+    }
+
+    /**
+     * 显示错误信息
+     * @param $msg
+     */
+    public function showError($msg)
+    {
+        header("Content-type: text/html; charset=utf-8");
+        echo $msg;
+        return;
+    }
 }

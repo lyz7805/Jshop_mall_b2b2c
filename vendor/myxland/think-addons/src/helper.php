@@ -16,7 +16,8 @@ use think\facade\Route;
 defined('ROOT_PATH') or define('ADDON_PATH', Env::get('root_path') . 'addons' . DIRECTORY_SEPARATOR);
 
 // 定义路由
-Route::any('addons/execute/:route', "\\myxland\\addons\\library\\Route@execute");
+// Route::any('addons/execute/:route', "\\myxland\\addons\\library\\Route@execute");
+Route::any('plugins/:route', "\\myxland\\addons\\library\\Route@execute")->mergeExtraVars();
 
 // 如果插件目录不存在则创建
 if (! is_dir(ADDON_PATH)) {
@@ -184,4 +185,31 @@ function addon_url($url, $param = [], $suffix = true, $domain = false)
     $actions = "{$addons}-{$controller}-{$action}";
 
     return url("addons/execute/{$actions}", $param, $suffix, $domain);
+}
+
+/**
+ * 插件显示内容里生成访问插件的url
+ *
+ * @param $url
+ * @param array $param
+ * @return bool|string
+ * @param bool|string $suffix 生成的URL后缀
+ * @param bool|string $domain 域名
+ */
+function get_addon_url($url, $param = [], $suffix = true, $domain = false)
+{
+    $url        = parse_url($url);
+    $case       = config('url_convert');
+    $addons     = $case ? Loader::parseName($url['scheme']) : $url['scheme'];
+    $controller = $case ? Loader::parseName($url['host']) : $url['host'];
+    $action     = trim($case ? strtolower($url['path']) : $url['path'], '/');
+    /* 解析URL带的参数 */
+    if (isset($url['query'])) {
+        parse_str($url['query'], $query);
+        $param = array_merge($query, $param);
+    }
+
+    // 生成插件链接新规则
+    $actions = "{$addons}-{$controller}-{$action}";
+    return url("/plugins/{$actions}", $param, $suffix, $domain);
 }

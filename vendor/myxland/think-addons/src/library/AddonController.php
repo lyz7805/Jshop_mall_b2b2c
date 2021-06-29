@@ -2,6 +2,7 @@
 
 namespace myxland\addons\library;
 
+use think\App;
 use think\Loader;
 use think\Controller;
 
@@ -39,18 +40,22 @@ class AddonController extends Controller
     /**
      * 架构函数
      *
-     * @param Request $request Request对象
+     * @param App $app App应用实例
      * @access public
      */
-    public function __construct(Request $request = null)
+    public function __construct(App $app = null)
     {
         // 生成request对象
-        $this->request = is_null($request) ? request() : $request;
+        $this->request = is_null($app) ? request() : $app->request;
         // 初始化配置信息
         $this->config = config('template.') ?: $this->config;
         // 处理路由参数
-        $route = $this->request->param('route', '');
-        $param = explode('-', $route);
+        // $route = $this->request->param('route', '');
+        // $param = explode('-', $route);
+        $path = $this->request->path();
+        $url = explode('/', $path);
+        $param = explode('-', $url[1]);
+
         // 是否自动转换控制器和操作名
         $convert = config('app.url_convert');
         // 格式化路由的插件位置
@@ -64,7 +69,7 @@ class AddonController extends Controller
         // 重置配置
         config('template.view_path', ADDON_PATH . $this->addon . DIRECTORY_SEPARATOR . $view_path . DIRECTORY_SEPARATOR);
 
-        parent::__construct($request);
+        parent::__construct($app);
     }
 
     /**
