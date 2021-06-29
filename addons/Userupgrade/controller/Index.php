@@ -16,15 +16,15 @@ class Index extends AddonController
         parent::initialize();
 
         //想实现判断后台的登陆判断很简单，写如下代码即可
-        Session::init([
-            'prefix'         => 'manage',
-            'type'           => '',
-            'auto_start'     => true,
-        ]);
+        // Session::init([
+        //     'prefix'         => 'manage',
+        //     'type'           => '',
+        //     'auto_start'     => true,
+        // ]);
 
-        if (!session('?manage')) {
+        if (!session('?admin')) {
             cookie('redirect_url', Container::get('request')->url(), 3600);
-            $this->redirect('manage/common/login');
+            $this->redirect('admin/common/login');
         }
     }
 
