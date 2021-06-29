@@ -3,28 +3,35 @@
 namespace app\admin\controller;
 
 use app\common\controller\Admin;
-use app\common\model\AdminLog;
 use app\common\model\AdminOperationLog as LogModel;
-use app\common\model\User as UserModel;
 use app\common\model\AdminUserLog;
-use \think\facade\Request;
 
+/**
+ * 操作日志
+ * Class AdminOperationLog
+ * @package app\admin\controller
+ */
 class AdminOperationLog extends Admin
 {
     public function index()
     {
         $logModel = new LogModel();
-        if(Request::isAjax())
-        {
+        if (IS_AJAX) {
             $request = input('param.');
             return $logModel->tableData($request);
         }
         return $this->fetch();
     }
 
-    public function getLastLog(){
+    /**
+     * 获取最近十条日志
+     *
+     * @return mixed
+     */
+    public function getLastLog()
+    {
         $logModel = new LogModel();
-        $request['limit'] = 10;//最近10条数据
+        $request['limit'] = 10; //最近10条数据
         return $logModel->tableData($request);
     }
 
@@ -36,8 +43,8 @@ class AdminOperationLog extends Admin
     public function userLog()
     {
         $logModel = new AdminUserLog();
-        if (Request::isAjax()) {
-            $request         = input('param.');
+        if (IS_AJAX) {
+            $request = input('param.');
             $request['type'] = $logModel::MANAGE_TYPE;
             return $logModel->tableData($request);
         }
@@ -45,26 +52,11 @@ class AdminOperationLog extends Admin
     }
 
     /**
-     * 删除日志
+     * 删除日志，默认返回不让删除提示
      * @return array
      */
-    public function delLog()
+    public function delLog(): array
     {
-        $result = error_code(10075);
-        return $result;
-
-        $ids = input('ids/a', []);
-        if (!$ids) {
-            return error_code(10051);
-        }
-        $logModel = new LogModel();
-        $res = $logModel->where([['id','in',$ids]])->delete();
-        if($res !== false)
-        {
-            $result['msg'] = '删除成功';
-            $result['status'] = true;
-        }
-        return $result;
+        return error_code(10075);
     }
-
 }

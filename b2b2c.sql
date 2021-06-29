@@ -727,4 +727,6 @@ ALTER TABLE `jshop_manage` ADD COLUMN `is_shop_admin` tinyint(1) UNSIGNED NOT NU
 -- 主键调整
 ALTER TABLE `jshop_setting` DROP PRIMARY KEY, ADD PRIMARY KEY (`shop_id`, `skey`) USING BTREE;
 
+UPDATE `jshop_admin_operation` SET `code` = 'AdminOperationLog' WHERE `code` = 'OperationLog' AND `type` = 'c';
+
 SET FOREIGN_KEY_CHECKS = 1;
