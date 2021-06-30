@@ -47,7 +47,13 @@ class Admin extends Base
         $jshopHost = Container::get('request')->domain();
         $this->assign('jshopHost', $jshopHost);
         // 店铺名称
-        $shop_name = getSetting('shop_name');
+        $mall_name = getSetting('mall_name');
+        $this->assign('mall_name', $mall_name);
+        if ($name = getSetting('shop_name')) {
+            $shop_name = $name;
+        } else {
+            $shop_name = $mall_name;
+        }
         $this->assign('shop_name', $shop_name);
         $this->view->engine->layout('layout');
     }
