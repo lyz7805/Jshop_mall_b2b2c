@@ -5,55 +5,23 @@
     <input type="hidden" name="id" value="{$info.id}">
 
     <div class="layui-form-item">
-        <label class="layui-form-label"><i class="required-color">*</i>门店名称：</label>
+        <label class="layui-form-label"><i class="required-color">*</i>店铺名称：</label>
         <div class="layui-input-inline seller-inline-4">
-            <input type="text" name="store_name" value="{$info.store_name}" lay-verify="required" placeholder="请输入门店名称" autocomplete="off" class="layui-input">
+            <input type="text" name="name" value="{$info.name}" lay-verify="required" placeholder="请输入店铺名称" autocomplete="off" class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label"><i class="required-color">*</i>手机号：</label>
+        <label class="layui-form-label"><i class="required-color">*</i> 子域名：</label>
         <div class="layui-input-inline seller-inline-4">
-            <input type="text" name="mobile" value="{$info.mobile}" lay-verify="required|number" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+            <input type="text" name="subdomain" value="{$info.subdomain}" lay-verify="required" placeholder="请输入子域名" autocomplete="off" class="layui-input">
         </div>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label"><i class="required-color">*</i>联系人：</label>
-        <div class="layui-input-inline seller-inline-4">
-            <input type="text" name="linkman" value="{$info.linkman}" lay-verify="required" placeholder="请输入联系人名称" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">门店LOGO：</label>
-        <div class="layui-input-inline seller-inline-5">
-            {Jshop:image id='logo' name="logo" lay-verify="required" value="$info.logo"/}
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label"><i class="required-color">*</i>地区选择：</label>
-        <div class="layui-input-inline seller-inline-4 address-class">
-            {Jshop:area name='area_id' class="select-address" lay-verify="required" value="$info.area_id" }
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label"><i class="required-color">*</i>门店坐标：</label>
-        <div class="layui-input-inline seller-inline-6">
-            <input type="text" id="coordinate" name="coordinate" value="{$info.coordinate}" readonly="readonly" onclick="show_map();" lay-verify="required" placeholder="请选择坐标" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label"><i class="required-color">*</i>详细地址：</label>
-        <div class="layui-input-inline seller-inline-6">
-            <input type="text" name="address" id="address" value="{$info.address}" lay-verify="required" placeholder="请输入门店详细地址" autocomplete="off" class="layui-input">
-        </div>
-    </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            {:jshopToken('store_edit')}
-            <button type="button" class="layui-btn" lay-submit lay-filter="add-store">保存</button>
+            {:jshopToken('shop_edit')}
+            <button type="button" class="layui-btn" lay-submit lay-filter="add-shop">保存</button>
             <button type="button" onclick="javascript:history.back(-1);" class="layui-btn layui-btn-primary">取消</button>
         </div>
     </div>
@@ -65,11 +33,11 @@
         form.render();
         //各种基于事件的操作，下面会有进一步介绍
 
-        form.on('submit(add-store)', function(data){
-            JsPost("{:url('Store/edit')}",data.field,function(res){
+        form.on('submit(add-shop)', function(data){
+            JsPost("{:url('Shop/edit')}",data.field,function(res){
                 if(res.status){
                     layer.msg(res.msg, {time:1300},function(){
-                        window.location.href = "{:url('Store/index')}";
+                        window.location.href = "{:url('Shop/index')}";
                     });
                 }else{
                     layer.msg(res.msg);
@@ -77,15 +45,4 @@
             });
         });
     });
-
-    function show_map()
-    {
-        layer.open({
-            type: 2,
-            title: '选择门店位置',
-            area: setpage(800,650),
-            content: "{:url('Store/showMap')}?coordinate={$info.coordinate}"
-        });
-    }
-
 </script>

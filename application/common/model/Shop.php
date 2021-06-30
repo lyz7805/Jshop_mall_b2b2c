@@ -24,7 +24,7 @@ class Shop extends Common
     public const STATUS_NORMAL = 1;
     public const STATUS_DISABLE = 2;
 
-    public function getStatusTextAttr($value): string
+    public function getStatusAttr($value): string
     {
         $statuses = [
             self::STATUS_NORMAL => '启用',
