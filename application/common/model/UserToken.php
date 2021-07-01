@@ -78,9 +78,6 @@ class UserToken extends Common
      * @param $token //token的值
      * @param int $status //用户状态，0是所有状态，1是取正常的用户状态
      * @return array|mixed
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
     public function checkToken($token, $status = 1)
     {

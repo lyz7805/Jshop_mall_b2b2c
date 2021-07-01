@@ -17,10 +17,12 @@ class Api extends Base
     {
         error_reporting(E_ERROR | E_WARNING | E_PARSE);
         parent::initialize();
+
+        $this->userId = $this->request->userId ?? 0;
     }
 
     //此方法用于设置参数
-    public function setInit($user_id)
+    public function setInit($user_id): bool
     {
         $this->userId = $user_id;
         return true;
