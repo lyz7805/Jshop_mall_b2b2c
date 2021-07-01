@@ -10,8 +10,9 @@ namespace app\job\export;
 
 use think\queue\Job;
 use app\common\model\Ietask;
+use app\job\B2b2c;
 
-class Balance
+class Balance extends B2b2c
 {
     /**
      * 执行导出任务
@@ -23,6 +24,7 @@ class Balance
      */
     public function exec(Job $job, $params)
     {
+        parent::exec($job, $params);
         $ietaskModle = new Ietask();
         $model = new \app\common\model\Balance();
         $header = $model->csvHeader();

@@ -12,13 +12,14 @@ namespace app\job\export;
 use think\queue\Job;
 use app\common\model\Coupon as CouponModel;
 use app\common\model\Ietask;
+use app\job\B2b2c;
 
-
-class Coupon
+class Coupon extends B2b2c
 {
     //执行导出任务
     public function exec(Job $job, $params)
     {
+        parent::exec($job, $params);
         $ietaskModle = new Ietask();
         $couponModel = new CouponModel();
         $header = [

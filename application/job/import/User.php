@@ -12,11 +12,11 @@ use think\exception\ErrorException;
 use think\facade\Validate;
 use think\queue\Job;
 use app\common\model\User as UserModel;
-
 use app\common\model\Ietask;
+use app\job\B2b2c;
 use think\facade\Log;
 
-class User
+class User extends B2b2c
 {
     protected $rule = [
         'username' => 'require|max:40',
@@ -26,7 +26,7 @@ class User
         'nickname' => 'length:2,50',
         'balance' => 'float',
         'point' => 'number',
-        'birthday'=>'date'
+        'birthday' => 'date'
 
     ];
     protected $msg = [
@@ -44,55 +44,55 @@ class User
     //执行导入任务
     public function exec(Job $job, $params)
     {
+        parent::exec($job, $params);
         $ietaskModle = new Ietask();
         $userModel = new UserModel();
         $message = [];
         Log::record($params);
-        try{
+        try {
             $file = json_decode($params['params'], true);
             $csv = new \org\Csv();
             $resCsv = $csv->import($file['file_path']);
 
-            if($resCsv['status']){
+            if ($resCsv['status']) {
                 $header = $resCsv['data'][0];
                 unset($resCsv['data'][0]);
-                $title=$userModel->csvHeader();
-                $fields=[];
-                foreach($title as $key=>$val){
-                    $index = array_search($val['desc'],$header);
-                    if($index>=0){
+                $title = $userModel->csvHeader();
+                $fields = [];
+                foreach ($title as $key => $val) {
+                    $index = array_search($val['desc'], $header);
+                    if ($index >= 0) {
                         $fields[] = [
-                            'index'=>$index,
-                            'value'=>$val['id']
+                            'index' => $index,
+                            'value' => $val['id']
                         ];
                     }
                 }
                 $iData = [];
-                if($fields){
+                if ($fields) {
                     $i = 0;
-                    foreach ($resCsv['data'] as $key=>$val)
-                    {
-                        foreach($fields as $fkey=>$fval){
-                            $iData[$i][$fval['value']]=$val[$fval['index']];
+                    foreach ($resCsv['data'] as $key => $val) {
+                        foreach ($fields as $fkey => $fval) {
+                            $iData[$i][$fval['value']] = $val[$fval['index']];
                         }
                         $i++;
                     }
                 }
-                foreach($iData as $key=>$val){
+                foreach ($iData as $key => $val) {
                     $time = time();
                     $user['username'] = $val['username'];
-                    $user['password'] = md5(md5('000000'.$time));
+                    $user['password'] = md5(md5('000000' . $time));
                     $user['mobile'] = $val['mobile'];
                     $user['avatar'] = $val['avatar'];
-                    if($val['sex'] == '男'){
+                    if ($val['sex'] == '男') {
                         $user['sex'] = $userModel::SEX_BOY;
-                    }elseif ($val['sex'] == '女'){
+                    } elseif ($val['sex'] == '女') {
                         $user['sex'] = $userModel::SEX_GIRL;
-                    }else{
+                    } else {
                         $user['sex'] = $userModel::SEX_OTHER;
                     }
                     $user['status'] = trim($val['status']) == '正常' ? $userModel::STATUS_NORMAL : $userModel::STATUS_DISABLE;
-                    $user['birthday'] = str_replace('/','-',$val['birthday']);
+                    $user['birthday'] = str_replace('/', '-', $val['birthday']);
                     $user['nickname'] = $val['nickname'];
                     $user['balance'] = $val['balance'];
                     $user['point'] = $val['point'];
@@ -103,28 +103,27 @@ class User
                     Log::record($user);
                     //校验数据
                     $validate = new \think\Validate($this->rule, $this->msg);
-                    if(!$validate->check($user))
-                    {
+                    if (!$validate->check($user)) {
                         $message[] = $validate->getError();
-                        Log::record($user['username'].implode(',',$message));
+                        Log::record($user['username'] . implode(',', $message));
                         continue;
-                    }else{
+                    } else {
                         $userModel->startTrans();
                         //判断用户是否存在，存在跳过
-                        $userData=$userModel->field('id')->where(['mobile'=>$user['mobile']])->find();
-                        if(isset($userData['id'])&&$userData['id']!=''){
-                            Log::record($user['username'].'已存在，导入失败');
+                        $userData = $userModel->field('id')->where(['mobile' => $user['mobile']])->find();
+                        if (isset($userData['id']) && $userData['id'] != '') {
+                            Log::record($user['username'] . '已存在，导入失败');
                             $user_id = $userData['id'];
-                        }else{
+                        } else {
                             $user_id = $userModel->doAdd($user);
                         }
-                        if(!$user_id) {
+                        if (!$user_id) {
                             $userModel->rollback();
-                            $message[] = error_code(11029,true);
-                            Log::record($user['username'].'用户数据保存失败');
+                            $message[] = error_code(11029, true);
+                            Log::record($user['username'] . '用户数据保存失败');
                             continue;
-                        }else{
-                            Log::record("用户id".$user_id);
+                        } else {
+                            Log::record("用户id" . $user_id);
                             $userModel->commit();
                         }
                     }
@@ -132,23 +131,23 @@ class User
 
                 $uData['status'] = $ietaskModle::IMPORT_SUCCESS_STATUS;
                 $uData['message'] = '导入成功';
-                if($message){
+                if ($message) {
                     $uData['message'] .= json_encode($message);
                 }
                 $uData['utime'] = time();
                 $ietaskModle->update($uData, ['id' => $params['task_id']]);
-            }else{
+            } else {
                 $uData['status'] = $ietaskModle::IMPORT_FAIL_STATUS;
                 $uData['message'] = $resCsv['msg'];
                 $uData['utime'] = time();
                 $ietaskModle->update($uData, ['id' => $params['task_id']]);
             }
-        }catch (Exception $e){
+        } catch (\Exception $e) {
             $message[] = $e->getMessage();
         }
         if ($job->attempts() > 3) {
             $uData['status'] = $ietaskModle::IMPORT_FAIL_STATUS;
-            $uData['message'] = error_code(11041,true);
+            $uData['message'] = error_code(11041, true);
             $uData['utime'] = time();
             $ietaskModle->update($uData, ['id' => $params['task_id']]);
             $job->delete();

@@ -10,5 +10,5 @@
 // +----------------------------------------------------------------------
 
 return [
-    'connector' => 'Sync'//database
+    'connector' => 'Database'//database
 ];

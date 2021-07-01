@@ -12,13 +12,14 @@ namespace app\job\export;
 use think\queue\Job;
 use app\common\model\User as UserModel;
 use app\common\model\Ietask;
+use app\job\B2b2c;
 
-
-class User
+class User extends B2b2c
 {
     //执行导出任务
     public function exec(Job $job, $params)
     {
+        parent::exec($job, $params);
         $ietaskModle = new Ietask();
         $userModel = new UserModel();
         $header = $userModel->csvHeader();
@@ -34,7 +35,7 @@ class User
             $filter['id'] = explode(',', $filter['ids']);
             unset($filter['ids']);
         }
-        
+
         $userData = $userModel->getCsvData($filter);
         if ($userData['status']) {
             $body = $userData['data'];

@@ -42,6 +42,7 @@ class Ietask extends BaseB2b2c
     public function addExportTask($data, $job = 'Goods')
     {
         if ($this->save($data)) {
+            $exportData['shop_id'] = get_shop_id();
             $exportData['task_id'] = $this->id;
             $exportData['params'] = $data['params'];
             $jobClass = 'app\job\export\\' . $job . '@exec';
@@ -60,6 +61,7 @@ class Ietask extends BaseB2b2c
      */
     public function addImportTask($data, $job = 'Goods'){
         if ($this->save($data)) {
+            $importData['shop_id'] = get_shop_id();
             $importData['task_id'] = $this->id;
             $importData['params'] = $data['params'];
             $jobClass = 'app\job\import\\' . $job . '@exec';

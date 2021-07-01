@@ -15,13 +15,15 @@ use app\common\validate\Goods as GoodsValidate;
 use app\common\validate\Products as ProductsValidate;
 use app\common\model\Products;
 use app\common\model\Ietask;
+use app\job\B2b2c;
 use think\facade\Log;
 
-class Goods
+class Goods extends B2b2c
 {
     //执行导入任务
     public function exec(Job $job, $params)
     {
+        parent::exec($job, $params);
         $ietaskModle  = new Ietask();
         $goodsModel   = new goodsModel();
         $productModel = new Products();
@@ -107,7 +109,7 @@ class Goods
                     $goods['sort']            = $val['sort'];
                     $goods['is_recommend']    = ($val['is_recommend'] == '是') ? '1' : '2';
                     $goods['is_hot']          = ($val['is_hot'] == '是') ? '1' : '2';
-                    $goods['label_ids']       = model('common/Label')->getIdsByName($val['label_ids'], true);//todo 标签分隔
+                    $goods['label_ids']       = model('common/Label')->getIdsByName($val['label_ids'], true); //todo 标签分隔
                     $product                  = [];
                     $product[0]['spes_desc']  = $val['product_spes_desc'];
                     $val['sn']                = (isset($val['sn']) && $val['sn']) ? $val['sn'] : get_sn(4);
@@ -132,7 +134,7 @@ class Goods
                         }
                     }
 
-                    if ($val['is_defalut'] && $val['is_defalut'] == $productModel::DEFALUT_YES) {//取默认货品价格
+                    if ($val['is_defalut'] && $val['is_defalut'] == $productModel::DEFALUT_YES) { //取默认货品价格
                         $goods['price']     = $val['price'];
                         $goods['costprice'] = $val['costprice'];
                         $goods['mktprice']  = $val['mktprice'];
@@ -186,7 +188,7 @@ class Goods
 
                                 if (isset($productData) && $productData['id'] != '') {
                                     #print_r($pval);echo '---';
-                                    $res = $productModel->updateProduct($productData['id'], $pval,$error_code);
+                                    $res = $productModel->updateProduct($productData['id'], $pval, $error_code);
                                 } else {
                                     #print_r($pval);
                                     $res = $productModel->doAdd($pval);
@@ -214,7 +216,7 @@ class Goods
                 $uData['utime']   = time();
                 $ietaskModle->update($uData, ['id' => $params['task_id']]);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $message[] = $e->getMessage();
         }
         if ($job->attempts() > 3) {

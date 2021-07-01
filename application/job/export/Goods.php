@@ -12,13 +12,14 @@ namespace app\job\export;
 use think\queue\Job;
 use app\common\model\Goods as goodsModel;
 use app\common\model\Ietask;
+use app\job\B2b2c;
 
-
-class Goods
+class Goods extends B2b2c
 {
     //执行导出任务
     public function exec(Job $job, $params)
     {
+        parent::exec($job, $params);
         $ietaskModle = new Ietask();
         $goodsModel = new goodsModel();
         $header = $goodsModel->csvHeader();
