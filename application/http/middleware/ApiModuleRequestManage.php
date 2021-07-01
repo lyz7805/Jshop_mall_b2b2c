@@ -28,10 +28,20 @@ class ApiModuleRequestManage
                 return $next($request);
             }
 
-            $response = new Json(['msg' => '禁止访问', 'status' => false], 403);
-            throw new HttpResponseException($response);
+            self::abort('禁止访问', 403);
         }
 
         return $next($request);
+    }
+
+    private static function abort(string $message = 'Request Error', int $code = 200)
+    {
+        $response = new Json(['msg' => $message, 'status' => false], $code);
+        throw new HttpResponseException($response);
+    }
+
+    private static function abort_error_code(int $code = 10000)
+    {
+        self::abort(error_code($code, true), 200);
     }
 }
